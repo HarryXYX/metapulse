@@ -1,0 +1,129 @@
+
+package com.linkedin.assertion;
+
+import javax.annotation.Generated;
+import com.linkedin.data.schema.EnumDataSchema;
+import com.linkedin.data.schema.SchemaFormatType;
+import com.linkedin.data.template.DataTemplateUtil;
+
+
+/**
+ * A standard metric that can be derived from the set of values
+ * for a specific field / column of a dataset / table.
+ * 
+ */
+@Generated(value = "com.linkedin.pegasus.generator.JavaCodeUtil", comments = "Rest.li Data Template. Generated from metadata-events/mxe-schemas/src/main/pegasus/com/linkedin/assertion/FieldMetricType.pdl.")
+public enum FieldMetricType {
+
+
+    /**
+     * The number of unique values found in the column value set
+     * 
+     */
+    UNIQUE_COUNT,
+
+    /**
+     * The percentage of unique values to total rows for the dataset
+     * 
+     */
+    UNIQUE_PERCENTAGE,
+
+    /**
+     * The number of null values found in the column value set
+     * 
+     */
+    NULL_COUNT,
+
+    /**
+     * The percentage of null values to total rows for the dataset
+     * 
+     */
+    NULL_PERCENTAGE,
+
+    /**
+     * The minimum value in the column set (applies to numeric columns)
+     * 
+     */
+    MIN,
+
+    /**
+     * The maximum value in the column set (applies to numeric columns)
+     * 
+     */
+    MAX,
+
+    /**
+     * The mean length found in the column set (applies to numeric columns)
+     * 
+     */
+    MEAN,
+
+    /**
+     * The median length found in the column set (applies to numeric columns)
+     * 
+     */
+    MEDIAN,
+
+    /**
+     * The stddev length found in the column set (applies to numeric columns)
+     * 
+     */
+    STDDEV,
+
+    /**
+     * The number of negative values found in the value set (applies to numeric columns)
+     * 
+     */
+    NEGATIVE_COUNT,
+
+    /**
+     * The percentage of negative values to total rows for the dataset (applies to numeric columns)
+     * 
+     */
+    NEGATIVE_PERCENTAGE,
+
+    /**
+     * The number of zero values found in the value set (applies to numeric columns)
+     * 
+     */
+    ZERO_COUNT,
+
+    /**
+     * The percentage of zero values to total rows for the dataset (applies to numeric columns)
+     * 
+     */
+    ZERO_PERCENTAGE,
+
+    /**
+     * The minimum length found in the column set (applies to string columns)
+     * 
+     */
+    MIN_LENGTH,
+
+    /**
+     * The maximum length found in the column set (applies to string columns)
+     * 
+     */
+    MAX_LENGTH,
+
+    /**
+     * The number of empty string values found in the value set (applies to string columns).
+     * Note: This is a completely different metric different from NULL_COUNT!
+     * 
+     */
+    EMPTY_COUNT,
+
+    /**
+     * The percentage of empty string values to total rows for the dataset (applies to string columns)
+     * Note: This is a completely different metric different from NULL_PERCENTAGE!
+     * 
+     */
+    EMPTY_PERCENTAGE,
+    $UNKNOWN;
+    private final static EnumDataSchema SCHEMA = ((EnumDataSchema) DataTemplateUtil.parseSchema("namespace com.linkedin.assertion/**A standard metric that can be derived from the set of values\nfor a specific field / column of a dataset / table.*/enum FieldMetricType{/**The number of unique values found in the column value set*/UNIQUE_COUNT/**The percentage of unique values to total rows for the dataset*/UNIQUE_PERCENTAGE/**The number of null values found in the column value set*/NULL_COUNT/**The percentage of null values to total rows for the dataset*/NULL_PERCENTAGE/**The minimum value in the column set (applies to numeric columns)*/MIN/**The maximum value in the column set (applies to numeric columns)*/MAX/**The mean length found in the column set (applies to numeric columns)*/MEAN/**The median length found in the column set (applies to numeric columns)*/MEDIAN/**The stddev length found in the column set (applies to numeric columns)*/STDDEV/**The number of negative values found in the value set (applies to numeric columns)*/NEGATIVE_COUNT/**The percentage of negative values to total rows for the dataset (applies to numeric columns)*/NEGATIVE_PERCENTAGE/**The number of zero values found in the value set (applies to numeric columns)*/ZERO_COUNT/**The percentage of zero values to total rows for the dataset (applies to numeric columns)*/ZERO_PERCENTAGE/**The minimum length found in the column set (applies to string columns)*/MIN_LENGTH/**The maximum length found in the column set (applies to string columns)*/MAX_LENGTH/**The number of empty string values found in the value set (applies to string columns).\nNote: This is a completely different metric different from NULL_COUNT!*/EMPTY_COUNT/**The percentage of empty string values to total rows for the dataset (applies to string columns)\nNote: This is a completely different metric different from NULL_PERCENTAGE!*/EMPTY_PERCENTAGE}", SchemaFormatType.PDL));
+
+    public static EnumDataSchema dataSchema() {
+        return SCHEMA;
+    }
+
+}

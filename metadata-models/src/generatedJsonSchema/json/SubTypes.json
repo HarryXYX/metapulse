@@ -1,0 +1,20 @@
+{
+  "definitions" : {
+    "SubTypes" : {
+      "description" : "Sub Types. Use this aspect to specialize a generic Entity\ne.g. Making a Dataset also be a View or also be a LookerExplore",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "typeNames" : {
+          "description" : "The names of the specific types.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "typeNames" ]
+    }
+  },
+  "$ref" : "#/definitions/SubTypes"
+}

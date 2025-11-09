@@ -1,0 +1,58 @@
+{
+  "type" : "record",
+  "name" : "Actors",
+  "namespace" : "com.linkedin.role",
+  "doc" : "Provisioned users and groups of a role",
+  "fields" : [ {
+    "name" : "users",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "RoleUser",
+        "doc" : "Provisioned users of a role",
+        "fields" : [ {
+          "name" : "user",
+          "type" : "string",
+          "doc" : "Link provisioned corp user for a role",
+          "Relationship" : {
+            "entityTypes" : [ "corpuser" ],
+            "name" : "Has"
+          },
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        } ]
+      }
+    } ],
+    "doc" : "List of provisioned users of a role",
+    "default" : null
+  }, {
+    "name" : "groups",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "RoleGroup",
+        "doc" : "Provisioned groups of a role",
+        "fields" : [ {
+          "name" : "group",
+          "type" : "string",
+          "doc" : "Link provisioned corp group for a role",
+          "Relationship" : {
+            "entityTypes" : [ "corpGroup" ],
+            "name" : "Has"
+          },
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        } ]
+      }
+    } ],
+    "doc" : "List of provisioned groups of a role",
+    "default" : null
+  } ],
+  "Aspect" : {
+    "name" : "actors"
+  }
+}

@@ -1,0 +1,4539 @@
+{
+  "definitions" : {
+    "Entity" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "oneOf" : [ {
+            "$ref" : "#/definitions/ChartSnapshot"
+          }, {
+            "$ref" : "#/definitions/CorpGroupSnapshot"
+          }, {
+            "$ref" : "#/definitions/CorpUserSnapshot"
+          }, {
+            "$ref" : "#/definitions/DashboardSnapshot"
+          }, {
+            "$ref" : "#/definitions/DataFlowSnapshot"
+          }, {
+            "$ref" : "#/definitions/DataJobSnapshot"
+          }, {
+            "$ref" : "#/definitions/DatasetSnapshot"
+          }, {
+            "$ref" : "#/definitions/DataProcessSnapshot"
+          }, {
+            "$ref" : "#/definitions/DataPlatformSnapshot"
+          }, {
+            "$ref" : "#/definitions/MLModelSnapshot"
+          }, {
+            "$ref" : "#/definitions/MLPrimaryKeySnapshot"
+          }, {
+            "$ref" : "#/definitions/MLFeatureSnapshot"
+          }, {
+            "$ref" : "#/definitions/MLFeatureTableSnapshot"
+          }, {
+            "$ref" : "#/definitions/MLModelDeploymentSnapshot"
+          }, {
+            "$ref" : "#/definitions/MLModelGroupSnapshot"
+          }, {
+            "$ref" : "#/definitions/TagSnapshot"
+          }, {
+            "$ref" : "#/definitions/GlossaryTermSnapshot"
+          }, {
+            "$ref" : "#/definitions/GlossaryNodeSnapshot"
+          }, {
+            "$ref" : "#/definitions/DataHubPolicySnapshot"
+          }, {
+            "$ref" : "#/definitions/SchemaFieldSnapshot"
+          }, {
+            "$ref" : "#/definitions/DataHubRetentionSnapshot"
+          } ]
+        }
+      },
+      "required" : [ "value" ]
+    },
+    "ChartSnapshot" : {
+      "description" : "A metadata snapshot for a specific Chart entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the chart. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/ChartKey"
+            }, {
+              "$ref" : "#/definitions/ChartInfo"
+            }, {
+              "$ref" : "#/definitions/ChartQuery"
+            }, {
+              "$ref" : "#/definitions/EditableChartProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlossaryTerms"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "ChartKey" : {
+      "description" : "Key for a Chart",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dashboardTool" : {
+          "description" : "The name of the dashboard tool such as looker, redash etc.",
+          "type" : "string"
+        },
+        "chartId" : {
+          "description" : "Unique id for the chart. This id should be globally unique for a dashboarding tool even when there are multiple deployments of it. As an example, chart URL could be used here for Looker such as 'looker.linkedin.com/looks/1234'",
+          "type" : "string"
+        }
+      },
+      "required" : [ "dashboardTool", "chartId" ]
+    },
+    "ChartInfo" : {
+      "description" : "Information about a chart",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Title of the chart",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Detailed description about the chart",
+          "type" : "string"
+        },
+        "lastModified" : {
+          "description" : "Captures information about who created/last modified/deleted this chart and when",
+          "$ref" : "#/definitions/ChangeAuditStamps"
+        },
+        "chartUrl" : {
+          "default" : null,
+          "description" : "URL for the chart. This could be used as an external link on DataHub to allow users access/view the chart",
+          "type" : "string"
+        },
+        "inputs" : {
+          "default" : null,
+          "description" : "Data sources for the chart\nDeprecated! Use inputEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "inputEdges" : {
+          "default" : null,
+          "description" : "Data sources for the chart",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "type" : {
+          "default" : null,
+          "description" : "Type of the chart",
+          "$ref" : "#/definitions/ChartType"
+        },
+        "access" : {
+          "default" : null,
+          "description" : "Access level for the chart",
+          "$ref" : "#/definitions/AccessLevel"
+        },
+        "lastRefreshed" : {
+          "default" : null,
+          "description" : "The time when this chart last refreshed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "customProperties", "title", "description", "lastModified" ]
+    },
+    "ChangeAuditStamps" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into various lifecycle stages, and who acted to move it into those lifecycle stages. The recommended best practice is to include this record in your record schema, and annotate its fields as @readOnly in your resource. See https://github.com/linkedin/rest.li/wiki/Validation-in-Rest.li#restli-validation-annotations",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    },
+    "Edge" : {
+      "description" : "A common structure to represent all edges to entities when used inside aspects as collections\nThis ensures that all edges have common structure around audit-stamps and will support PATCH, time-travel automatically.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "sourceUrn" : {
+          "default" : null,
+          "description" : "Urn of the source of this relationship edge.\nIf not specified, assumed to be the entity that this aspect belongs to.",
+          "type" : "string"
+        },
+        "destinationUrn" : {
+          "description" : "Urn of the destination of this relationship edge.",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created this relationship edge and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Audit stamp containing who last modified this relationship edge and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : "A generic properties bag that allows us to store specific information on this graph edge.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "destinationUrn" ]
+    },
+    "ChartType" : {
+      "description" : "The various types of charts",
+      "enum" : [ "BAR", "PIE", "SCATTER", "TABLE", "TEXT", "LINE", "AREA", "HISTOGRAM", "BOX_PLOT", "WORD_CLOUD", "COHORT" ]
+    },
+    "AccessLevel" : {
+      "description" : "The various access levels",
+      "enum" : [ "PUBLIC", "PRIVATE" ]
+    },
+    "ChartQuery" : {
+      "description" : "Information for chart query which is used for getting data of the chart",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawQuery" : {
+          "description" : "Raw query to build a chart from input datasets",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "Chart query type",
+          "$ref" : "#/definitions/ChartQueryType"
+        }
+      },
+      "required" : [ "rawQuery", "type" ]
+    },
+    "ChartQueryType" : {
+      "enum" : [ "LOOKML", "SQL" ]
+    },
+    "EditableChartProperties" : {
+      "description" : "Stores editable changes made to properties. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Edited documentation of the chart ",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "Ownership" : {
+      "description" : "Ownership information of an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "owners" : {
+          "description" : "List of owners of the entity.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Owner"
+          }
+        },
+        "ownerTypes" : {
+          "default" : { },
+          "description" : "Ownership type to Owners map, populated via mutation hook.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "Audit stamp containing who last modified the record and when. A value of 0 in the time field indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "owners", "ownerTypes", "lastModified" ]
+    },
+    "Owner" : {
+      "description" : "Ownership information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "owner" : {
+          "description" : "Owner URN, e.g. urn:li:corpuser:ldap, urn:li:corpGroup:group_name, and urn:li:multiProduct:mp_name\n(Caveat: only corpuser is currently supported in the frontend.)",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the ownership",
+          "$ref" : "#/definitions/OwnershipType"
+        },
+        "typeUrn" : {
+          "default" : null,
+          "description" : "The type of the ownership\nUrn of type O",
+          "type" : "string"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "Source information for the ownership",
+          "$ref" : "#/definitions/OwnershipSource"
+        },
+        "attribution" : {
+          "default" : null,
+          "description" : "Information about who, why, and how this metadata was applied",
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      },
+      "required" : [ "owner", "type" ]
+    },
+    "OwnershipType" : {
+      "description" : "Asset owner types",
+      "enum" : [ "CUSTOM", "TECHNICAL_OWNER", "BUSINESS_OWNER", "DATA_STEWARD", "NONE", "DEVELOPER", "DATAOWNER", "DELEGATE", "PRODUCER", "CONSUMER", "STAKEHOLDER" ]
+    },
+    "OwnershipSource" : {
+      "description" : "Source/provider of the ownership information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The type of the source",
+          "$ref" : "#/definitions/OwnershipSourceType"
+        },
+        "url" : {
+          "default" : null,
+          "description" : "A reference URL for the source",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "OwnershipSourceType" : {
+      "enum" : [ "AUDIT", "DATABASE", "FILE_SYSTEM", "ISSUE_TRACKING_SYSTEM", "MANUAL", "SERVICE", "SOURCE_CONTROL", "OTHER" ]
+    },
+    "MetadataAttribution" : {
+      "description" : "Information about who, why, and how this metadata was applied",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When this metadata was updated.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) responsible for applying the assocated metadata. This can\neither be a user (in case of UI edits) or the datahub system for automation.",
+          "type" : "string"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "The DataHub source responsible for applying the associated metadata. This will only be filled out\nwhen a DataHub source is responsible. This includes the specific metadata test urn, the automation urn.",
+          "type" : "string"
+        },
+        "sourceDetail" : {
+          "default" : { },
+          "description" : "The details associated with why this metadata was applied. For example, this could include\nthe actual regex rule, sql statement, ingestion pipeline ID, etc.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "time", "actor", "sourceDetail" ]
+    },
+    "Status" : {
+      "description" : "The lifecycle status metadata of an entity, e.g. dataset, metric, feature, etc.\nThis aspect is used to represent soft deletes conventionally.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "removed" : {
+          "default" : false,
+          "description" : "Whether the entity has been removed (soft-deleted).",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "removed" ]
+    },
+    "GlobalTags" : {
+      "description" : "Tag aspect used for applying tags to an entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tags" : {
+          "description" : "Tags associated with a given entity",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TagAssociation"
+          }
+        }
+      },
+      "required" : [ "tags" ]
+    },
+    "TagAssociation" : {
+      "description" : "Properties of an applied tag. For now, just an Urn. In the future we can extend this with other properties, e.g.\npropagation parameters.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tag" : {
+          "description" : "Urn of the applied tag",
+          "type" : "string"
+        },
+        "context" : {
+          "default" : null,
+          "description" : "Additional context about the association",
+          "type" : "string"
+        },
+        "attribution" : {
+          "default" : null,
+          "description" : "Information about who, why, and how this metadata was applied",
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      },
+      "required" : [ "tag" ]
+    },
+    "BrowsePaths" : {
+      "description" : "Shared aspect containing Browse Paths to be indexed for an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "paths" : {
+          "description" : "A list of valid browse paths for the entity.\n\nBrowse paths are expected to be forward slash-separated strings. For example: 'prod/snowflake/datasetName'",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "paths" ]
+    },
+    "GlossaryTerms" : {
+      "description" : "Related business terms information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "terms" : {
+          "description" : "The related business terms",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/GlossaryTermAssociation"
+          }
+        },
+        "auditStamp" : {
+          "description" : "Audit stamp containing who reported the related business term",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "terms", "auditStamp" ]
+    },
+    "GlossaryTermAssociation" : {
+      "description" : "Properties of an applied glossary term.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "Urn of the applied glossary term",
+          "type" : "string"
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "The user URN which will be credited for adding associating this term to the entity",
+          "type" : "string"
+        },
+        "context" : {
+          "default" : null,
+          "description" : "Additional context about the association",
+          "type" : "string"
+        },
+        "attribution" : {
+          "default" : null,
+          "description" : "Information about who, why, and how this metadata was applied",
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      },
+      "required" : [ "urn" ]
+    },
+    "InstitutionalMemory" : {
+      "description" : "Institutional memory of an entity. This is a way to link to relevant documentation and provide description of the documentation. Institutional or tribal knowledge is very important for users to leverage the entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "elements" : {
+          "description" : "List of records that represent institutional memory of an entity. Each record consists of a link, description, creator and timestamps associated with that record.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InstitutionalMemoryMetadata"
+          }
+        }
+      },
+      "required" : [ "elements" ]
+    },
+    "InstitutionalMemoryMetadata" : {
+      "description" : "Metadata corresponding to a record of institutional memory.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "url" : {
+          "description" : "Link to an engineering design document or a wiki page.",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Description of the link.",
+          "type" : "string"
+        },
+        "createStamp" : {
+          "description" : "Audit stamp associated with creation of this record",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "updateStamp" : {
+          "default" : null,
+          "description" : "Audit stamp associated with updation of this record",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "settings" : {
+          "default" : null,
+          "description" : "Settings for this record",
+          "$ref" : "#/definitions/InstitutionalMemoryMetadataSettings"
+        }
+      },
+      "required" : [ "url", "description", "createStamp" ]
+    },
+    "InstitutionalMemoryMetadataSettings" : {
+      "description" : "Settings related to a record of InstitutionalMemoryMetadata",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "showInAssetPreview" : {
+          "default" : false,
+          "description" : "Show record in asset preview like on entity header and search previews",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "showInAssetPreview" ]
+    },
+    "DataPlatformInstance" : {
+      "description" : "The specific instance of the data platform that this entity belongs to",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Data Platform",
+          "type" : "string"
+        },
+        "instance" : {
+          "default" : null,
+          "description" : "Instance of the data platform (e.g. db instance)",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platform" ]
+    },
+    "BrowsePathsV2" : {
+      "description" : "Shared aspect containing a Browse Path to be indexed for an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "path" : {
+          "description" : "A valid browse path for the entity. This field is provided by DataHub by default.\nThis aspect is a newer version of browsePaths where we can encode more information in the path.\nThis path is also based on containers for a given entity if it has containers.\n\nThis is stored in elasticsearch as unit-separator delimited strings and only includes platform specific folders or containers.\nThese paths should not include high level info captured elsewhere ie. Platform and Environment.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BrowsePathEntry"
+          }
+        }
+      },
+      "required" : [ "path" ]
+    },
+    "BrowsePathEntry" : {
+      "description" : "Represents a single level in an entity's browsePathV2",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The ID of the browse path entry. This is what gets stored in the index.\nIf there's an urn associated with this entry, id and urn will be the same",
+          "type" : "string"
+        },
+        "urn" : {
+          "default" : null,
+          "description" : "Optional urn pointing to some entity in DataHub",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    },
+    "CorpGroupSnapshot" : {
+      "description" : "A metadata snapshot for a specific CorpGroup entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the LdapUser. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/CorpGroupKey"
+            }, {
+              "$ref" : "#/definitions/CorpGroupInfo"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/Status"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "CorpGroupKey" : {
+      "description" : "Key for a CorpGroup",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The URL-encoded name of the AD/LDAP group. Serves as a globally unique identifier within DataHub.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "CorpGroupInfo" : {
+      "description" : "Information about a Corp Group ingested from a third party source",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "displayName" : {
+          "default" : null,
+          "description" : "The name of the group.",
+          "type" : "string"
+        },
+        "email" : {
+          "default" : null,
+          "description" : "email of this group",
+          "type" : "string"
+        },
+        "admins" : {
+          "description" : "owners of this group\nDeprecated! Replaced by Ownership aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "members" : {
+          "description" : "List of ldap urn in this group.\nDeprecated! Replaced by GroupMembership aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "groups" : {
+          "description" : "List of groups in this group.\nDeprecated! This field is unused.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "A description of the group.",
+          "type" : "string"
+        },
+        "slack" : {
+          "default" : null,
+          "description" : "Slack channel for the group",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Created Audit stamp",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "admins", "members", "groups" ]
+    },
+    "CorpUserSnapshot" : {
+      "description" : "A metadata snapshot for a specific CorpUser entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the CorpUser. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/CorpUserKey"
+            }, {
+              "$ref" : "#/definitions/CorpUserInfo"
+            }, {
+              "$ref" : "#/definitions/CorpUserEditableInfo"
+            }, {
+              "$ref" : "#/definitions/CorpUserStatus"
+            }, {
+              "$ref" : "#/definitions/GroupMembership"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/Status"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "CorpUserKey" : {
+      "description" : "Key for a CorpUser",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "username" : {
+          "description" : "The name of the AD/LDAP user.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "username" ]
+    },
+    "CorpUserInfo" : {
+      "description" : "Linkedin corp user information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "active" : {
+          "description" : "Deprecated! Use CorpUserStatus instead. Whether the corpUser is active, ref: https://iwww.corp.linkedin.com/wiki/cf/display/GTSD/Accessing+Active+Directory+via+LDAP+tools",
+          "type" : "boolean"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "displayName of this user ,  e.g.  Hang Zhang(DataHQ)",
+          "type" : "string"
+        },
+        "email" : {
+          "default" : null,
+          "description" : "email address of this user",
+          "type" : "string"
+        },
+        "title" : {
+          "default" : null,
+          "description" : "title of this user",
+          "type" : "string"
+        },
+        "managerUrn" : {
+          "default" : null,
+          "description" : "direct manager of this user",
+          "type" : "string"
+        },
+        "departmentId" : {
+          "default" : null,
+          "description" : "department id this user belong to",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "departmentName" : {
+          "default" : null,
+          "description" : "department name this user belong to",
+          "type" : "string"
+        },
+        "firstName" : {
+          "default" : null,
+          "description" : "first name of this user",
+          "type" : "string"
+        },
+        "lastName" : {
+          "default" : null,
+          "description" : "last name of this user",
+          "type" : "string"
+        },
+        "fullName" : {
+          "default" : null,
+          "description" : "Common name of this user, format is firstName + lastName (split by a whitespace)",
+          "type" : "string"
+        },
+        "countryCode" : {
+          "default" : null,
+          "description" : "two uppercase letters country code. e.g.  US",
+          "type" : "string"
+        },
+        "system" : {
+          "default" : false,
+          "description" : "Whether the corpUser is a system user.",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "customProperties", "active", "system" ]
+    },
+    "CorpUserEditableInfo" : {
+      "description" : "Linkedin corp user information that can be edited from UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "aboutMe" : {
+          "default" : null,
+          "description" : "About me section of the user",
+          "type" : "string"
+        },
+        "teams" : {
+          "default" : [ ],
+          "description" : "Teams that the user belongs to e.g. Metadata",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "skills" : {
+          "default" : [ ],
+          "description" : "Skills that the user possesses e.g. Machine Learning",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "pictureLink" : {
+          "default" : "assets/platforms/default_avatar.png",
+          "description" : "A URL which points to a picture which user wants to set as a profile photo",
+          "type" : "string"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "DataHub-native display name",
+          "type" : "string"
+        },
+        "title" : {
+          "default" : null,
+          "description" : "DataHub-native Title, e.g. 'Software Engineer'",
+          "type" : "string"
+        },
+        "platforms" : {
+          "default" : null,
+          "description" : "The platforms that the user commonly works with",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "persona" : {
+          "default" : null,
+          "description" : "The user's persona type, based on their role",
+          "type" : "string"
+        },
+        "slack" : {
+          "default" : null,
+          "description" : "Slack handle for the user",
+          "type" : "string"
+        },
+        "phone" : {
+          "default" : null,
+          "description" : "Phone number to contact the user",
+          "type" : "string"
+        },
+        "email" : {
+          "default" : null,
+          "description" : "Email address to contact the user",
+          "type" : "string"
+        },
+        "informationSources" : {
+          "default" : null,
+          "description" : "Information sources that have been used to populate this CorpUserEditableInfo.\nThese include platform resources, such as Slack members or Looker users.\nThey can also refer to other semantic urns in the future.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "teams", "skills", "pictureLink" ]
+    },
+    "CorpUserStatus" : {
+      "description" : "The status of the user, e.g. provisioned, active, suspended, etc.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "status" : {
+          "description" : "Status of the user, e.g. PROVISIONED / ACTIVE / SUSPENDED",
+          "type" : "string"
+        },
+        "lastModified" : {
+          "description" : "Audit stamp containing who last modified the status and when.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "status", "lastModified" ]
+    },
+    "GroupMembership" : {
+      "description" : "Carries information about the CorpGroups a user is in.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "groups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "groups" ]
+    },
+    "DashboardSnapshot" : {
+      "description" : "A metadata snapshot for a specific Dashboard entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the dashboard. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DashboardKey"
+            }, {
+              "$ref" : "#/definitions/DashboardInfo"
+            }, {
+              "$ref" : "#/definitions/EditableDashboardProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlossaryTerms"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DashboardKey" : {
+      "description" : "Key for a Dashboard",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dashboardTool" : {
+          "description" : "The name of the dashboard tool such as looker, redash etc.",
+          "type" : "string"
+        },
+        "dashboardId" : {
+          "description" : "Unique id for the dashboard. This id should be globally unique for a dashboarding tool even when there are multiple deployments of it. As an example, dashboard URL could be used here for Looker such as 'looker.linkedin.com/dashboards/1234'",
+          "type" : "string"
+        }
+      },
+      "required" : [ "dashboardTool", "dashboardId" ]
+    },
+    "DashboardInfo" : {
+      "description" : "Information about a dashboard",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Title of the dashboard",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Detailed description about the dashboard",
+          "type" : "string"
+        },
+        "charts" : {
+          "default" : [ ],
+          "description" : "Charts in a dashboard\nDeprecated! Use chartEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "chartEdges" : {
+          "default" : null,
+          "description" : "Charts in a dashboard",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "datasets" : {
+          "default" : [ ],
+          "description" : "Datasets consumed by a dashboard\nDeprecated! Use datasetEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "datasetEdges" : {
+          "default" : null,
+          "description" : "Datasets consumed by a dashboard",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "dashboards" : {
+          "default" : [ ],
+          "description" : "Dashboards included by this dashboard.\nSome dashboard entities (e.g. PowerBI Apps) can contain other dashboards.\n\nThe Edge's sourceUrn should never be set, as it will always be the base dashboard.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "lastModified" : {
+          "description" : "Captures information about who created/last modified/deleted this dashboard and when",
+          "$ref" : "#/definitions/ChangeAuditStamps"
+        },
+        "dashboardUrl" : {
+          "default" : null,
+          "description" : "URL for the dashboard. This could be used as an external link on DataHub to allow users access/view the dashboard",
+          "type" : "string"
+        },
+        "access" : {
+          "default" : null,
+          "description" : "Access level for the dashboard",
+          "$ref" : "#/definitions/AccessLevel"
+        },
+        "lastRefreshed" : {
+          "default" : null,
+          "description" : "The time when this dashboard last refreshed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "customProperties", "title", "description", "charts", "datasets", "dashboards", "lastModified" ]
+    },
+    "EditableDashboardProperties" : {
+      "description" : "Stores editable changes made to properties. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Edited documentation of the dashboard",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "DataFlowSnapshot" : {
+      "description" : "A metadata snapshot for a specific DataFlow entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the data flow. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataFlowKey"
+            }, {
+              "$ref" : "#/definitions/DataFlowInfo"
+            }, {
+              "$ref" : "#/definitions/EditableDataFlowProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlossaryTerms"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataFlowKey" : {
+      "description" : "Key for a Data Flow",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "orchestrator" : {
+          "description" : "Workflow manager like azkaban, airflow which orchestrates the flow",
+          "type" : "string"
+        },
+        "flowId" : {
+          "description" : "Unique Identifier of the data flow",
+          "type" : "string"
+        },
+        "cluster" : {
+          "description" : "Cluster where the flow is executed",
+          "type" : "string"
+        }
+      },
+      "required" : [ "orchestrator", "flowId", "cluster" ]
+    },
+    "DataFlowInfo" : {
+      "description" : "Information about a Data processing flow",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Flow name",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Flow description",
+          "type" : "string"
+        },
+        "project" : {
+          "default" : null,
+          "description" : "Optional project/namespace associated with the flow",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "env" : {
+          "default" : null,
+          "description" : "Environment for this flow",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "customProperties", "name" ]
+    },
+    "TimeStamp" : {
+      "description" : "A standard event timestamp",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the event occur",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "Optional: The actor urn involved in the event.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time" ]
+    },
+    "FabricType" : {
+      "description" : "Fabric group type",
+      "enum" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ]
+    },
+    "EditableDataFlowProperties" : {
+      "description" : "Stores editable changes made to properties. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Edited documentation of the data flow",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "DataJobSnapshot" : {
+      "description" : "A metadata snapshot for a specific DataJob entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the data job. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataJobKey"
+            }, {
+              "$ref" : "#/definitions/DataJobInfo"
+            }, {
+              "$ref" : "#/definitions/DataJobInputOutput"
+            }, {
+              "$ref" : "#/definitions/EditableDataJobProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlossaryTerms"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataJobKey" : {
+      "description" : "Key for a Data Job",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "flow" : {
+          "description" : "Standardized data processing flow urn representing the flow for the job",
+          "type" : "string"
+        },
+        "jobId" : {
+          "description" : "Unique Identifier of the data job",
+          "type" : "string"
+        }
+      },
+      "required" : [ "flow", "jobId" ]
+    },
+    "DataJobInfo" : {
+      "description" : "Information about a Data processing job",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Job name",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Job description",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "Datajob type\n*NOTE**: AzkabanJobType is deprecated. Please use strings instead.",
+          "type" : "string"
+        },
+        "flowUrn" : {
+          "default" : null,
+          "description" : "DataFlow urn that this job is part of",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "status" : {
+          "default" : null,
+          "description" : "Status of the job - Deprecated for Data Process Instance model.",
+          "$ref" : "#/definitions/JobStatus"
+        },
+        "env" : {
+          "default" : null,
+          "description" : "Environment for this job",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "customProperties", "name", "type" ]
+    },
+    "JobStatus" : {
+      "description" : "Job statuses",
+      "enum" : [ "STARTING", "IN_PROGRESS", "STOPPING", "STOPPED", "COMPLETED", "FAILED", "UNKNOWN", "SKIPPED" ]
+    },
+    "DataJobInputOutput" : {
+      "description" : "Information about the inputs and outputs of a Data processing job",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "inputDatasets" : {
+          "description" : "Input datasets consumed by the data job during processing\nDeprecated! Use inputDatasetEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "inputDatasetEdges" : {
+          "default" : null,
+          "description" : "Input datasets consumed by the data job during processing",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "outputDatasets" : {
+          "description" : "Output datasets produced by the data job during processing\nDeprecated! Use outputDatasetEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "outputDatasetEdges" : {
+          "default" : null,
+          "description" : "Output datasets produced by the data job during processing",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "inputDatajobs" : {
+          "default" : null,
+          "description" : "Input datajobs that this data job depends on\nDeprecated! Use inputDatajobEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "inputDatajobEdges" : {
+          "default" : null,
+          "description" : "Input datajobs that this data job depends on",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "inputDatasetFields" : {
+          "default" : null,
+          "description" : "Fields of the input datasets used by this job",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "outputDatasetFields" : {
+          "default" : null,
+          "description" : "Fields of the output datasets this job writes to",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "fineGrainedLineages" : {
+          "default" : null,
+          "description" : "Fine-grained column-level lineages\nNot currently supported in the UI\nUse UpstreamLineage aspect for datasets to express Column Level Lineage for the UI",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FineGrainedLineage"
+          }
+        }
+      },
+      "required" : [ "inputDatasets", "outputDatasets" ]
+    },
+    "FineGrainedLineage" : {
+      "description" : "A fine-grained lineage from upstream fields/datasets to downstream field(s)",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "upstreamType" : {
+          "description" : "The type of upstream entity",
+          "$ref" : "#/definitions/FineGrainedLineageUpstreamType"
+        },
+        "upstreams" : {
+          "default" : null,
+          "description" : "Upstream entities in the lineage",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "downstreamType" : {
+          "description" : "The type of downstream field(s)",
+          "$ref" : "#/definitions/FineGrainedLineageDownstreamType"
+        },
+        "downstreams" : {
+          "default" : null,
+          "description" : "Downstream fields in the lineage",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "transformOperation" : {
+          "default" : null,
+          "description" : "The transform operation applied to the upstream entities to produce the downstream field(s)",
+          "type" : "string"
+        },
+        "confidenceScore" : {
+          "default" : 1,
+          "description" : "The confidence in this lineage between 0 (low confidence) and 1 (high confidence)",
+          "type" : "number"
+        },
+        "query" : {
+          "default" : null,
+          "description" : "The query that was used to generate this lineage. \nPresent only if the lineage was generated from a detected query.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "upstreamType", "downstreamType", "confidenceScore" ]
+    },
+    "FineGrainedLineageUpstreamType" : {
+      "description" : "The type of upstream entity in a fine-grained lineage",
+      "enum" : [ "FIELD_SET", "DATASET", "NONE" ]
+    },
+    "FineGrainedLineageDownstreamType" : {
+      "description" : "The type of downstream field(s) in a fine-grained lineage",
+      "enum" : [ "FIELD", "FIELD_SET" ]
+    },
+    "EditableDataJobProperties" : {
+      "description" : "Stores editable changes made to properties. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Edited documentation of the data job ",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "DatasetSnapshot" : {
+      "description" : "A metadata snapshot for a specific dataset entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the dataset. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DatasetKey"
+            }, {
+              "$ref" : "#/definitions/DatasetProperties"
+            }, {
+              "$ref" : "#/definitions/EditableDatasetProperties"
+            }, {
+              "$ref" : "#/definitions/DatasetDeprecation"
+            }, {
+              "$ref" : "#/definitions/DatasetUpstreamLineage"
+            }, {
+              "$ref" : "#/definitions/UpstreamLineage"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/SchemaMetadata"
+            }, {
+              "$ref" : "#/definitions/EditableSchemaMetadata"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/GlossaryTerms"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/ViewProperties"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DatasetKey" : {
+      "description" : "Key for a Dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Data platform urn associated with the dataset",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Unique guid for dataset",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where dataset belongs to or where it was generated.",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "platform", "name", "origin" ]
+    },
+    "DatasetProperties" : {
+      "description" : "Properties associated with a Dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the Dataset",
+          "type" : "string"
+        },
+        "qualifiedName" : {
+          "default" : null,
+          "description" : "Fully-qualified name of the Dataset",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the dataset",
+          "type" : "string"
+        },
+        "uri" : {
+          "default" : null,
+          "description" : "The abstracted URI such as hdfs:///data/tracking/PageViewEvent, file:///dir/file_name. Uri should not include any environment specific properties. Some datasets might not have a standardized uri, which makes this field optional (i.e. kafka topic).",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "tags" : {
+          "default" : [ ],
+          "description" : "[Legacy] Unstructured tags for the dataset. Structured tags can be applied via the `GlobalTags` aspect.\nThis is now deprecated.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties", "tags" ]
+    },
+    "EditableDatasetProperties" : {
+      "description" : "EditableDatasetProperties stores editable changes made to dataset properties. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the dataset",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Editable display name of the Dataset",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "DatasetDeprecation" : {
+      "description" : "Dataset deprecation status\nDeprecated! This aspect is deprecated in favor of the more-general-purpose 'Deprecation' aspect.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "deprecated" : {
+          "description" : "Whether the dataset is deprecated by owner.",
+          "type" : "boolean"
+        },
+        "decommissionTime" : {
+          "default" : null,
+          "description" : "The time user plan to decommission this dataset.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "note" : {
+          "description" : "Additional information about the dataset deprecation plan, such as the wiki, doc, RB.",
+          "type" : "string"
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "The corpuser URN which will be credited for modifying this deprecation content.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "deprecated", "note" ]
+    },
+    "DatasetUpstreamLineage" : {
+      "description" : "Fine Grained upstream lineage for fields in a dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldMappings" : {
+          "description" : "Upstream to downstream field level lineage mappings",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DatasetFieldMapping"
+          }
+        }
+      },
+      "required" : [ "fieldMappings" ]
+    },
+    "DatasetFieldMapping" : {
+      "description" : "Representation of mapping between fields in source dataset to the field in destination dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "description" : "Audit stamp containing who reported the field mapping and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "transformation" : {
+          "description" : "Transfomration function between the fields involved",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/TransformationType"
+          }, {
+            "$ref" : "#/definitions/UDFTransformer"
+          } ]
+        },
+        "sourceFields" : {
+          "description" : "Source fields from which the fine grained lineage is derived",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "destinationField" : {
+          "description" : "Destination field which is derived from source fields",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "transformation", "sourceFields", "destinationField" ]
+    },
+    "TransformationType" : {
+      "description" : "Type of the transformation involved in generating destination fields from source fields.",
+      "enum" : [ "BLACKBOX", "IDENTITY" ]
+    },
+    "UDFTransformer" : {
+      "description" : "Field transformation expressed in UDF",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "udf" : {
+          "description" : "A UDF mentioning how the source fields got transformed to destination field. This is the FQCN(Fully Qualified Class Name) of the udf.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "udf" ]
+    },
+    "UpstreamLineage" : {
+      "description" : "Upstream lineage of a dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "upstreams" : {
+          "description" : "List of upstream dataset lineage information",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Upstream"
+          }
+        },
+        "fineGrainedLineages" : {
+          "default" : null,
+          "description" : " List of fine-grained lineage information, including field-level lineage",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FineGrainedLineage"
+          }
+        }
+      },
+      "required" : [ "upstreams" ]
+    },
+    "Upstream" : {
+      "description" : "Upstream lineage information about a dataset including the source reporting the lineage",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "auditStamp" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "Audit stamp containing who reported the lineage and when.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created the lineage and when.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "dataset" : {
+          "description" : "The upstream dataset the lineage points to",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the lineage",
+          "$ref" : "#/definitions/DatasetLineageType"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : "A generic properties bag that allows us to store specific information on this graph edge.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "query" : {
+          "default" : null,
+          "description" : "If the lineage is generated by a query, a reference to the query",
+          "type" : "string"
+        }
+      },
+      "required" : [ "auditStamp", "dataset", "type" ]
+    },
+    "DatasetLineageType" : {
+      "description" : "The various types of supported dataset lineage",
+      "enum" : [ "COPY", "TRANSFORMED", "VIEW" ]
+    },
+    "SchemaMetadata" : {
+      "description" : "SchemaMetadata to describe metadata related to store schema",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schemaName" : {
+          "description" : "Schema name e.g. PageViewEvent, identity.Profile, ams.account_management_tracking",
+          "type" : "string"
+        },
+        "platform" : {
+          "description" : "Standardized platform urn where schema is defined. The data platform Urn (urn:li:platform:{platform_name})",
+          "type" : "string"
+        },
+        "version" : {
+          "description" : "Every change to SchemaMetadata in the resource results in a new version. Version is server assigned. This version is differ from platform native schema version.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "dataset" : {
+          "default" : null,
+          "description" : "Dataset this schema metadata is associated with.",
+          "type" : "string"
+        },
+        "cluster" : {
+          "default" : null,
+          "description" : "The cluster this schema metadata resides from",
+          "type" : "string"
+        },
+        "hash" : {
+          "description" : "the SHA1 hash of the schema content",
+          "type" : "string"
+        },
+        "platformSchema" : {
+          "description" : "The native schema in the dataset's platform.",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/EspressoSchema"
+          }, {
+            "$ref" : "#/definitions/OracleDDL"
+          }, {
+            "$ref" : "#/definitions/MySqlDDL"
+          }, {
+            "$ref" : "#/definitions/PrestoDDL"
+          }, {
+            "$ref" : "#/definitions/KafkaSchema"
+          }, {
+            "$ref" : "#/definitions/BinaryJsonSchema"
+          }, {
+            "$ref" : "#/definitions/OrcSchema"
+          }, {
+            "$ref" : "#/definitions/Schemaless"
+          }, {
+            "$ref" : "#/definitions/KeyValueSchema"
+          }, {
+            "$ref" : "#/definitions/OtherSchema"
+          } ]
+        },
+        "fields" : {
+          "description" : "Client provided a list of fields from document schema.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SchemaField"
+          }
+        },
+        "primaryKeys" : {
+          "default" : null,
+          "description" : "Client provided list of fields that define primary keys to access record. Field order defines hierarchical espresso keys. Empty lists indicates absence of primary key access patter. Value is a SchemaField@fieldPath.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "foreignKeysSpecs" : {
+          "default" : null,
+          "description" : "Map captures all the references schema makes to external datasets. Map key is ForeignKeySpecName typeref.",
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ForeignKeySpec"
+          }
+        },
+        "foreignKeys" : {
+          "default" : null,
+          "description" : "List of foreign key constraints for the schema",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ForeignKeyConstraint"
+          }
+        }
+      },
+      "required" : [ "schemaName", "platform", "version", "created", "lastModified", "hash", "platformSchema", "fields" ]
+    },
+    "EspressoSchema" : {
+      "description" : "Schema text of an espresso table schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "documentSchema" : {
+          "description" : "The native espresso document schema.",
+          "type" : "string"
+        },
+        "tableSchema" : {
+          "description" : "The espresso table schema definition.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "documentSchema", "tableSchema" ]
+    },
+    "OracleDDL" : {
+      "description" : "Schema holder for oracle data definition language that describes an oracle table.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tableSchema" : {
+          "description" : "The native schema in the dataset's platform. This is a human readable (json blob) table schema.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "tableSchema" ]
+    },
+    "MySqlDDL" : {
+      "description" : "Schema holder for MySql data definition language that describes an MySql table.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tableSchema" : {
+          "description" : "The native schema in the dataset's platform. This is a human readable (json blob) table schema.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "tableSchema" ]
+    },
+    "PrestoDDL" : {
+      "description" : "Schema holder for presto data definition language that describes a presto view.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawSchema" : {
+          "description" : "The raw schema in the dataset's platform. This includes the DDL and the columns extracted from DDL.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "rawSchema" ]
+    },
+    "KafkaSchema" : {
+      "description" : "Schema holder for kafka schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "documentSchema" : {
+          "description" : "The native kafka document schema. This is a human readable avro document schema.",
+          "type" : "string"
+        },
+        "documentSchemaType" : {
+          "default" : null,
+          "description" : "The native kafka document schema type. This can be AVRO/PROTOBUF/JSON.",
+          "type" : "string"
+        },
+        "keySchema" : {
+          "default" : null,
+          "description" : "The native kafka key schema as retrieved from Schema Registry",
+          "type" : "string"
+        },
+        "keySchemaType" : {
+          "default" : null,
+          "description" : "The native kafka key schema type. This can be AVRO/PROTOBUF/JSON.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "documentSchema" ]
+    },
+    "BinaryJsonSchema" : {
+      "description" : "Schema text of binary JSON schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schema" : {
+          "description" : "The native schema text for binary JSON file format.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "schema" ]
+    },
+    "OrcSchema" : {
+      "description" : "Schema text of an ORC schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schema" : {
+          "description" : "The native schema for ORC file format.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "schema" ]
+    },
+    "Schemaless" : { },
+    "KeyValueSchema" : {
+      "description" : "Schema text of a key-value store schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "keySchema" : {
+          "description" : "The raw schema for the key in the key-value store.",
+          "type" : "string"
+        },
+        "valueSchema" : {
+          "description" : "The raw schema for the value in the key-value store.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "keySchema", "valueSchema" ]
+    },
+    "OtherSchema" : {
+      "description" : "Schema holder for undefined schema types.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawSchema" : {
+          "description" : "The native schema in the dataset's platform.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "rawSchema" ]
+    },
+    "SchemaField" : {
+      "description" : "SchemaField to describe metadata related to dataset schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldPath" : {
+          "description" : "Flattened name of the field. Field is computed from jsonPath field.",
+          "type" : "string"
+        },
+        "jsonPath" : {
+          "default" : null,
+          "description" : "Flattened name of a field in JSON Path notation.",
+          "type" : "string"
+        },
+        "nullable" : {
+          "default" : false,
+          "description" : "Indicates if this field is optional or nullable",
+          "type" : "boolean"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description",
+          "type" : "string"
+        },
+        "label" : {
+          "default" : null,
+          "description" : "Label of the field. Provides a more human-readable name for the field than field path. Some sources will\nprovide this metadata but not all sources have the concept of a label. If just one string is associated with\na field in a source, that is most likely a description.\n\nNote that this field is deprecated and is not surfaced in the UI.",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the creation of this schema field.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the last modification of this schema field.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "type" : {
+          "description" : "Platform independent field type of the field.",
+          "$ref" : "#/definitions/SchemaFieldDataType"
+        },
+        "nativeDataType" : {
+          "description" : "The native type of the field in the dataset's platform as declared by platform schema.",
+          "type" : "string"
+        },
+        "recursive" : {
+          "default" : false,
+          "description" : "There are use cases when a field in type B references type A. A field in A references field of type B. In such cases, we will mark the first field as recursive.",
+          "type" : "boolean"
+        },
+        "globalTags" : {
+          "default" : null,
+          "description" : "Tags associated with the field",
+          "$ref" : "#/definitions/GlobalTags"
+        },
+        "glossaryTerms" : {
+          "default" : null,
+          "description" : "Glossary terms associated with the field",
+          "$ref" : "#/definitions/GlossaryTerms"
+        },
+        "isPartOfKey" : {
+          "default" : false,
+          "description" : "For schema fields that are part of complex keys, set this field to true\nWe do this to easily distinguish between value and key fields",
+          "type" : "boolean"
+        },
+        "isPartitioningKey" : {
+          "default" : null,
+          "description" : "For Datasets which are partitioned, this determines the partitioning key.\nNote that multiple columns can be part of a partitioning key, but currently we do not support\nrendering the ordered partitioning key.",
+          "type" : "boolean"
+        },
+        "jsonProps" : {
+          "default" : null,
+          "description" : "For schema fields that have other properties that are not modeled explicitly,\nuse this field to serialize those properties into a JSON string",
+          "type" : "string"
+        }
+      },
+      "required" : [ "fieldPath", "nullable", "type", "nativeDataType", "recursive", "isPartOfKey" ]
+    },
+    "SchemaFieldDataType" : {
+      "description" : "Schema field data types",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Data platform specific types",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/BooleanType"
+          }, {
+            "$ref" : "#/definitions/FixedType"
+          }, {
+            "$ref" : "#/definitions/StringType"
+          }, {
+            "$ref" : "#/definitions/BytesType"
+          }, {
+            "$ref" : "#/definitions/NumberType"
+          }, {
+            "$ref" : "#/definitions/DateType"
+          }, {
+            "$ref" : "#/definitions/TimeType"
+          }, {
+            "$ref" : "#/definitions/EnumType"
+          }, {
+            "$ref" : "#/definitions/NullType"
+          }, {
+            "$ref" : "#/definitions/MapType"
+          }, {
+            "$ref" : "#/definitions/ArrayType"
+          }, {
+            "$ref" : "#/definitions/UnionType"
+          }, {
+            "$ref" : "#/definitions/RecordType"
+          } ]
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "BooleanType" : { },
+    "FixedType" : { },
+    "StringType" : { },
+    "BytesType" : { },
+    "NumberType" : { },
+    "DateType" : { },
+    "TimeType" : { },
+    "EnumType" : { },
+    "NullType" : { },
+    "MapType" : {
+      "description" : "Map field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "keyType" : {
+          "default" : null,
+          "description" : "Key type in a map",
+          "type" : "string"
+        },
+        "valueType" : {
+          "default" : null,
+          "description" : "Type of the value in a map",
+          "type" : "string"
+        }
+      }
+    },
+    "ArrayType" : {
+      "description" : "Array field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedType" : {
+          "default" : null,
+          "description" : "List of types this array holds.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "UnionType" : {
+      "description" : "Union field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedTypes" : {
+          "default" : null,
+          "description" : "List of types in union type.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "RecordType" : { },
+    "ForeignKeySpec" : {
+      "description" : "Description of a foreign key in a schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "foreignKey" : {
+          "description" : "Foreign key definition in metadata schema.",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/DatasetFieldForeignKey"
+          }, {
+            "$ref" : "#/definitions/UrnForeignKey"
+          } ]
+        }
+      },
+      "required" : [ "foreignKey" ]
+    },
+    "DatasetFieldForeignKey" : {
+      "description" : "For non-urn based foregin keys.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "parentDataset" : {
+          "description" : "dataset that stores the resource.",
+          "type" : "string"
+        },
+        "currentFieldPaths" : {
+          "description" : "List of fields in hosting(current) SchemaMetadata that conform a foreign key. List can contain a single entry or multiple entries if several entries in hosting schema conform a foreign key in a single parent dataset.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "parentField" : {
+          "description" : "SchemaField@fieldPath that uniquely identify field in parent dataset that this field references.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "parentDataset", "currentFieldPaths", "parentField" ]
+    },
+    "UrnForeignKey" : {
+      "description" : "If SchemaMetadata fields make any external references and references are of type com.linkedin.common.Urn or any children, this models can be used to mark it.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "currentFieldPath" : {
+          "description" : "Field in hosting(current) SchemaMetadata.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "currentFieldPath" ]
+    },
+    "ForeignKeyConstraint" : {
+      "description" : "Description of a foreign key constraint in a schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the constraint, likely provided from the source",
+          "type" : "string"
+        },
+        "foreignFields" : {
+          "description" : "Fields the constraint maps to on the foreign dataset",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "sourceFields" : {
+          "description" : "Fields the constraint maps to on the source dataset",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "foreignDataset" : {
+          "description" : "Reference to the foreign dataset for ease of lookup",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "foreignFields", "sourceFields", "foreignDataset" ]
+    },
+    "EditableSchemaMetadata" : {
+      "description" : "EditableSchemaMetadata stores editable changes made to schema metadata. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "editableSchemaFieldInfo" : {
+          "description" : "Client provided a list of fields from document schema.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EditableSchemaFieldInfo"
+          }
+        }
+      },
+      "required" : [ "created", "lastModified", "editableSchemaFieldInfo" ]
+    },
+    "EditableSchemaFieldInfo" : {
+      "description" : "SchemaField to describe metadata related to dataset schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldPath" : {
+          "description" : "FieldPath uniquely identifying the SchemaField this metadata is associated with",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description",
+          "type" : "string"
+        },
+        "globalTags" : {
+          "default" : null,
+          "description" : "Tags associated with the field",
+          "$ref" : "#/definitions/GlobalTags"
+        },
+        "glossaryTerms" : {
+          "default" : null,
+          "description" : "Glossary terms associated with the field",
+          "$ref" : "#/definitions/GlossaryTerms"
+        }
+      },
+      "required" : [ "fieldPath" ]
+    },
+    "ViewProperties" : {
+      "description" : "Details about a View. \ne.g. Gets activated when subTypes is view",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "materialized" : {
+          "description" : "Whether the view is materialized",
+          "type" : "boolean"
+        },
+        "viewLogic" : {
+          "description" : "The view logic",
+          "type" : "string"
+        },
+        "formattedViewLogic" : {
+          "default" : null,
+          "description" : "The formatted view logic. This is particularly used for SQL sources, where the SQL\nlogic is formatted for better readability, and with dbt, where this contains the\ncompiled SQL logic.",
+          "type" : "string"
+        },
+        "viewLanguage" : {
+          "description" : "The view logic language / dialect",
+          "type" : "string"
+        }
+      },
+      "required" : [ "materialized", "viewLogic", "viewLanguage" ]
+    },
+    "DataProcessSnapshot" : {
+      "description" : "A metadata snapshot for a specific Data process entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the data process. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataProcessKey"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/DataProcessInfo"
+            }, {
+              "$ref" : "#/definitions/Status"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataProcessKey" : {
+      "description" : "Key for a Data Process",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Process name i.e. an ETL job name",
+          "type" : "string"
+        },
+        "orchestrator" : {
+          "description" : "Standardized Orchestrator where data process is defined.\nTODO: Migrate towards something that can be validated like DataPlatform urn",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where dataset belongs to or where it was generated.",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "name", "orchestrator", "origin" ]
+    },
+    "DataProcessInfo" : {
+      "description" : "The inputs and outputs of this data process",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "inputs" : {
+          "default" : null,
+          "description" : "the inputs of the data process",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "outputs" : {
+          "default" : null,
+          "description" : "the outputs of the data process",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "DataPlatformSnapshot" : {
+      "description" : "A metadata snapshot for a specific dataplatform entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the data platform. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataPlatformKey"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInfo"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataPlatformKey" : {
+      "description" : "Key for a Data Platform",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platformName" : {
+          "description" : "Data platform name i.e. hdfs, oracle, espresso",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platformName" ]
+    },
+    "DataPlatformInfo" : {
+      "description" : "Information about a data platform",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the data platform",
+          "type" : "string"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "The name that will be used for displaying a platform type.",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "Platform type this data platform describes",
+          "$ref" : "#/definitions/PlatformType"
+        },
+        "datasetNameDelimiter" : {
+          "description" : "The delimiter in the dataset names on the data platform, e.g. '/' for HDFS and '.' for Oracle",
+          "type" : "string"
+        },
+        "logoUrl" : {
+          "default" : null,
+          "description" : "The URL for a logo associated with the platform",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "type", "datasetNameDelimiter" ]
+    },
+    "PlatformType" : {
+      "description" : "Platform types available at LinkedIn",
+      "enum" : [ "FILE_SYSTEM", "KEY_VALUE_STORE", "MESSAGE_BROKER", "OBJECT_STORE", "OLAP_DATASTORE", "OTHERS", "QUERY_ENGINE", "RELATIONAL_DB", "SEARCH_ENGINE" ]
+    },
+    "MLModelSnapshot" : {
+      "description" : "MLModel Snapshot entity details.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the MLModel. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/MLModelKey"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/MLModelProperties"
+            }, {
+              "$ref" : "#/definitions/IntendedUse"
+            }, {
+              "$ref" : "#/definitions/MLModelFactorPrompts"
+            }, {
+              "$ref" : "#/definitions/Metrics"
+            }, {
+              "$ref" : "#/definitions/EvaluationData"
+            }, {
+              "$ref" : "#/definitions/TrainingData"
+            }, {
+              "$ref" : "#/definitions/QuantitativeAnalyses"
+            }, {
+              "$ref" : "#/definitions/EthicalConsiderations"
+            }, {
+              "$ref" : "#/definitions/CaveatsAndRecommendations"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/SourceCode"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/Cost"
+            }, {
+              "$ref" : "#/definitions/Deprecation"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "MLModelKey" : {
+      "description" : "Key for an ML model",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Standardized platform urn for the model",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the MLModel",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where model belongs to or where it was generated",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "platform", "name", "origin" ]
+    },
+    "MLModelProperties" : {
+      "description" : "Properties associated with a ML Model",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "trainingJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "downstreamJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) that use the model or group.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the MLModel",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLModel",
+          "type" : "string"
+        },
+        "date" : {
+          "default" : null,
+          "description" : "Date when the MLModel was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created this and when",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Date when the MLModel was last modified",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Version of the MLModel",
+          "$ref" : "#/definitions/VersionTag"
+        },
+        "type" : {
+          "default" : null,
+          "description" : "Type of Algorithm or MLModel such as whether it is a Naive Bayes classifier, Convolutional Neural Network, etc",
+          "type" : "string"
+        },
+        "hyperParameters" : {
+          "default" : null,
+          "description" : "Hyper Parameters of the MLModel\n\nNOTE: these are deprecated in favor of hyperParams",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "hyperParams" : {
+          "default" : null,
+          "description" : "Hyperparameters of the MLModel",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLHyperParam"
+          }
+        },
+        "trainingMetrics" : {
+          "default" : null,
+          "description" : "Metrics of the MLModel used in training",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLMetric"
+          }
+        },
+        "onlineMetrics" : {
+          "default" : null,
+          "description" : "Metrics of the MLModel used in production",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLMetric"
+          }
+        },
+        "mlFeatures" : {
+          "default" : null,
+          "description" : "List of features used for MLModel training",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "tags" : {
+          "default" : [ ],
+          "description" : "Tags for the MLModel",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "deployments" : {
+          "default" : null,
+          "description" : "Deployments for the MLModel",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "groups" : {
+          "default" : null,
+          "description" : "Groups the model belongs to",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties", "tags" ]
+    },
+    "VersionTag" : {
+      "description" : "A resource-defined string representing the resource state for the purpose of concurrency control",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "versionTag" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "metadataAttribution" : {
+          "default" : null,
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      }
+    },
+    "MLHyperParam" : {
+      "description" : "Properties associated with an ML Hyper Param",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the MLHyperParam",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLHyperParam",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the MLHyperParam",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the MLHyperParam was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "MLMetric" : {
+      "description" : "Properties associated with an ML Metric",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the mlMetric",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the mlMetric",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the mlMetric",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the mlMetric was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "IntendedUse" : {
+      "description" : "Intended Use for the ML Model",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "primaryUses" : {
+          "default" : null,
+          "description" : "Primary Use cases for the MLModel.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "primaryUsers" : {
+          "default" : null,
+          "description" : "Primary Intended Users - For example, was the MLModel developed for entertainment purposes, for hobbyists, or enterprise solutions?",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IntendedUserType"
+          }
+        },
+        "outOfScopeUses" : {
+          "default" : null,
+          "description" : "Highlight technology that the MLModel might easily be confused with, or related contexts that users could try to apply the MLModel to.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "IntendedUserType" : {
+      "enum" : [ "ENTERPRISE", "HOBBY", "ENTERTAINMENT" ]
+    },
+    "MLModelFactorPrompts" : {
+      "description" : "Prompts which affect the performance of the MLModel",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "relevantFactors" : {
+          "default" : null,
+          "description" : "What are foreseeable salient factors for which MLModel performance may vary, and how were these determined?",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLModelFactors"
+          }
+        },
+        "evaluationFactors" : {
+          "default" : null,
+          "description" : "Which factors are being reported, and why were these chosen?",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLModelFactors"
+          }
+        }
+      }
+    },
+    "MLModelFactors" : {
+      "description" : "Factors affecting the performance of the MLModel.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "groups" : {
+          "default" : null,
+          "description" : "Groups refers to distinct categories with similar characteristics that are present in the evaluation data instances.\nFor human-centric machine learning MLModels, groups are people who share one or multiple characteristics.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "instrumentation" : {
+          "default" : null,
+          "description" : "The performance of a MLModel can vary depending on what instruments were used to capture the input to the MLModel.\nFor example, a face detection model may perform differently depending on the camera's hardware and software,\nincluding lens, image stabilization, high dynamic range techniques, and background blurring for portrait mode.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "environment" : {
+          "default" : null,
+          "description" : "A further factor affecting MLModel performance is the environment in which it is deployed.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Metrics" : {
+      "description" : "Metrics to be featured for the MLModel.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "performanceMeasures" : {
+          "default" : null,
+          "description" : "Measures of MLModel performance",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "decisionThreshold" : {
+          "default" : null,
+          "description" : "Decision Thresholds used (if any)?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "EvaluationData" : {
+      "description" : "All referenced datasets would ideally point to any set of documents that provide visibility into the source and composition of the dataset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "evaluationData" : {
+          "description" : "Details on the dataset(s) used for the quantitative analyses in the MLModel",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BaseData"
+          }
+        }
+      },
+      "required" : [ "evaluationData" ]
+    },
+    "BaseData" : {
+      "description" : "BaseData record",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dataset" : {
+          "description" : "What dataset were used in the MLModel?",
+          "type" : "string"
+        },
+        "motivation" : {
+          "default" : null,
+          "description" : "Why was this dataset chosen?",
+          "type" : "string"
+        },
+        "preProcessing" : {
+          "default" : null,
+          "description" : "How was the data preprocessed (e.g., tokenization of sentences, cropping of images, any filtering such as dropping images without faces)?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "dataset" ]
+    },
+    "TrainingData" : {
+      "description" : "Ideally, the MLModel card would contain as much information about the training data as the evaluation data. However, there might be cases where it is not feasible to provide this level of detailed information about the training data. For example, the data may be proprietary, or require a non-disclosure agreement. In these cases, we advocate for basic details about the distributions over groups in the data, as well as any other details that could inform stakeholders on the kinds of biases the model may have encoded.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "trainingData" : {
+          "description" : "Details on the dataset(s) used for training the MLModel",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BaseData"
+          }
+        }
+      },
+      "required" : [ "trainingData" ]
+    },
+    "QuantitativeAnalyses" : {
+      "description" : "Quantitative analyses should be disaggregated, that is, broken down by the chosen factors. Quantitative analyses should provide the results of evaluating the MLModel according to the chosen metrics, providing confidence interval values when possible.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "unitaryResults" : {
+          "default" : null,
+          "description" : "Link to a dashboard with results showing how the MLModel performed with respect to each factor",
+          "type" : "string"
+        },
+        "intersectionalResults" : {
+          "default" : null,
+          "description" : "Link to a dashboard with results showing how the MLModel performed with respect to the intersection of evaluated factors?",
+          "type" : "string"
+        }
+      }
+    },
+    "EthicalConsiderations" : {
+      "description" : "This section is intended to demonstrate the ethical considerations that went into MLModel development, surfacing ethical challenges and solutions to stakeholders.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "data" : {
+          "default" : null,
+          "description" : "Does the MLModel use any sensitive data (e.g., protected classes)?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "humanLife" : {
+          "default" : null,
+          "description" : " Is the MLModel intended to inform decisions about matters central to human life or flourishing - e.g., health or safety? Or could it be used in such a way?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "mitigations" : {
+          "default" : null,
+          "description" : "What risk mitigation strategies were used during MLModel development?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "risksAndHarms" : {
+          "default" : null,
+          "description" : "What risks may be present in MLModel usage? Try to identify the potential recipients, likelihood, and magnitude of harms. If these cannot be determined, note that they were considered but remain unknown.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "useCases" : {
+          "default" : null,
+          "description" : "Are there any known MLModel use cases that are especially fraught? This may connect directly to the intended use section",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "CaveatsAndRecommendations" : {
+      "description" : "This section should list additional concerns that were not covered in the previous sections. For example, did the results suggest any further testing? Were there any relevant groups that were not represented in the evaluation dataset? Are there additional recommendations for model use?",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "caveats" : {
+          "default" : null,
+          "description" : "This section should list additional concerns that were not covered in the previous sections. For example, did the results suggest any further testing? Were there any relevant groups that were not represented in the evaluation dataset?",
+          "$ref" : "#/definitions/CaveatDetails"
+        },
+        "recommendations" : {
+          "default" : null,
+          "description" : "Recommendations on where this MLModel should be used.",
+          "type" : "string"
+        },
+        "idealDatasetCharacteristics" : {
+          "default" : null,
+          "description" : "Ideal characteristics of an evaluation dataset for this MLModel",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "CaveatDetails" : {
+      "description" : "This section should list additional concerns that were not covered in the previous sections. For example, did the results suggest any further testing? Were there any relevant groups that were not represented in the evaluation dataset? Are there additional recommendations for model use?",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "needsFurtherTesting" : {
+          "default" : null,
+          "description" : "Did the results suggest any further testing?",
+          "type" : "boolean"
+        },
+        "caveatDescription" : {
+          "default" : null,
+          "description" : "Caveat Description\nFor ex: Given gender classes are binary (male/not male), which we include as male/female. Further work needed to evaluate across a spectrum of genders.",
+          "type" : "string"
+        },
+        "groupsNotRepresented" : {
+          "default" : null,
+          "description" : "Relevant groups that were not represented in the evaluation dataset?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "SourceCode" : {
+      "description" : "Source Code",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "sourceCode" : {
+          "description" : "Source Code along with types",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SourceCodeUrl"
+          }
+        }
+      },
+      "required" : [ "sourceCode" ]
+    },
+    "SourceCodeUrl" : {
+      "description" : "Source Code Url Entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Source Code Url Types",
+          "$ref" : "#/definitions/SourceCodeUrlType"
+        },
+        "sourceCodeUrl" : {
+          "description" : "Source Code Url",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type", "sourceCodeUrl" ]
+    },
+    "SourceCodeUrlType" : {
+      "enum" : [ "ML_MODEL_SOURCE_CODE", "TRAINING_PIPELINE_SOURCE_CODE", "EVALUATION_PIPELINE_SOURCE_CODE" ]
+    },
+    "Cost" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "costType" : {
+          "$ref" : "#/definitions/CostType"
+        },
+        "cost" : {
+          "$ref" : "#/definitions/CostCost"
+        }
+      },
+      "required" : [ "costType", "cost" ]
+    },
+    "CostType" : {
+      "description" : "Type of Cost Code",
+      "enum" : [ "ORG_COST_TYPE" ]
+    },
+    "CostCost" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "costId" : {
+          "default" : null,
+          "type" : "number"
+        },
+        "costCode" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "fieldDiscriminator" : {
+          "description" : "Contains the name of the field that has its value set.",
+          "$ref" : "#/definitions/CostCostDiscriminator"
+        }
+      },
+      "required" : [ "fieldDiscriminator" ]
+    },
+    "CostCostDiscriminator" : {
+      "enum" : [ "costId", "costCode" ]
+    },
+    "Deprecation" : {
+      "description" : "Deprecation status of an entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "deprecated" : {
+          "description" : "Whether the entity is deprecated.",
+          "type" : "boolean"
+        },
+        "decommissionTime" : {
+          "default" : null,
+          "description" : "The time user plan to decommission this entity.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "note" : {
+          "description" : "Additional information about the entity deprecation plan, such as the wiki, doc, RB.",
+          "type" : "string"
+        },
+        "actor" : {
+          "description" : "The user URN which will be credited for modifying this deprecation content.",
+          "type" : "string"
+        },
+        "replacement" : {
+          "default" : null,
+          "type" : "string"
+        }
+      },
+      "required" : [ "deprecated", "note", "actor" ]
+    },
+    "MLPrimaryKeySnapshot" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the MLPrimaryKey. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/MLPrimaryKeyKey"
+            }, {
+              "$ref" : "#/definitions/MLPrimaryKeyProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/Deprecation"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "MLPrimaryKeyKey" : {
+      "description" : "Key for an MLPrimaryKey",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "featureNamespace" : {
+          "description" : "Namespace for the primary key",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the primary key",
+          "type" : "string"
+        }
+      },
+      "required" : [ "featureNamespace", "name" ]
+    },
+    "MLPrimaryKeyProperties" : {
+      "description" : "Properties associated with a MLPrimaryKey",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLPrimaryKey",
+          "type" : "string"
+        },
+        "dataType" : {
+          "default" : null,
+          "description" : "Data Type of the MLPrimaryKey",
+          "$ref" : "#/definitions/MLFeatureDataType"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Version of the MLPrimaryKey",
+          "$ref" : "#/definitions/VersionTag"
+        },
+        "sources" : {
+          "description" : "Source of the MLPrimaryKey",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties", "sources" ]
+    },
+    "MLFeatureDataType" : {
+      "description" : "MLFeature Data Type",
+      "enum" : [ "USELESS", "NOMINAL", "ORDINAL", "BINARY", "COUNT", "TIME", "INTERVAL", "IMAGE", "VIDEO", "AUDIO", "TEXT", "MAP", "SEQUENCE", "SET", "CONTINUOUS", "BYTE", "UNKNOWN" ]
+    },
+    "MLFeatureSnapshot" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the MLFeature. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/MLFeatureKey"
+            }, {
+              "$ref" : "#/definitions/MLFeatureProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/Deprecation"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "MLFeatureKey" : {
+      "description" : "Key for an MLFeature",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "featureNamespace" : {
+          "description" : "Namespace for the feature",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the feature",
+          "type" : "string"
+        }
+      },
+      "required" : [ "featureNamespace", "name" ]
+    },
+    "MLFeatureProperties" : {
+      "description" : "Properties associated with a MLFeature",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLFeature",
+          "type" : "string"
+        },
+        "dataType" : {
+          "default" : null,
+          "description" : "Data Type of the MLFeature",
+          "$ref" : "#/definitions/MLFeatureDataType"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Version of the MLFeature",
+          "$ref" : "#/definitions/VersionTag"
+        },
+        "sources" : {
+          "default" : null,
+          "description" : "Source of the MLFeature",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties" ]
+    },
+    "MLFeatureTableSnapshot" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the MLFeatureTable. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/MLFeatureTableKey"
+            }, {
+              "$ref" : "#/definitions/MLFeatureTableProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/Deprecation"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "MLFeatureTableKey" : {
+      "description" : "Key for an MLFeatureTable",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Data platform urn associated with the feature table",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the feature table",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platform", "name" ]
+    },
+    "MLFeatureTableProperties" : {
+      "description" : "Properties associated with a MLFeatureTable",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLFeatureTable",
+          "type" : "string"
+        },
+        "mlFeatures" : {
+          "default" : null,
+          "description" : "List of features contained in the feature table",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "mlPrimaryKeys" : {
+          "default" : null,
+          "description" : "List of primary keys in the feature table (if multiple, assumed to act as a composite key)",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties" ]
+    },
+    "MLModelDeploymentSnapshot" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the MLModelDeployment. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/MLModelDeploymentKey"
+            }, {
+              "$ref" : "#/definitions/MLModelDeploymentProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/Deprecation"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "MLModelDeploymentKey" : {
+      "description" : "Key for an ML model deployment",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Standardized platform urn for the model Deployment",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the MLModelDeployment",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where model Deployment belongs to or where it was generated",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "platform", "name", "origin" ]
+    },
+    "MLModelDeploymentProperties" : {
+      "description" : "Properties associated with an ML Model Deployment",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLModelDeployment",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the MLModelDeployment was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Version of the MLModelDeployment",
+          "$ref" : "#/definitions/VersionTag"
+        },
+        "status" : {
+          "default" : null,
+          "description" : "Status of the deployment",
+          "$ref" : "#/definitions/DeploymentStatus"
+        }
+      },
+      "required" : [ "customProperties" ]
+    },
+    "DeploymentStatus" : {
+      "description" : "Model endpoint statuses",
+      "enum" : [ "OUT_OF_SERVICE", "CREATING", "UPDATING", "ROLLING_BACK", "IN_SERVICE", "DELETING", "FAILED", "UNKNOWN" ]
+    },
+    "MLModelGroupSnapshot" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the MLModelGroup. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/MLModelGroupKey"
+            }, {
+              "$ref" : "#/definitions/MLModelGroupProperties"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/Deprecation"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "MLModelGroupKey" : {
+      "description" : "Key for an ML model group",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Standardized platform urn for the model group",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the MLModelGroup",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where model group belongs to or where it was generated",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "platform", "name", "origin" ]
+    },
+    "MLModelGroupProperties" : {
+      "description" : "Properties associated with an ML Model Group",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "trainingJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "downstreamJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) that use the model or group.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the MLModelGroup",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLModelGroup",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the MLModelGroup was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Time and Actor who created the MLModelGroup",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Date when the MLModelGroup was last modified",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Version of the MLModelGroup",
+          "$ref" : "#/definitions/VersionTag"
+        }
+      },
+      "required" : [ "customProperties" ]
+    },
+    "TagSnapshot" : {
+      "description" : "A metadata snapshot for a specific dataset entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the dataset. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/TagKey"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/TagProperties"
+            }, {
+              "$ref" : "#/definitions/Status"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "TagKey" : {
+      "description" : "Key for a Tag",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The tag name, which serves as a unique id",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "TagProperties" : {
+      "description" : "Properties associated with a Tag",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Display name of the tag",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the tag",
+          "type" : "string"
+        },
+        "colorHex" : {
+          "default" : null,
+          "description" : "The color associated with the Tag in Hex. For example #FFFFFF.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "GlossaryTermSnapshot" : {
+      "description" : "A metadata snapshot for a specific GlossaryTerm entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the GlossaryTerm. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/GlossaryTermKey"
+            }, {
+              "$ref" : "#/definitions/GlossaryTermInfo"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/GlossaryRelatedTerms"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "GlossaryTermKey" : {
+      "description" : "Key for a GlossaryTerm",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The term name, which serves as a unique id",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "GlossaryTermInfo" : {
+      "description" : "Properties associated with a GlossaryTerm",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "id" : {
+          "default" : null,
+          "description" : "Optional id for the term",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the term",
+          "type" : "string"
+        },
+        "definition" : {
+          "description" : "Definition of business term.",
+          "type" : "string"
+        },
+        "parentNode" : {
+          "default" : null,
+          "description" : "Parent node of the glossary term",
+          "type" : "string"
+        },
+        "termSource" : {
+          "description" : "Source of the Business Term (INTERNAL or EXTERNAL) with default value as INTERNAL",
+          "type" : "string"
+        },
+        "sourceRef" : {
+          "default" : null,
+          "description" : "External Reference to the business-term",
+          "type" : "string"
+        },
+        "sourceUrl" : {
+          "default" : null,
+          "description" : "The abstracted URL such as https://spec.edmcouncil.org/fibo/ontology/FBC/FinancialInstruments/FinancialInstruments/CashInstrument.",
+          "type" : "string"
+        },
+        "rawSchema" : {
+          "default" : null,
+          "description" : "Schema definition of the glossary term",
+          "type" : "string"
+        }
+      },
+      "required" : [ "customProperties", "definition", "termSource" ]
+    },
+    "GlossaryRelatedTerms" : {
+      "description" : "Has A / Is A lineage information about a glossary Term reporting the lineage",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "isRelatedTerms" : {
+          "default" : null,
+          "description" : "The relationship Is A with glossary term",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "hasRelatedTerms" : {
+          "default" : null,
+          "description" : "The relationship Has A with glossary term",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "values" : {
+          "default" : null,
+          "description" : "The relationship Has Value with glossary term.\nThese are fixed value a term has. For example a ColorEnum where RED, GREEN and YELLOW are fixed values.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "relatedTerms" : {
+          "default" : null,
+          "description" : "The relationship isRelatedTo with glossary term",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "GlossaryNodeSnapshot" : {
+      "description" : "A metadata snapshot for a specific GlossaryNode entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the GlossaryNode. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/GlossaryNodeKey"
+            }, {
+              "$ref" : "#/definitions/GlossaryNodeInfo"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "GlossaryNodeKey" : {
+      "description" : "Key for a GlossaryNode",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "GlossaryNodeInfo" : {
+      "description" : "Properties associated with a GlossaryNode",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "definition" : {
+          "description" : "Definition of business node",
+          "type" : "string"
+        },
+        "parentNode" : {
+          "default" : null,
+          "description" : "Parent node of the glossary term",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the node",
+          "type" : "string"
+        },
+        "id" : {
+          "default" : null,
+          "description" : "Optional id for the GlossaryNode",
+          "type" : "string"
+        }
+      },
+      "required" : [ "customProperties", "definition" ]
+    },
+    "DataHubPolicySnapshot" : {
+      "description" : "A metadata snapshot for DataHub Access Policy data.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the DataHub access policy.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataHubPolicyKey"
+            }, {
+              "$ref" : "#/definitions/DataHubPolicyInfo"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataHubPolicyKey" : {
+      "description" : "Key for a DataHub Policy",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the DataHub access policy record. Generated on the server side at policy creation time.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    },
+    "DataHubPolicyInfo" : {
+      "description" : "Information about a DataHub (UI) access policy.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "displayName" : {
+          "description" : "Display name of the Policy",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Description of the Policy",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of policy",
+          "type" : "string"
+        },
+        "state" : {
+          "description" : "The state of policy, ACTIVE or INACTIVE",
+          "type" : "string"
+        },
+        "resources" : {
+          "default" : null,
+          "description" : "The resource that the policy applies to. Not required for some 'Platform' privileges.",
+          "$ref" : "#/definitions/DataHubResourceFilter"
+        },
+        "privileges" : {
+          "description" : "The privileges that the policy grants.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "actors" : {
+          "description" : "The actors that the policy applies to.",
+          "$ref" : "#/definitions/DataHubActorFilter"
+        },
+        "editable" : {
+          "default" : true,
+          "description" : "Whether the policy should be editable via the UI",
+          "type" : "boolean"
+        },
+        "lastUpdatedTimestamp" : {
+          "default" : null,
+          "description" : "Timestamp when the policy was last updated",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "displayName", "description", "type", "state", "privileges", "actors", "editable" ]
+    },
+    "DataHubResourceFilter" : {
+      "description" : "Information used to filter DataHub resource.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "default" : null,
+          "description" : "The type of resource that the policy applies to. This will most often be a data asset entity name, for\nexample 'dataset'. It is not strictly required because in the future we will want to support filtering a resource\nby domain, as well.",
+          "type" : "string"
+        },
+        "resources" : {
+          "default" : null,
+          "description" : "A specific set of resources to apply the policy to, e.g. asset urns",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "allResources" : {
+          "default" : false,
+          "description" : "Whether the policy should be applied to all assets matching the filter.",
+          "type" : "boolean"
+        },
+        "filter" : {
+          "default" : null,
+          "description" : "Filter to apply privileges to",
+          "$ref" : "#/definitions/PolicyMatchFilter"
+        },
+        "privilegeConstraints" : {
+          "default" : null,
+          "description" : "Constraints around what sub-resources operations are allowed to modify, i.e. NOT_EQUALS - cannot modify a particular defined tag, EQUALS - can only modify a particular defined tag, STARTS_WITH - can only modify a tag starting with xyz",
+          "$ref" : "#/definitions/PolicyMatchFilter"
+        }
+      },
+      "required" : [ "allResources" ]
+    },
+    "PolicyMatchFilter" : {
+      "description" : "The filter for specifying the resource or actor to apply privileges to",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "criteria" : {
+          "description" : "A list of criteria to apply conjunctively (so all criteria must pass)",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PolicyMatchCriterion"
+          }
+        }
+      },
+      "required" : [ "criteria" ]
+    },
+    "PolicyMatchCriterion" : {
+      "description" : "A criterion for matching a field with given value",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "field" : {
+          "description" : "The name of the field that the criterion refers to",
+          "type" : "string"
+        },
+        "values" : {
+          "description" : "Values. Matches criterion if any one of the values matches condition (OR-relationship)",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "condition" : {
+          "default" : "EQUALS",
+          "description" : "The condition for the criterion",
+          "$ref" : "#/definitions/PolicyMatchCondition"
+        }
+      },
+      "required" : [ "field", "values", "condition" ]
+    },
+    "PolicyMatchCondition" : {
+      "description" : "The matching condition in a filter criterion",
+      "enum" : [ "EQUALS", "STARTS_WITH", "NOT_EQUALS" ]
+    },
+    "DataHubActorFilter" : {
+      "description" : "Information used to filter DataHub actors.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "users" : {
+          "default" : null,
+          "description" : "A specific set of users to apply the policy to (disjunctive)",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "groups" : {
+          "default" : null,
+          "description" : "A specific set of groups to apply the policy to (disjunctive)",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "resourceOwners" : {
+          "default" : false,
+          "description" : "Whether the filter should return true for owners of a particular resource.\nOnly applies to policies of type 'Metadata', which have a resource associated with them.",
+          "type" : "boolean"
+        },
+        "resourceOwnersTypes" : {
+          "default" : null,
+          "description" : "Define type of ownership for the policy",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "allUsers" : {
+          "default" : false,
+          "description" : "Whether the filter should apply to all users.",
+          "type" : "boolean"
+        },
+        "allGroups" : {
+          "default" : false,
+          "description" : "Whether the filter should apply to all groups.",
+          "type" : "boolean"
+        },
+        "roles" : {
+          "default" : null,
+          "description" : "A specific set of roles to apply the policy to (disjunctive).",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "resourceOwners", "allUsers", "allGroups" ]
+    },
+    "SchemaFieldSnapshot" : {
+      "description" : "A metadata snapshot for a specific schema field entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the dataset. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SchemaFieldKey"
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "SchemaFieldKey" : {
+      "description" : "Key for a SchemaField",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "parent" : {
+          "description" : "Parent associated with the schema field",
+          "type" : "string"
+        },
+        "fieldPath" : {
+          "description" : "fieldPath identifying the schema field",
+          "type" : "string"
+        }
+      },
+      "required" : [ "parent", "fieldPath" ]
+    },
+    "DataHubRetentionSnapshot" : {
+      "description" : "A metadata snapshot for DataHub Access Policy data.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the DataHub access policy.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataHubRetentionKey"
+            }, {
+              "$ref" : "#/definitions/DataHubRetentionConfig"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataHubRetentionKey" : {
+      "description" : "Key for a DataHub Retention",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "entityName" : {
+          "description" : "Entity name to apply retention to. * (or empty) for applying defaults.",
+          "type" : "string"
+        },
+        "aspectName" : {
+          "description" : "Aspect name to apply retention to. * (or empty) for applying defaults.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "entityName", "aspectName" ]
+    },
+    "DataHubRetentionConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "retention" : {
+          "$ref" : "#/definitions/Retention"
+        }
+      },
+      "required" : [ "retention" ]
+    },
+    "Retention" : {
+      "description" : "Base class that encapsulates different retention policies.\nOnly one of the fields should be set",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "version" : {
+          "default" : null,
+          "$ref" : "#/definitions/VersionBasedRetention"
+        },
+        "time" : {
+          "default" : null,
+          "$ref" : "#/definitions/TimeBasedRetention"
+        }
+      }
+    },
+    "VersionBasedRetention" : {
+      "description" : "Keep max N latest records",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxVersions" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxVersions" ]
+    },
+    "TimeBasedRetention" : {
+      "description" : "Keep records that are less than X seconds old",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxAgeInSeconds" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxAgeInSeconds" ]
+    }
+  },
+  "$ref" : "#/definitions/Entity"
+}

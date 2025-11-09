@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "DataProcessInstanceRunResult",
+  "namespace" : "com.linkedin.dataprocess",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "RunResultType",
+      "symbols" : [ "SUCCESS", "FAILURE", "SKIPPED", "UP_FOR_RETRY" ],
+      "symbolDocs" : {
+        "FAILURE" : " The Run Failed",
+        "SKIPPED" : " The Run Skipped",
+        "SUCCESS" : " The Run Succeeded",
+        "UP_FOR_RETRY" : " The Run Failed and will Retry"
+      }
+    },
+    "doc" : " The final result, e.g. SUCCESS, FAILURE, SKIPPED, or UP_FOR_RETRY."
+  }, {
+    "name" : "nativeResultType",
+    "type" : "string",
+    "doc" : "It identifies the system where the native result comes from like Airflow, Azkaban, etc.."
+  } ]
+}

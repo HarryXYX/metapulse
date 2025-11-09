@@ -1,0 +1,20 @@
+{
+  "definitions" : {
+    "PropertyValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Optional description of the property value",
+          "type" : "string"
+        }
+      },
+      "required" : [ "value" ]
+    }
+  },
+  "$ref" : "#/definitions/PropertyValue"
+}

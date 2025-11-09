@@ -1,0 +1,6 @@
+{
+  "definitions" : {
+    "StringType" : { }
+  },
+  "$ref" : "#/definitions/StringType"
+}

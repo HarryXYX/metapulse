@@ -1,0 +1,54 @@
+{
+  "type" : "record",
+  "name" : "FineGrainedLineage",
+  "namespace" : "com.linkedin.dataset",
+  "doc" : "A fine-grained lineage from upstream fields/datasets to downstream field(s)",
+  "fields" : [ {
+    "name" : "upstreamType",
+    "type" : "FineGrainedLineageUpstreamType",
+    "doc" : "The type of upstream entity"
+  }, {
+    "name" : "upstreams",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Upstream entities in the lineage",
+    "optional" : true,
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "fineGrainedUpstreams",
+        "fieldType" : "URN",
+        "hasValuesFieldName" : "hasFineGrainedUpstreams",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "downstreamType",
+    "type" : "FineGrainedLineageDownstreamType",
+    "doc" : "The type of downstream field(s)"
+  }, {
+    "name" : "downstreams",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Downstream fields in the lineage",
+    "optional" : true
+  }, {
+    "name" : "transformOperation",
+    "type" : "string",
+    "doc" : "The transform operation applied to the upstream entities to produce the downstream field(s)",
+    "optional" : true
+  }, {
+    "name" : "confidenceScore",
+    "type" : "float",
+    "doc" : "The confidence in this lineage between 0 (low confidence) and 1 (high confidence)",
+    "default" : 1.0
+  }, {
+    "name" : "query",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The query that was used to generate this lineage. \nPresent only if the lineage was generated from a detected query.",
+    "optional" : true
+  } ]
+}

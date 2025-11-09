@@ -1,0 +1,35 @@
+{
+  "type" : "record",
+  "name" : "DashboardUserUsageCounts",
+  "namespace" : "com.linkedin.dashboard",
+  "doc" : "Records a single user's usage counts for a given resource",
+  "fields" : [ {
+    "name" : "user",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The unique id of the user."
+  }, {
+    "name" : "viewsCount",
+    "type" : "int",
+    "doc" : "The number of times the user has viewed the dashboard",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "executionsCount",
+    "type" : "int",
+    "doc" : "The number of times the user has executed (refreshed) the dashboard",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "usageCount",
+    "type" : "int",
+    "doc" : "Normalized numeric metric representing user's dashboard usage -- the number of times the user executed or viewed the dashboard. ",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "userEmail",
+    "type" : "string",
+    "doc" : "If user_email is set, we attempt to resolve the user's urn upon ingest",
+    "optional" : true,
+    "TimeseriesField" : { }
+  } ]
+}

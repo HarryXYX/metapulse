@@ -1,0 +1,29 @@
+{
+  "type" : "typeref",
+  "name" : "ERModelRelationshipUrn",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Standardized erModelRelationship identifier.",
+  "ref" : "string",
+  "java" : {
+    "class" : "com.linkedin.common.urn.ERModelRelationshipUrn"
+  },
+  "validate" : {
+    "com.linkedin.common.validator.TypedUrnValidator" : {
+      "accessible" : true,
+      "constructable" : true,
+      "doc" : "Standardized ERModelRelationship identifier.",
+      "entityType" : "erModelRelationship",
+      "fields" : [ {
+        "doc" : "ERModelRelationship native name e.g. <db>.<table>, /dir/subdir/<name>, or <name>",
+        "maxLength" : 284,
+        "name" : "id",
+        "type" : "string"
+      } ],
+      "maxLength" : 284,
+      "name" : "ERModelRelationship",
+      "namespace" : "li",
+      "owners" : [ "urn:li:corpuser:fbar", "urn:li:corpuser:bfoo" ],
+      "owningTeam" : "urn:li:internalTeam:datahub"
+    }
+  }
+}

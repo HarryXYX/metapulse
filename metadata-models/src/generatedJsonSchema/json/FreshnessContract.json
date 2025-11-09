@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "FreshnessContract" : {
+      "description" : "A contract pertaining to the operational SLAs of a physical data asset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "assertion" : {
+          "description" : "The assertion representing the SLA contract.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "assertion" ]
+    }
+  },
+  "$ref" : "#/definitions/FreshnessContract"
+}

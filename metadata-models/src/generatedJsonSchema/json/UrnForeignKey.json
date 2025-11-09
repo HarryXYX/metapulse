@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "UrnForeignKey" : {
+      "description" : "If SchemaMetadata fields make any external references and references are of type com.linkedin.common.Urn or any children, this models can be used to mark it.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "currentFieldPath" : {
+          "description" : "Field in hosting(current) SchemaMetadata.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "currentFieldPath" ]
+    }
+  },
+  "$ref" : "#/definitions/UrnForeignKey"
+}

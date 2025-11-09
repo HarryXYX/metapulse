@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "HierarchyModuleParams",
+  "namespace" : "com.linkedin.module",
+  "doc" : "The params required if the module is type HIERARCHY_VIEW",
+  "fields" : [ {
+    "name" : "assetUrns",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "optional" : true
+  }, {
+    "name" : "showRelatedEntities",
+    "type" : "boolean"
+  }, {
+    "name" : "relatedEntitiesFilterJson",
+    "type" : "string",
+    "doc" : "Optional filters to filter relatedEntities (assetUrns) out\n\nThe stringified json representing the logical predicate built in the UI to select assets.\nThis predicate is turned into orFilters to send through graphql since graphql doesn't support\narbitrary nesting. This string is used to restore the UI for this logical predicate.",
+    "optional" : true
+  } ]
+}

@@ -1,0 +1,41 @@
+{
+  "type" : "record",
+  "name" : "CustomAssertionInfo",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes that are applicable to Custom Assertions",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "string",
+    "doc" : "The type of custom assertion.\nThis is how your assertion will appear categorized in DataHub UI. ",
+    "Searchable" : {
+      "fieldName" : "customType"
+    }
+  }, {
+    "name" : "entity",
+    "type" : "string",
+    "doc" : "The entity targeted by this assertion.\nThis can have support more entityTypes (e.g. dataJob) in future",
+    "Relationship" : {
+      "entityTypes" : [ "dataset" ],
+      "name" : "Asserts"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "field",
+    "type" : [ "null", "string" ],
+    "doc" : "dataset schema field targeted by this assertion.\n\nThis field is expected to be provided if the assertion is on dataset field",
+    "default" : null,
+    "Relationship" : {
+      "entityTypes" : [ "schemaField" ],
+      "name" : "Asserts"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "logic",
+    "type" : [ "null", "string" ],
+    "default" : null
+  } ]
+}

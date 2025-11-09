@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "Container" : {
+      "description" : "Link from an asset to its parent container",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "container" : {
+          "description" : "The parent container of an asset",
+          "type" : "string"
+        }
+      },
+      "required" : [ "container" ]
+    }
+  },
+  "$ref" : "#/definitions/Container"
+}

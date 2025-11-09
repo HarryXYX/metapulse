@@ -1,0 +1,6 @@
+{
+  "definitions" : {
+    "EnumType" : { }
+  },
+  "$ref" : "#/definitions/EnumType"
+}

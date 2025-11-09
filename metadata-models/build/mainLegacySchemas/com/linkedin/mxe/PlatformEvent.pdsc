@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "PlatformEvent",
+  "namespace" : "com.linkedin.mxe",
+  "doc" : "A DataHub Platform Event.",
+  "fields" : [ {
+    "name" : "header",
+    "type" : "PlatformEventHeader",
+    "doc" : "Header information stored with the event."
+  }, {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "The name of the event, e.g. the type of event. For example, 'notificationRequestEvent', 'entityChangeEvent'"
+  }, {
+    "name" : "payload",
+    "type" : "GenericPayload",
+    "doc" : "The event payload."
+  } ]
+}

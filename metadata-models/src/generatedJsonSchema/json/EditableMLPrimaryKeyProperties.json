@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "EditableMLPrimaryKeyProperties" : {
+      "description" : "Properties associated with a MLPrimaryKey editable from the UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLPrimaryKey",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/EditableMLPrimaryKeyProperties"
+}

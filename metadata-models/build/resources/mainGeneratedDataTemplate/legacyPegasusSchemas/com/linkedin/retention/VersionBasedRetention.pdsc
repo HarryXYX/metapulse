@@ -1,0 +1,10 @@
+{
+  "type" : "record",
+  "name" : "VersionBasedRetention",
+  "namespace" : "com.linkedin.retention",
+  "doc" : "Keep max N latest records",
+  "fields" : [ {
+    "name" : "maxVersions",
+    "type" : "int"
+  } ]
+}

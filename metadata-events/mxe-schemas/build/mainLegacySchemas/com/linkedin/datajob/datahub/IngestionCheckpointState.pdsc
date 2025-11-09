@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "IngestionCheckpointState",
+  "namespace" : "com.linkedin.datajob.datahub",
+  "doc" : "The checkpoint state object of a datahub ingestion run for a given job.",
+  "fields" : [ {
+    "name" : "formatVersion",
+    "type" : "string",
+    "doc" : "The version of the state format."
+  }, {
+    "name" : "serde",
+    "type" : "string",
+    "doc" : "The serialization/deserialization protocol."
+  }, {
+    "name" : "payload",
+    "type" : "bytes",
+    "doc" : "Opaque blob of the state representation.",
+    "optional" : true
+  } ]
+}

@@ -1,0 +1,16 @@
+{
+  "definitions" : {
+    "DataTypeKey" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for a data type. Usually this will be a unique namespace + data type name.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataTypeKey"
+}

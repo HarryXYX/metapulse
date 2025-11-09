@@ -1,0 +1,25 @@
+{
+  "type" : "enum",
+  "name" : "AssertionStdAggregation",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "The function that is applied to the aggregation input (schema, rows, column values) before evaluating an operator.",
+  "symbols" : [ "ROW_COUNT", "COLUMNS", "COLUMN_COUNT", "IDENTITY", "MEAN", "MEDIAN", "UNIQUE_COUNT", "UNIQUE_PROPORTION", "UNIQUE_PROPOTION", "NULL_COUNT", "NULL_PROPORTION", "STDDEV", "MIN", "MAX", "SUM", "_NATIVE_" ],
+  "symbolDocs" : {
+    "COLUMNS" : "Assertion is applied on all columns.",
+    "COLUMN_COUNT" : "Assertion is applied on number of columns.",
+    "IDENTITY" : "Assertion is applied on individual column value. (No aggregation)",
+    "MAX" : "Assertion is applied on column std deviation",
+    "MEAN" : "Assertion is applied on column mean",
+    "MEDIAN" : "Assertion is applied on column median",
+    "MIN" : "Assertion is applied on column min",
+    "NULL_COUNT" : "Assertion is applied on number of null values in column",
+    "NULL_PROPORTION" : "Assertion is applied on proportion of null values in column",
+    "ROW_COUNT" : "Assertion is applied on number of rows.",
+    "STDDEV" : "Assertion is applied on column std deviation",
+    "SUM" : "Assertion is applied on column sum",
+    "UNIQUE_COUNT" : "Assertion is applied on number of distinct values in column",
+    "UNIQUE_PROPORTION" : "Assertion is applied on proportion of distinct values in column",
+    "UNIQUE_PROPOTION" : "Assertion is applied on proportion of distinct values in column\n\nDeprecated! Use UNIQUE_PROPORTION instead.",
+    "_NATIVE_" : "Other"
+  }
+}

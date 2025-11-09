@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubJsonConnection" : {
+      "description" : "A set of connection details consisting of an encrypted JSON blob.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "encryptedBlob" : {
+          "description" : "The encrypted JSON connection details.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "encryptedBlob" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubJsonConnection"
+}

@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageModuleKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a DataHubPageModule",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "Unique id for the module."
+  } ],
+  "Aspect" : {
+    "name" : "dataHubPageModuleKey"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "DataHubActionKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a DataHub Action Pipeline",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the Action, either generated or provided"
+  } ],
+  "Aspect" : {
+    "name" : "dataHubActionKey"
+  }
+}

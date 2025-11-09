@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "FormVerificationAssociation",
+  "namespace" : "com.linkedin.common",
+  "doc" : "An association between a verification and an entity that has been granted\nvia completion of one or more forms of type 'VERIFICATION'.",
+  "fields" : [ {
+    "name" : "form",
+    "type" : "Urn",
+    "doc" : "The urn of the form that granted this verification."
+  }, {
+    "name" : "lastModified",
+    "type" : "AuditStamp",
+    "doc" : "An audit stamp capturing who and when verification was applied for this form.",
+    "optional" : true
+  } ]
+}

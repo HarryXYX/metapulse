@@ -1,0 +1,92 @@
+{
+  "type" : "record",
+  "name" : "GlossaryRelatedTerms",
+  "namespace" : "com.linkedin.glossary",
+  "doc" : "Has A / Is A lineage information about a glossary Term reporting the lineage",
+  "fields" : [ {
+    "name" : "isRelatedTerms",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "The relationship Is A with glossary term",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "glossaryTerm" ],
+        "name" : "IsA"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "isRelatedTerms",
+        "fieldType" : "URN",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "hasRelatedTerms",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "The relationship Has A with glossary term",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "glossaryTerm" ],
+        "name" : "HasA"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "hasRelatedTerms",
+        "fieldType" : "URN",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "values",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "The relationship Has Value with glossary term.\nThese are fixed value a term has. For example a ColorEnum where RED, GREEN and YELLOW are fixed values.",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "glossaryTerm" ],
+        "name" : "HasValue"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "values",
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "relatedTerms",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "The relationship isRelatedTo with glossary term",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "glossaryTerm" ],
+        "name" : "IsRelatedTo"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "relatedTerms",
+        "fieldType" : "URN"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "glossaryRelatedTerms"
+  }
+}

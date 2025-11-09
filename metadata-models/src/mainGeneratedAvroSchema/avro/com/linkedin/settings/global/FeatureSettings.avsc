@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "FeatureSettings",
+  "namespace" : "com.linkedin.settings.global",
+  "doc" : "A standardized settings template for a feature.",
+  "fields" : [ {
+    "name" : "enabled",
+    "type" : "boolean"
+  }, {
+    "name" : "config",
+    "type" : [ "null", "string" ],
+    "doc" : "The configuration for the feature, in JSON format.",
+    "default" : null
+  }, {
+    "name" : "configVersion",
+    "type" : [ "null", "string" ],
+    "doc" : "The version of the configuration schema that has been used to serialize\n       the config.\nIf not provided, the version is assumed to be the latest version.",
+    "default" : null
+  } ]
+}

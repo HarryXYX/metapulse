@@ -1,0 +1,212 @@
+{
+  "definitions" : {
+    "SearchResult" : {
+      "description" : "The model for the result of a search query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "entities" : {
+          "description" : "A list of entities returned from the search results",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SearchEntity"
+          }
+        },
+        "metadata" : {
+          "description" : "Metadata specific to the browse result of the queried path",
+          "$ref" : "#/definitions/SearchResultMetadata"
+        },
+        "from" : {
+          "description" : "Offset of the first entity in the result",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "pageSize" : {
+          "description" : "Size of each page in the result",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "numEntities" : {
+          "description" : "The total number of entities directly under searched path",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "entities", "metadata", "from", "pageSize", "numEntities" ]
+    },
+    "SearchEntity" : {
+      "description" : "The model for each entity returned by the search query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "entity" : {
+          "description" : "Urn of the entity being returned",
+          "type" : "string"
+        },
+        "matchedFields" : {
+          "default" : [ ],
+          "description" : "Matched field name and values",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MatchedField"
+          }
+        },
+        "features" : {
+          "default" : null,
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "number"
+          }
+        },
+        "score" : {
+          "default" : null,
+          "type" : "number"
+        },
+        "restrictedAspects" : {
+          "default" : null,
+          "description" : "A list of the the restricted aspects on the entity.\nIf the key aspect is present, assume ALL aspects should be restricted including the entity's Urn.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "extraFields" : {
+          "default" : null,
+          "description" : "Extra fields from the search document based on what is requested in the search request",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "entity", "matchedFields" ]
+    },
+    "MatchedField" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Matched field name",
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Matched field value",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "value" ]
+    },
+    "SearchResultMetadata" : {
+      "description" : "The model for the search result",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "aggregations" : {
+          "default" : [ ],
+          "description" : "A list of search result metadata such as aggregations",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/AggregationMetadata"
+          }
+        },
+        "suggestions" : {
+          "default" : [ ],
+          "description" : "A list of search query suggestions based on the given query",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SearchSuggestion"
+          }
+        }
+      },
+      "required" : [ "aggregations", "suggestions" ]
+    },
+    "AggregationMetadata" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The name of the aggregation, e.g, platform, origin",
+          "type" : "string"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "Name of the filter to be displayed in the UI",
+          "type" : "string"
+        },
+        "entity" : {
+          "default" : null,
+          "description" : "Entity associated with this facet",
+          "type" : "string"
+        },
+        "aggregations" : {
+          "description" : "List of aggregations showing the number of documents falling into each bucket. e.g, for platform aggregation, the bucket can be hive, kafka, etc",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64",
+            "minimum" : -9223372036854775808,
+            "maximum" : 9223372036854775807
+          }
+        },
+        "filterValues" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FilterValue"
+          }
+        }
+      },
+      "required" : [ "name", "aggregations", "filterValues" ]
+    },
+    "FilterValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "entity" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "facetCount" : {
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "filtered" : {
+          "default" : null,
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "value", "facetCount" ]
+    },
+    "SearchSuggestion" : {
+      "description" : "The model for the search result",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "text" : {
+          "description" : "The suggestion text for this search query",
+          "type" : "string"
+        },
+        "score" : {
+          "description" : "The score for how close this suggestion is to the original search query.\nThe closer to 1 means it is closer to the original query and 0 is further away.",
+          "type" : "number"
+        },
+        "frequency" : {
+          "description" : "How many matches there are with the suggested text for the given field",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "text", "score", "frequency" ]
+    }
+  },
+  "$ref" : "#/definitions/SearchResult"
+}

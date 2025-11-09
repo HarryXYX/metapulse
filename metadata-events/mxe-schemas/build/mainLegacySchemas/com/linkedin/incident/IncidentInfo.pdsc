@@ -1,0 +1,102 @@
+{
+  "type" : "record",
+  "name" : "IncidentInfo",
+  "namespace" : "com.linkedin.incident",
+  "doc" : "Information about an incident raised on an asset.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "IncidentType",
+    "doc" : "The type of incident",
+    "Searchable" : {
+      "addToFilters" : true,
+      "filterNameOverride" : "Type"
+    }
+  }, {
+    "name" : "customType",
+    "type" : "string",
+    "doc" : "An optional custom incident type. Present only if type is 'CUSTOM'.",
+    "optional" : true,
+    "Searchable" : {
+      "addToFilters" : true,
+      "filterNameOverride" : "Other Type"
+    }
+  }, {
+    "name" : "title",
+    "type" : "string",
+    "doc" : "Optional title associated with the incident",
+    "optional" : true
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Optional description associated with the incident",
+    "optional" : true
+  }, {
+    "name" : "entities",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "A reference to the entity associated with the incident.",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset", "chart", "dashboard", "dataFlow", "dataJob", "schemaField" ],
+        "name" : "IncidentOn"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "priority",
+    "type" : "int",
+    "doc" : "A numeric severity or priority for the incident. On the UI we will translate this into something easy to understand.\nCurrently supported: 0 - CRITICAL, 1 - HIGH, 2 - MED, 3 - LOW\n(We probably should have modeled as an enum)",
+    "optional" : true,
+    "Searchable" : {
+      "addToFilters" : true,
+      "filterNameOverride" : "Priority"
+    }
+  }, {
+    "name" : "assignees",
+    "type" : {
+      "type" : "array",
+      "items" : "IncidentAssignee"
+    },
+    "doc" : "The parties assigned with resolving the incident",
+    "optional" : true
+  }, {
+    "name" : "status",
+    "type" : "IncidentStatus",
+    "doc" : "The current status of an incident, i.e. active or inactive."
+  }, {
+    "name" : "source",
+    "type" : "IncidentSource",
+    "doc" : "The source of an incident, i.e. how it was generated.",
+    "optional" : true
+  }, {
+    "name" : "startedAt",
+    "type" : "com.linkedin.common.Time",
+    "doc" : "The time at which the incident actually started (may be before the date it was raised).",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "startedAt",
+        "fieldType" : "COUNT"
+      }
+    }
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The time at which the request was initially created",
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "created",
+        "fieldType" : "COUNT"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "incidentInfo"
+  }
+}

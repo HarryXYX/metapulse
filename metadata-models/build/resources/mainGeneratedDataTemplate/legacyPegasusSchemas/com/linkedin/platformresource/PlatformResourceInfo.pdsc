@@ -1,0 +1,42 @@
+{
+  "type" : "record",
+  "name" : "PlatformResourceInfo",
+  "namespace" : "com.linkedin.platformresource",
+  "doc" : "Platform Resource Info.\nThese entities are for miscelaneous data that is used in non-core parts of the system.\nFor instance, if we want to persist & retrieve data from auxiliary integrations such as Slack or Microsoft Teams.",
+  "fields" : [ {
+    "name" : "resourceType",
+    "type" : "string",
+    "doc" : "The type of the resource. \nIntended as a loose specifier of the generic type of the resource.\nProducer is not forced to conform to a specific set of symbols for\nresource types.\nThe @PlatformResourceType enumeration offers a paved path for agreed upon\ncommon terms, but is not required to be followed.\nExample values could be: conversation, user, grant, etc.\nResource types are indexed for ease of access. \ne.g. Get me all platform resources of type user for the platform looker",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "primaryKey",
+    "type" : "string",
+    "doc" : "The primary key for this platform resource.\ne.g. for a slack member this would be the memberID.\nprimary keys specified here don't need to include any additional specificity for the\n     dataPlatform\nThe @PlatformResourceKey is supposed to represent that",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "secondaryKeys",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "doc" : "The secondary keys this platform resource can be located by.\nI.e., for a slack member this would be email or phone.",
+    "optional" : true,
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "KEYWORD"
+      }
+    }
+  }, {
+    "name" : "value",
+    "type" : "com.linkedin.common.SerializedValue",
+    "doc" : "The serialized value of this platform resource item.",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "platformResourceInfo"
+  }
+}

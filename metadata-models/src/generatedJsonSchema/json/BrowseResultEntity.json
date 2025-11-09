@@ -1,0 +1,22 @@
+{
+  "definitions" : {
+    "BrowseResultEntity" : {
+      "description" : "Data model for an entity returned as part of a browse query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "default" : null,
+          "description" : "Name of the entity",
+          "type" : "string"
+        },
+        "urn" : {
+          "description" : "URN of the entity",
+          "type" : "string"
+        }
+      },
+      "required" : [ "urn" ]
+    }
+  },
+  "$ref" : "#/definitions/BrowseResultEntity"
+}

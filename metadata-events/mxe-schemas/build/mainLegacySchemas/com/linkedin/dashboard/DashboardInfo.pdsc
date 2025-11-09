@@ -1,0 +1,160 @@
+{
+  "type" : "record",
+  "name" : "DashboardInfo",
+  "namespace" : "com.linkedin.dashboard",
+  "doc" : "Information about a dashboard",
+  "include" : [ "com.linkedin.common.CustomProperties", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "title",
+    "type" : "string",
+    "doc" : "Title of the dashboard",
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Detailed description about the dashboard",
+    "Searchable" : {
+      "fieldType" : "TEXT",
+      "hasValuesFieldName" : "hasDescription",
+      "searchTier" : 2
+    }
+  }, {
+    "name" : "charts",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.ChartUrn"
+    },
+    "doc" : "Charts in a dashboard\nDeprecated! Use chartEdges instead.",
+    "default" : [ ],
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "chart" ],
+        "isLineage" : true,
+        "name" : "Contains"
+      }
+    },
+    "deprecated" : true
+  }, {
+    "name" : "chartEdges",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Charts in a dashboard",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "chartEdges/*/created/actor",
+        "createdOn" : "chartEdges/*/created/time",
+        "entityTypes" : [ "chart" ],
+        "isLineage" : true,
+        "name" : "Contains",
+        "properties" : "chartEdges/*/properties",
+        "updatedActor" : "chartEdges/*/lastModified/actor",
+        "updatedOn" : "chartEdges/*/lastModified/time"
+      }
+    }
+  }, {
+    "name" : "datasets",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Datasets consumed by a dashboard\nDeprecated! Use datasetEdges instead.",
+    "default" : [ ],
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset" ],
+        "isLineage" : true,
+        "name" : "Consumes"
+      }
+    },
+    "deprecated" : true
+  }, {
+    "name" : "datasetEdges",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Datasets consumed by a dashboard",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "datasetEdges/*/created/actor",
+        "createdOn" : "datasetEdges/*/created/time",
+        "entityTypes" : [ "dataset" ],
+        "isLineage" : true,
+        "name" : "Consumes",
+        "properties" : "datasetEdges/*/properties",
+        "updatedActor" : "datasetEdges/*/lastModified/actor",
+        "updatedOn" : "datasetEdges/*/lastModified/time"
+      }
+    }
+  }, {
+    "name" : "dashboards",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Dashboards included by this dashboard.\nSome dashboard entities (e.g. PowerBI Apps) can contain other dashboards.\n\nThe Edge's sourceUrn should never be set, as it will always be the base dashboard.",
+    "default" : [ ],
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "dashboards/*/created/actor",
+        "createdOn" : "dashboards/*/created/time",
+        "entityTypes" : [ "dashboard" ],
+        "isLineage" : true,
+        "name" : "DashboardContainsDashboard",
+        "properties" : "dashboards/*/properties",
+        "updatedActor" : "dashboards/*/lastModified/actor",
+        "updatedOn" : "dashboards/*/lastModified/time"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.ChangeAuditStamps",
+    "doc" : "Captures information about who created/last modified/deleted this dashboard and when",
+    "Searchable" : {
+      "/lastModified/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME",
+        "searchLabel" : "lastModifiedAt"
+      }
+    }
+  }, {
+    "name" : "dashboardUrl",
+    "type" : "com.linkedin.common.Url",
+    "doc" : "URL for the dashboard. This could be used as an external link on DataHub to allow users access/view the dashboard",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "KEYWORD",
+      "searchTier" : 4
+    }
+  }, {
+    "name" : "access",
+    "type" : "com.linkedin.common.AccessLevel",
+    "doc" : "Access level for the dashboard",
+    "optional" : true,
+    "Searchable" : {
+      "addToFilters" : true,
+      "fieldType" : "KEYWORD",
+      "filterNameOverride" : "Access Level",
+      "searchTier" : 4
+    }
+  }, {
+    "name" : "lastRefreshed",
+    "type" : "com.linkedin.common.Time",
+    "doc" : "The time when this dashboard last refreshed",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "dashboardInfo"
+  }
+}

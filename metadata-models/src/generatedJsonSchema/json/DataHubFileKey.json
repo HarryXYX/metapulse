@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubFileKey" : {
+      "description" : "Key for a DataHubFile",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "Unique id for the file.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubFileKey"
+}

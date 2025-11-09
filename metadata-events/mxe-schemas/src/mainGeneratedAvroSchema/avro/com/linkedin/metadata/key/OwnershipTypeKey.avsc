@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "OwnershipTypeKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a Ownership Type",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "Unique ID for the data ownership type name i.e. Business Owner, Data Steward, Technical Owner, etc..\nShould be separate from the name used for displaying an Ownership Type."
+  } ],
+  "Aspect" : {
+    "name" : "ownershipTypeKey"
+  }
+}

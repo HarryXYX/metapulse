@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "DashboardKey" : {
+      "description" : "Key for a Dashboard",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dashboardTool" : {
+          "description" : "The name of the dashboard tool such as looker, redash etc.",
+          "type" : "string"
+        },
+        "dashboardId" : {
+          "description" : "Unique id for the dashboard. This id should be globally unique for a dashboarding tool even when there are multiple deployments of it. As an example, dashboard URL could be used here for Looker such as 'looker.linkedin.com/dashboards/1234'",
+          "type" : "string"
+        }
+      },
+      "required" : [ "dashboardTool", "dashboardId" ]
+    }
+  },
+  "$ref" : "#/definitions/DashboardKey"
+}

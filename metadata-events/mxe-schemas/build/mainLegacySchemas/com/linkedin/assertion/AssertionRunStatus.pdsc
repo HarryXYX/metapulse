@@ -1,0 +1,10 @@
+{
+  "type" : "enum",
+  "name" : "AssertionRunStatus",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "The lifecycle status of an assertion run.",
+  "symbols" : [ "COMPLETE" ],
+  "symbolDocs" : {
+    "COMPLETE" : "The Assertion Run has completed"
+  }
+}

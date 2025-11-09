@@ -1,0 +1,88 @@
+{
+  "definitions" : {
+    "CorpGroupInfo" : {
+      "description" : "Information about a Corp Group ingested from a third party source",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "displayName" : {
+          "default" : null,
+          "description" : "The name of the group.",
+          "type" : "string"
+        },
+        "email" : {
+          "default" : null,
+          "description" : "email of this group",
+          "type" : "string"
+        },
+        "admins" : {
+          "description" : "owners of this group\nDeprecated! Replaced by Ownership aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "members" : {
+          "description" : "List of ldap urn in this group.\nDeprecated! Replaced by GroupMembership aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "groups" : {
+          "description" : "List of groups in this group.\nDeprecated! This field is unused.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "A description of the group.",
+          "type" : "string"
+        },
+        "slack" : {
+          "default" : null,
+          "description" : "Slack channel for the group",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Created Audit stamp",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "admins", "members", "groups" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    }
+  },
+  "$ref" : "#/definitions/CorpGroupInfo"
+}

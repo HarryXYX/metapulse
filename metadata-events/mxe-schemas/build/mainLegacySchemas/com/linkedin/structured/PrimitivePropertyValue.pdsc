@@ -1,0 +1,7 @@
+{
+  "type" : "typeref",
+  "name" : "PrimitivePropertyValue",
+  "namespace" : "com.linkedin.structured",
+  "doc" : "Represents a stored primitive property value\n",
+  "ref" : [ "string", "double" ]
+}

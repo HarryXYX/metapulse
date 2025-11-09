@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataContractKey" : {
+      "description" : "Key for a Data Contract",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "Unique id for the contract",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataContractKey"
+}

@@ -1,0 +1,29 @@
+{
+  "type" : "record",
+  "name" : "TimeseriesIndexSizeResult",
+  "namespace" : "com.linkedin.timeseries",
+  "doc" : "Encapsulates the response of the getIndexSizes API",
+  "fields" : [ {
+    "name" : "indexName",
+    "type" : "string",
+    "doc" : "Name of the index"
+  }, {
+    "name" : "entityName",
+    "type" : "string",
+    "doc" : "Name of the entity associated with the index"
+  }, {
+    "name" : "aspectName",
+    "type" : "string",
+    "doc" : "Name of the aspect associated with the index"
+  }, {
+    "name" : "sizeMb",
+    "type" : "float",
+    "doc" : "Size",
+    "default" : 0.0,
+    "deprecated" : "use sizeInMb instead"
+  }, {
+    "name" : "sizeInMb",
+    "type" : "double",
+    "default" : 0.0
+  } ]
+}

@@ -1,0 +1,54 @@
+{
+  "type" : "record",
+  "name" : "PostInfo",
+  "namespace" : "com.linkedin.post",
+  "doc" : "Information about a DataHub Post.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "PostType",
+    "doc" : "Type of the Post.",
+    "Searchable" : { }
+  }, {
+    "name" : "content",
+    "type" : "PostContent",
+    "doc" : "Content stored in the post."
+  }, {
+    "name" : "created",
+    "type" : "long",
+    "doc" : "The time at which the post was initially created",
+    "Searchable" : {
+      "fieldType" : "COUNT"
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "long",
+    "doc" : "The time at which the post was last modified",
+    "Searchable" : {
+      "fieldType" : "COUNT"
+    }
+  }, {
+    "name" : "auditStamp",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The audit stamp at which the request was last updated",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "created",
+        "fieldType" : "COUNT"
+      }
+    }
+  }, {
+    "name" : "target",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "Optional Entity URN that the post is associated with.",
+    "optional" : true,
+    "Relationship" : {
+      "entityTypes" : [ "dataset", "schemaField", "chart", "container", "dashboard", "dataFlow", "dataJob", "dataProduct", "glossaryTerm", "glossaryNode", "mlModel", "mlFeature", "notebook", "mlFeatureTable", "mlPrimaryKey", "mlModelGroup", "domain", "dataProduct" ],
+      "name" : "PostTarget"
+    },
+    "Searchable" : { }
+  } ],
+  "Aspect" : {
+    "name" : "postInfo"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type" : "enum",
+  "name" : "AspectType",
+  "namespace" : "com.linkedin.entity",
+  "doc" : "The type of a DataHub aspect",
+  "symbols" : [ "VERSIONED", "TIMESERIES" ],
+  "symbolDocs" : {
+    "TIMESERIES" : "Designates an aspect that represents a point-in-time data point",
+    "VERSIONED" : "Designates an aspect that has a monotonically increasing version number"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DomainKey" : {
+      "description" : "Key for an Asset Domain",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the domain. Should be separate from the name used for displaying a Domain.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DomainKey"
+}

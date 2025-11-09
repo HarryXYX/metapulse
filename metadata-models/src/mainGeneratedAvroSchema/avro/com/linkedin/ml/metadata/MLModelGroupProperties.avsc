@@ -1,0 +1,172 @@
+{
+  "type" : "record",
+  "name" : "MLModelGroupProperties",
+  "namespace" : "com.linkedin.ml.metadata",
+  "doc" : "Properties associated with an ML Model Group",
+  "fields" : [ {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Custom property bag.",
+    "default" : { },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "TEXT",
+        "queryByDefault" : true
+      }
+    }
+  }, {
+    "name" : "trainingJobs",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataJob", "dataProcessInstance" ],
+        "isLineage" : true,
+        "name" : "TrainedBy"
+      }
+    }
+  }, {
+    "name" : "downstreamJobs",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "List of jobs or process instances (if any) that use the model or group.",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataJob", "dataProcessInstance" ],
+        "isLineage" : true,
+        "isUpstream" : false,
+        "name" : "UsedBy"
+      }
+    }
+  }, {
+    "name" : "externalUrl",
+    "type" : [ "null", "string" ],
+    "doc" : "URL where the reference exist",
+    "default" : null,
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.url.Url",
+      "coercerClass" : "com.linkedin.common.url.UrlCoercer"
+    }
+  }, {
+    "name" : "name",
+    "type" : [ "null", "string" ],
+    "doc" : "Display name of the MLModelGroup",
+    "default" : null,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "WORD_GRAM",
+      "queryByDefault" : true
+    }
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "Documentation of the MLModelGroup",
+    "default" : null,
+    "Searchable" : {
+      "fieldType" : "TEXT",
+      "hasValuesFieldName" : "hasDescription"
+    }
+  }, {
+    "name" : "createdAt",
+    "type" : [ "null", "long" ],
+    "doc" : "Date when the MLModelGroup was developed",
+    "default" : null,
+    "deprecated" : true
+  }, {
+    "name" : "created",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "TimeStamp",
+      "namespace" : "com.linkedin.common",
+      "doc" : "A standard event timestamp",
+      "fields" : [ {
+        "name" : "time",
+        "type" : "long",
+        "doc" : "When did the event occur"
+      }, {
+        "name" : "actor",
+        "type" : [ "null", "string" ],
+        "doc" : "Optional: The actor urn involved in the event.",
+        "default" : null,
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      } ]
+    } ],
+    "doc" : "Time and Actor who created the MLModelGroup",
+    "default" : null
+  }, {
+    "name" : "lastModified",
+    "type" : [ "null", "com.linkedin.common.TimeStamp" ],
+    "doc" : "Date when the MLModelGroup was last modified",
+    "default" : null
+  }, {
+    "name" : "version",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "VersionTag",
+      "namespace" : "com.linkedin.common",
+      "doc" : "A resource-defined string representing the resource state for the purpose of concurrency control",
+      "fields" : [ {
+        "name" : "versionTag",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "metadataAttribution",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "MetadataAttribution",
+          "doc" : "Information about who, why, and how this metadata was applied",
+          "fields" : [ {
+            "name" : "time",
+            "type" : "long",
+            "doc" : "When this metadata was updated."
+          }, {
+            "name" : "actor",
+            "type" : "string",
+            "doc" : "The entity (e.g. a member URN) responsible for applying the assocated metadata. This can\neither be a user (in case of UI edits) or the datahub system for automation.",
+            "java" : {
+              "class" : "com.linkedin.common.urn.Urn"
+            }
+          }, {
+            "name" : "source",
+            "type" : [ "null", "string" ],
+            "doc" : "The DataHub source responsible for applying the associated metadata. This will only be filled out\nwhen a DataHub source is responsible. This includes the specific metadata test urn, the automation urn.",
+            "default" : null,
+            "java" : {
+              "class" : "com.linkedin.common.urn.Urn"
+            }
+          }, {
+            "name" : "sourceDetail",
+            "type" : {
+              "type" : "map",
+              "values" : "string"
+            },
+            "doc" : "The details associated with why this metadata was applied. For example, this could include\nthe actual regex rule, sql statement, ingestion pipeline ID, etc.",
+            "default" : { }
+          } ]
+        } ],
+        "default" : null
+      } ]
+    } ],
+    "doc" : "Version of the MLModelGroup",
+    "default" : null
+  } ],
+  "Aspect" : {
+    "name" : "mlModelGroupProperties"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "GlobalViewsSettings" : {
+      "description" : "Settings for DataHub Views feature.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "defaultView" : {
+          "default" : null,
+          "description" : "The default View for the instance, or organization.",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/GlobalViewsSettings"
+}

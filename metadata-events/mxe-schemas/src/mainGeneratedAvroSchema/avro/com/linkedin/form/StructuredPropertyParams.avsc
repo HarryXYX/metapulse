@@ -1,0 +1,17 @@
+{
+  "type" : "record",
+  "name" : "StructuredPropertyParams",
+  "namespace" : "com.linkedin.form",
+  "fields" : [ {
+    "name" : "urn",
+    "type" : "string",
+    "doc" : "The structured property that is required on this entity",
+    "Searchable" : {
+      "fieldName" : "structuredPropertyPromptUrns",
+      "fieldType" : "URN"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  } ]
+}

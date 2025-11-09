@@ -1,0 +1,17 @@
+{
+  "type" : "record",
+  "name" : "DataTransformLogic",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about a Query against one or more data assets (e.g. Tables or Views).",
+  "fields" : [ {
+    "name" : "transforms",
+    "type" : {
+      "type" : "array",
+      "items" : "DataTransform"
+    },
+    "doc" : "List of transformations applied"
+  } ],
+  "Aspect" : {
+    "name" : "dataTransformLogic"
+  }
+}

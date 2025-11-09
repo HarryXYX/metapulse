@@ -1,0 +1,29 @@
+{
+  "type" : "record",
+  "name" : "IncidentSummaryDetails",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Summary statistics about incidents on an entity.",
+  "fields" : [ {
+    "name" : "urn",
+    "type" : "Urn",
+    "doc" : "The urn of the incident"
+  }, {
+    "name" : "type",
+    "type" : "string",
+    "doc" : "The type of an incident"
+  }, {
+    "name" : "createdAt",
+    "type" : "long",
+    "doc" : "The time at which the incident was raised in milliseconds since epoch."
+  }, {
+    "name" : "resolvedAt",
+    "type" : "long",
+    "doc" : "The time at which the incident was marked as resolved in milliseconds since epoch. Null if the incident is still active.",
+    "optional" : true
+  }, {
+    "name" : "priority",
+    "type" : "int",
+    "doc" : "The priority of the incident",
+    "optional" : true
+  } ]
+}

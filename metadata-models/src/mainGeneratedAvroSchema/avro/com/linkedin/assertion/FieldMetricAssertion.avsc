@@ -1,0 +1,140 @@
+{
+  "type" : "record",
+  "name" : "FieldMetricAssertion",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes defining a field metric assertion, which asserts an expectation against\na common metric derived from the set of field / column values, for example:\nmax, min, median, null count, null percentage, unique count, unique percentage, and more.",
+  "fields" : [ {
+    "name" : "field",
+    "type" : {
+      "type" : "record",
+      "name" : "SchemaFieldSpec",
+      "namespace" : "com.linkedin.schema",
+      "doc" : "Lightweight spec used for referencing a particular schema field.",
+      "fields" : [ {
+        "name" : "path",
+        "type" : "string",
+        "doc" : "The field path"
+      }, {
+        "name" : "type",
+        "type" : "string",
+        "doc" : "The DataHub standard schema field type."
+      }, {
+        "name" : "nativeType",
+        "type" : "string",
+        "doc" : "The native field type"
+      } ]
+    },
+    "doc" : "The field under evaluation",
+    "Searchable" : {
+      "/path" : {
+        "fieldName" : "fieldPath"
+      }
+    }
+  }, {
+    "name" : "metric",
+    "type" : {
+      "type" : "enum",
+      "name" : "FieldMetricType",
+      "doc" : "A standard metric that can be derived from the set of values\nfor a specific field / column of a dataset / table.",
+      "symbols" : [ "UNIQUE_COUNT", "UNIQUE_PERCENTAGE", "NULL_COUNT", "NULL_PERCENTAGE", "MIN", "MAX", "MEAN", "MEDIAN", "STDDEV", "NEGATIVE_COUNT", "NEGATIVE_PERCENTAGE", "ZERO_COUNT", "ZERO_PERCENTAGE", "MIN_LENGTH", "MAX_LENGTH", "EMPTY_COUNT", "EMPTY_PERCENTAGE" ],
+      "symbolDocs" : {
+        "EMPTY_COUNT" : "The number of empty string values found in the value set (applies to string columns).\nNote: This is a completely different metric different from NULL_COUNT!",
+        "EMPTY_PERCENTAGE" : "The percentage of empty string values to total rows for the dataset (applies to string columns)\nNote: This is a completely different metric different from NULL_PERCENTAGE!",
+        "MAX" : "The maximum value in the column set (applies to numeric columns)",
+        "MAX_LENGTH" : "The maximum length found in the column set (applies to string columns)",
+        "MEAN" : "The mean length found in the column set (applies to numeric columns)",
+        "MEDIAN" : "The median length found in the column set (applies to numeric columns)",
+        "MIN" : "The minimum value in the column set (applies to numeric columns)",
+        "MIN_LENGTH" : "The minimum length found in the column set (applies to string columns)",
+        "NEGATIVE_COUNT" : "The number of negative values found in the value set (applies to numeric columns)",
+        "NEGATIVE_PERCENTAGE" : "The percentage of negative values to total rows for the dataset (applies to numeric columns)",
+        "NULL_COUNT" : "The number of null values found in the column value set",
+        "NULL_PERCENTAGE" : "The percentage of null values to total rows for the dataset",
+        "STDDEV" : "The stddev length found in the column set (applies to numeric columns)",
+        "UNIQUE_COUNT" : "The number of unique values found in the column value set",
+        "UNIQUE_PERCENTAGE" : "The percentage of unique values to total rows for the dataset",
+        "ZERO_COUNT" : "The number of zero values found in the value set (applies to numeric columns)",
+        "ZERO_PERCENTAGE" : "The percentage of zero values to total rows for the dataset (applies to numeric columns)"
+      }
+    },
+    "doc" : "The specific metric to assert against. This is the value that\nwill be obtained by applying a standard operation, such as an aggregation,\nto the selected field."
+  }, {
+    "name" : "operator",
+    "type" : {
+      "type" : "enum",
+      "name" : "AssertionStdOperator",
+      "doc" : "A boolean operator that is applied on the input to an assertion, after an aggregation function has been applied.",
+      "symbols" : [ "BETWEEN", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "EQUAL_TO", "NOT_EQUAL_TO", "NULL", "NOT_NULL", "CONTAIN", "END_WITH", "START_WITH", "REGEX_MATCH", "IN", "NOT_IN", "IS_TRUE", "IS_FALSE", "_NATIVE_" ],
+      "symbolDocs" : {
+        "BETWEEN" : "Value being asserted is between min_value and max_value.  Requires 'minValue' & 'maxValue' parameters.",
+        "CONTAIN" : "Value being asserted contains value. Requires 'value' parameter.",
+        "END_WITH" : "Value being asserted ends with value. Requires 'value' parameter.",
+        "EQUAL_TO" : "Value being asserted is equal to value. Requires 'value' parameter.",
+        "GREATER_THAN" : "Value being asserted is greater than some value. Requires 'value' parameter.",
+        "GREATER_THAN_OR_EQUAL_TO" : "Value being asserted is greater than or equal to some value. Requires 'value' parameter.",
+        "IN" : "Value being asserted is one of the array values. Requires 'value' parameter.",
+        "IS_FALSE" : "Value being asserted is false. Requires no parameters.",
+        "IS_TRUE" : "Value being asserted is true. Requires no parameters.",
+        "LESS_THAN" : "Value being asserted is less than a max value. Requires 'value' parameter.",
+        "LESS_THAN_OR_EQUAL_TO" : "Value being asserted is less than or equal to some value. Requires 'value' parameter.",
+        "NOT_EQUAL_TO" : "Value being asserted is not equal to value. Requires 'value' parameter.",
+        "NOT_IN" : "Value being asserted is not in one of the array values. Requires 'value' parameter.",
+        "NOT_NULL" : "Value being asserted is not null. Requires no parameters.",
+        "NULL" : "Value being asserted is null. Requires no parameters.",
+        "REGEX_MATCH" : "Value being asserted matches the regex value. Requires 'value' parameter.",
+        "START_WITH" : "Value being asserted starts with value. Requires 'value' parameter.",
+        "_NATIVE_" : "Other"
+      }
+    },
+    "doc" : "The predicate to evaluate against the metric for the field / column.\nDepending on the operator, parameters may be required in order to successfully\nevaluate the assertion against the metric value."
+  }, {
+    "name" : "parameters",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AssertionStdParameters",
+      "doc" : "Parameters for AssertionStdOperators.",
+      "fields" : [ {
+        "name" : "value",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "AssertionStdParameter",
+          "doc" : "Single parameter for AssertionStdOperators.",
+          "fields" : [ {
+            "name" : "value",
+            "type" : "string",
+            "doc" : "The parameter value"
+          }, {
+            "name" : "type",
+            "type" : {
+              "type" : "enum",
+              "name" : "AssertionStdParameterType",
+              "symbols" : [ "STRING", "NUMBER", "LIST", "SET", "UNKNOWN" ],
+              "symbolDocs" : {
+                "LIST" : "A list of values. When used, value should be formatted as a serialized JSON array.",
+                "NUMBER" : "A numeric value",
+                "SET" : "A set of values. When used, value should be formatted as a serialized JSON array.",
+                "STRING" : "A string value",
+                "UNKNOWN" : "A value of unknown type"
+              }
+            },
+            "doc" : "The type of the parameter"
+          } ]
+        } ],
+        "doc" : "The value parameter of an assertion",
+        "default" : null
+      }, {
+        "name" : "maxValue",
+        "type" : [ "null", "AssertionStdParameter" ],
+        "doc" : "The maxValue parameter of an assertion",
+        "default" : null
+      }, {
+        "name" : "minValue",
+        "type" : [ "null", "AssertionStdParameter" ],
+        "doc" : "The minValue parameter of an assertion",
+        "default" : null
+      } ]
+    } ],
+    "doc" : "Standard parameters required for the assertion. e.g. min_value, max_value, value, columns",
+    "default" : null
+  } ]
+}

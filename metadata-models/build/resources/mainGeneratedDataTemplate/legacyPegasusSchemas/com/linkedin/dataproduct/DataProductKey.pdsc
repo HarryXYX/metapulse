@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "DataProductKey",
+  "namespace" : "com.linkedin.dataproduct",
+  "doc" : "Key for a Query",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the Data Product."
+  } ],
+  "Aspect" : {
+    "name" : "dataProductKey"
+  }
+}

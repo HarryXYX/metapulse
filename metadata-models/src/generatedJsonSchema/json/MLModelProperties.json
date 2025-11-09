@@ -1,0 +1,271 @@
+{
+  "definitions" : {
+    "MLModelProperties" : {
+      "description" : "Properties associated with a ML Model",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "trainingJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "downstreamJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) that use the model or group.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the MLModel",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLModel",
+          "type" : "string"
+        },
+        "date" : {
+          "default" : null,
+          "description" : "Date when the MLModel was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created this and when",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Date when the MLModel was last modified",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Version of the MLModel",
+          "$ref" : "#/definitions/VersionTag"
+        },
+        "type" : {
+          "default" : null,
+          "description" : "Type of Algorithm or MLModel such as whether it is a Naive Bayes classifier, Convolutional Neural Network, etc",
+          "type" : "string"
+        },
+        "hyperParameters" : {
+          "default" : null,
+          "description" : "Hyper Parameters of the MLModel\n\nNOTE: these are deprecated in favor of hyperParams",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "hyperParams" : {
+          "default" : null,
+          "description" : "Hyperparameters of the MLModel",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLHyperParam"
+          }
+        },
+        "trainingMetrics" : {
+          "default" : null,
+          "description" : "Metrics of the MLModel used in training",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLMetric"
+          }
+        },
+        "onlineMetrics" : {
+          "default" : null,
+          "description" : "Metrics of the MLModel used in production",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLMetric"
+          }
+        },
+        "mlFeatures" : {
+          "default" : null,
+          "description" : "List of features used for MLModel training",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "tags" : {
+          "default" : [ ],
+          "description" : "Tags for the MLModel",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "deployments" : {
+          "default" : null,
+          "description" : "Deployments for the MLModel",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "groups" : {
+          "default" : null,
+          "description" : "Groups the model belongs to",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties", "tags" ]
+    },
+    "TimeStamp" : {
+      "description" : "A standard event timestamp",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the event occur",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "Optional: The actor urn involved in the event.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time" ]
+    },
+    "VersionTag" : {
+      "description" : "A resource-defined string representing the resource state for the purpose of concurrency control",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "versionTag" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "metadataAttribution" : {
+          "default" : null,
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      }
+    },
+    "MetadataAttribution" : {
+      "description" : "Information about who, why, and how this metadata was applied",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When this metadata was updated.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) responsible for applying the assocated metadata. This can\neither be a user (in case of UI edits) or the datahub system for automation.",
+          "type" : "string"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "The DataHub source responsible for applying the associated metadata. This will only be filled out\nwhen a DataHub source is responsible. This includes the specific metadata test urn, the automation urn.",
+          "type" : "string"
+        },
+        "sourceDetail" : {
+          "default" : { },
+          "description" : "The details associated with why this metadata was applied. For example, this could include\nthe actual regex rule, sql statement, ingestion pipeline ID, etc.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "time", "actor", "sourceDetail" ]
+    },
+    "MLHyperParam" : {
+      "description" : "Properties associated with an ML Hyper Param",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the MLHyperParam",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLHyperParam",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the MLHyperParam",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the MLHyperParam was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "MLMetric" : {
+      "description" : "Properties associated with an ML Metric",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the mlMetric",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the mlMetric",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the mlMetric",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the mlMetric was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/MLModelProperties"
+}

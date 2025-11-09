@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "AssertionResultError" : {
+      "description" : " An error encountered when evaluating an AssertionResult",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : " The type of error encountered",
+          "$ref" : "#/definitions/AssertionResultErrorType"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : " Additional metadata depending on the type of error",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "AssertionResultErrorType" : {
+      "enum" : [ "SOURCE_CONNECTION_ERROR", "SOURCE_QUERY_FAILED", "INSUFFICIENT_DATA", "INVALID_PARAMETERS", "INVALID_SOURCE_TYPE", "UNSUPPORTED_PLATFORM", "CUSTOM_SQL_ERROR", "FIELD_ASSERTION_ERROR", "UNKNOWN_ERROR" ]
+    }
+  },
+  "$ref" : "#/definitions/AssertionResultError"
+}

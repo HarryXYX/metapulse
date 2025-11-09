@@ -1,0 +1,182 @@
+{
+  "definitions" : {
+    "DataHubPageModuleProperties" : {
+      "description" : "The main properties of a DataHub page module",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The display name of this module",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of this module - the purpose it serves",
+          "$ref" : "#/definitions/DataHubPageModuleType"
+        },
+        "visibility" : {
+          "description" : "Info about the visibility of this module",
+          "$ref" : "#/definitions/DataHubPageModuleVisibility"
+        },
+        "params" : {
+          "description" : "The specific parameters stored for this module",
+          "$ref" : "#/definitions/DataHubPageModuleParams"
+        },
+        "created" : {
+          "description" : "Audit stamp for when and by whom this template was created",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "description" : "Audit stamp for when and by whom this template was last updated",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "name", "type", "visibility", "params", "created", "lastModified" ]
+    },
+    "DataHubPageModuleType" : {
+      "description" : "Enum containing the types of page modules that there are",
+      "enum" : [ "LINK", "RICH_TEXT", "ASSET_COLLECTION", "HIERARCHY", "OWNED_ASSETS", "DOMAINS", "ASSETS", "CHILD_HIERARCHY", "DATA_PRODUCTS", "RELATED_TERMS", "PLATFORMS" ]
+    },
+    "DataHubPageModuleVisibility" : {
+      "description" : "Info about the visibility of this module",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "scope" : {
+          "description" : "Audit stamp for when and by whom this module was created",
+          "$ref" : "#/definitions/PageModuleScope"
+        }
+      },
+      "required" : [ "scope" ]
+    },
+    "PageModuleScope" : {
+      "enum" : [ "PERSONAL", "GLOBAL" ]
+    },
+    "DataHubPageModuleParams" : {
+      "description" : "The specific parameters stored for a module",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "linkParams" : {
+          "default" : null,
+          "description" : "The params required if the module is type LINK",
+          "$ref" : "#/definitions/LinkModuleParams"
+        },
+        "richTextParams" : {
+          "default" : null,
+          "description" : "The params required if the module is type RICH_TEXT",
+          "$ref" : "#/definitions/RichTextModuleParams"
+        },
+        "assetCollectionParams" : {
+          "default" : null,
+          "description" : "The params required if the module is type ASSET_COLLECTION",
+          "$ref" : "#/definitions/AssetCollectionModuleParams"
+        },
+        "hierarchyViewParams" : {
+          "default" : null,
+          "description" : "The params required if the module is type HIERARCHY_VIEW",
+          "$ref" : "#/definitions/HierarchyModuleParams"
+        }
+      }
+    },
+    "LinkModuleParams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "linkUrl" : {
+          "type" : "string"
+        },
+        "imageUrl" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "type" : "string"
+        }
+      },
+      "required" : [ "linkUrl" ]
+    },
+    "RichTextModuleParams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "content" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "content" ]
+    },
+    "AssetCollectionModuleParams" : {
+      "description" : "The params required if the module is type ASSET_COLLECTION",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "assetUrns" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "dynamicFilterJson" : {
+          "default" : null,
+          "description" : "Optional dynamic filters\n\nThe stringified json representing the logical predicate built in the UI to select assets.\nThis predicate is turned into orFilters to send through graphql since graphql doesn't support\narbitrary nesting. This string is used to restore the UI for this logical predicate.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "assetUrns" ]
+    },
+    "HierarchyModuleParams" : {
+      "description" : "The params required if the module is type HIERARCHY_VIEW",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "assetUrns" : {
+          "default" : null,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "showRelatedEntities" : {
+          "type" : "boolean"
+        },
+        "relatedEntitiesFilterJson" : {
+          "default" : null,
+          "description" : "Optional filters to filter relatedEntities (assetUrns) out\n\nThe stringified json representing the logical predicate built in the UI to select assets.\nThis predicate is turned into orFilters to send through graphql since graphql doesn't support\narbitrary nesting. This string is used to restore the UI for this logical predicate.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "showRelatedEntities" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubPageModuleProperties"
+}

@@ -1,0 +1,65 @@
+{
+  "type" : "record",
+  "name" : "DataContractProperties",
+  "namespace" : "com.linkedin.datacontract",
+  "doc" : "Information about a data contract",
+  "fields" : [ {
+    "name" : "entity",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The entity that this contract is associated with. Currently, we only support Dataset contracts, but\nin the future we may also support Data Product level contracts.",
+    "Relationship" : {
+      "entityTypes" : [ "dataset" ],
+      "name" : "ContractFor"
+    }
+  }, {
+    "name" : "schema",
+    "type" : {
+      "type" : "array",
+      "items" : "SchemaContract"
+    },
+    "doc" : "An optional set of schema contracts. If this is a dataset contract, there will only be one.",
+    "optional" : true,
+    "Relationship" : {
+      "/*/assertion" : {
+        "entityTypes" : [ "assertion" ],
+        "name" : "IncludesSchemaAssertion"
+      }
+    }
+  }, {
+    "name" : "freshness",
+    "type" : {
+      "type" : "array",
+      "items" : "FreshnessContract"
+    },
+    "doc" : "An optional set of FRESHNESS contracts. If this is a dataset contract, there will only be one.",
+    "optional" : true,
+    "Relationship" : {
+      "/*/assertion" : {
+        "entityTypes" : [ "assertion" ],
+        "name" : "IncludesFreshnessAssertion"
+      }
+    }
+  }, {
+    "name" : "dataQuality",
+    "type" : {
+      "type" : "array",
+      "items" : "DataQualityContract"
+    },
+    "doc" : "An optional set of Data Quality contracts, e.g. table and column level contract constraints.",
+    "optional" : true,
+    "Relationship" : {
+      "/*/assertion" : {
+        "entityTypes" : [ "assertion" ],
+        "name" : "IncludesDataQualityAssertion"
+      }
+    }
+  }, {
+    "name" : "rawContract",
+    "type" : "string",
+    "doc" : "YAML-formatted contract definition",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "dataContractProperties"
+  }
+}

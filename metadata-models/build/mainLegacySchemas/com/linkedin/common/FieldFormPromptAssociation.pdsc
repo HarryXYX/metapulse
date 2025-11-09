@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "FieldFormPromptAssociation",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about the status of a particular prompt for a specific schema field\non an entity.",
+  "fields" : [ {
+    "name" : "fieldPath",
+    "type" : "string",
+    "doc" : "The field path on a schema field."
+  }, {
+    "name" : "lastModified",
+    "type" : "AuditStamp",
+    "doc" : "The last time this prompt was touched for the field on the entity (set, unset)"
+  } ]
+}

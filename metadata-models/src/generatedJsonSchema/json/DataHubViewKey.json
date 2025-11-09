@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubViewKey" : {
+      "description" : "Key for a DataHub View",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the View",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubViewKey"
+}

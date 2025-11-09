@@ -1,0 +1,103 @@
+{
+  "type" : "record",
+  "name" : "SearchFlags",
+  "namespace" : "com.linkedin.metadata.query",
+  "doc" : "Set of flags to control search behavior",
+  "fields" : [ {
+    "name" : "skipCache",
+    "type" : "boolean",
+    "doc" : "Whether to skip cache",
+    "default" : false
+  }, {
+    "name" : "maxAggValues",
+    "type" : "int",
+    "doc" : "The maximum number of values in a facet aggregation",
+    "default" : 20
+  }, {
+    "name" : "fulltext",
+    "type" : "boolean",
+    "doc" : "Structured or unstructured fulltext query",
+    "optional" : true
+  }, {
+    "name" : "skipHighlighting",
+    "type" : "boolean",
+    "doc" : "Whether to skip highlighting",
+    "default" : false,
+    "optional" : true
+  }, {
+    "name" : "skipAggregates",
+    "type" : "boolean",
+    "doc" : "Whether to skip aggregates/facets",
+    "default" : false,
+    "optional" : true
+  }, {
+    "name" : "getSuggestions",
+    "type" : "boolean",
+    "doc" : "Whether to request for search suggestions on the _entityName virtualized field",
+    "default" : false,
+    "optional" : true
+  }, {
+    "name" : "groupingSpec",
+    "type" : "GroupingSpec",
+    "doc" : "Instructions for grouping results before returning",
+    "optional" : true
+  }, {
+    "name" : "includeSoftDeleted",
+    "type" : "boolean",
+    "doc" : "include soft deleted entities in results",
+    "default" : false,
+    "optional" : true
+  }, {
+    "name" : "includeRestricted",
+    "type" : "boolean",
+    "doc" : "include restricted entities in results (default is to filter)",
+    "default" : false,
+    "optional" : true
+  }, {
+    "name" : "customHighlightingFields",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "doc" : "Include mentioned fields inside elastic highlighting query",
+    "optional" : true
+  }, {
+    "name" : "rewriteQuery",
+    "type" : "boolean",
+    "doc" : "invoke query rewrite chain for filters based on configured rewriters",
+    "default" : true,
+    "optional" : true
+  }, {
+    "name" : "includeDefaultFacets",
+    "type" : "boolean",
+    "doc" : "Include default facets when getting facets to aggregate on in search requests.\nBy default we include these, but custom aggregation requests don't need them.",
+    "default" : true,
+    "optional" : true
+  }, {
+    "name" : "filterNonLatestVersions",
+    "type" : "boolean",
+    "doc" : "Include only latest versions in version sets, default true",
+    "default" : true,
+    "optional" : true
+  }, {
+    "name" : "fieldConfiguration",
+    "type" : "string",
+    "doc" : "Which fieldConfiguration should be applied. The possible values\nare defined in the configuration file `search_config.yaml`",
+    "optional" : true
+  }, {
+    "name" : "sliceOptions",
+    "type" : {
+      "type" : "record",
+      "name" : "SliceOptions",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "int"
+      }, {
+        "name" : "max",
+        "type" : "int"
+      } ]
+    },
+    "doc" : "Sets slice parameter for elasticsearch query,\nto allow multiple clients to scroll the same query at once.\nOnly supported by the ElasticSearchService",
+    "optional" : true
+  } ]
+}

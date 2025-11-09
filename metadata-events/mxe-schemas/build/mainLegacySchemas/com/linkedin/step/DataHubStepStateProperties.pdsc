@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "DataHubStepStateProperties",
+  "namespace" : "com.linkedin.step",
+  "doc" : "The properties associated with a DataHub step state",
+  "fields" : [ {
+    "name" : "properties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Description of the secret",
+    "default" : { }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp describing the last person to update it."
+  } ],
+  "Aspect" : {
+    "name" : "dataHubStepStateProperties"
+  }
+}

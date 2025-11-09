@@ -1,0 +1,149 @@
+{
+  "type" : "record",
+  "name" : "QueryProperties",
+  "namespace" : "com.linkedin.query",
+  "doc" : "Information about a Query against one or more data assets (e.g. Tables or Views).",
+  "fields" : [ {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Custom property bag.",
+    "default" : { },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "TEXT",
+        "queryByDefault" : true
+      }
+    }
+  }, {
+    "name" : "statement",
+    "type" : {
+      "type" : "record",
+      "name" : "QueryStatement",
+      "doc" : "A query statement against one or more data assets.",
+      "fields" : [ {
+        "name" : "value",
+        "type" : "string",
+        "doc" : "The query text"
+      }, {
+        "name" : "language",
+        "type" : {
+          "type" : "enum",
+          "name" : "QueryLanguage",
+          "symbols" : [ "SQL", "UNKNOWN" ],
+          "symbolDocs" : {
+            "SQL" : "A SQL Query",
+            "UNKNOWN" : "Unknown query language"
+          }
+        },
+        "doc" : "The language of the Query, e.g. SQL.",
+        "default" : "SQL"
+      } ]
+    },
+    "doc" : "The Query Statement."
+  }, {
+    "name" : "source",
+    "type" : {
+      "type" : "enum",
+      "name" : "QuerySource",
+      "symbols" : [ "MANUAL", "SYSTEM" ],
+      "symbolDocs" : {
+        "MANUAL" : "The query was entered manually by a user (via the UI).",
+        "SYSTEM" : "The query was discovered by a crawler."
+      }
+    },
+    "doc" : "The source of the Query",
+    "Searchable" : { }
+  }, {
+    "name" : "name",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional display name to identify the query.",
+    "default" : null,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "WORD_GRAM"
+    }
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "The Query description.",
+    "default" : null
+  }, {
+    "name" : "created",
+    "type" : {
+      "type" : "record",
+      "name" : "AuditStamp",
+      "namespace" : "com.linkedin.common",
+      "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "fields" : [ {
+        "name" : "time",
+        "type" : "long",
+        "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+      }, {
+        "name" : "actor",
+        "type" : "string",
+        "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "impersonator",
+        "type" : [ "null", "string" ],
+        "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+        "default" : null,
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "message",
+        "type" : [ "null", "string" ],
+        "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+        "default" : null
+      } ]
+    },
+    "doc" : "Audit stamp capturing the time and actor who created the Query.",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "createdBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp capturing the time and actor who last modified the Query.",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "lastModifiedBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "origin",
+    "type" : [ "null", "string" ],
+    "doc" : "The origin of the Query.\nThis is the source of the Query (e.g. a View, Stored Procedure, dbt Model, etc.) that the Query was created from.",
+    "default" : null,
+    "Searchable" : {
+      "addToFilters" : false,
+      "fieldType" : "URN",
+      "queryByDefault" : false
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "queryProperties"
+  }
+}

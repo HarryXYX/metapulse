@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "DataHubIngestionSourceSchedule",
+  "namespace" : "com.linkedin.ingestion",
+  "doc" : "The schedule associated with an ingestion source.",
+  "fields" : [ {
+    "name" : "interval",
+    "type" : "string",
+    "doc" : "A cron-formatted execution interval, as a cron string, e.g. * * * * *"
+  }, {
+    "name" : "timezone",
+    "type" : "string",
+    "doc" : "Timezone in which the cron interval applies, e.g. America/Los Angeles"
+  } ]
+}

@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "GroupingSpec",
+  "namespace" : "com.linkedin.metadata.query",
+  "doc" : "A set of directives to control how results are grouped.\nThe underlying generic groupings are nested to allow for further evolution of the grouping spec.",
+  "fields" : [ {
+    "name" : "groupingCriteria",
+    "type" : {
+      "type" : "array",
+      "items" : "GroupingCriterion"
+    },
+    "doc" : "A list of generic directives to group results by.\n",
+    "default" : [ ]
+  } ]
+}

@@ -1,0 +1,30 @@
+{
+  "definitions" : {
+    "BaseData" : {
+      "description" : "BaseData record",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dataset" : {
+          "description" : "What dataset were used in the MLModel?",
+          "type" : "string"
+        },
+        "motivation" : {
+          "default" : null,
+          "description" : "Why was this dataset chosen?",
+          "type" : "string"
+        },
+        "preProcessing" : {
+          "default" : null,
+          "description" : "How was the data preprocessed (e.g., tokenization of sentences, cropping of images, any filtering such as dropping images without faces)?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "dataset" ]
+    }
+  },
+  "$ref" : "#/definitions/BaseData"
+}

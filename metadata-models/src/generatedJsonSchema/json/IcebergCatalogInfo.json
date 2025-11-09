@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "IcebergCatalogInfo" : {
+      "description" : "Iceberg Catalog metadata associated with an Iceberg table/view",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "metadataPointer" : {
+          "default" : null,
+          "description" : "When Datahub is the REST Catalog for an Iceberg Table, stores the current metadata pointer.\nIf the Iceberg table is managed by an external catalog, the metadata pointer is not set.",
+          "type" : "string"
+        },
+        "view" : {
+          "default" : null,
+          "type" : "boolean"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/IcebergCatalogInfo"
+}

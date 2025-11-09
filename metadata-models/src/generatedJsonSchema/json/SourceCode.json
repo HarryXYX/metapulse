@@ -1,0 +1,39 @@
+{
+  "definitions" : {
+    "SourceCode" : {
+      "description" : "Source Code",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "sourceCode" : {
+          "description" : "Source Code along with types",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SourceCodeUrl"
+          }
+        }
+      },
+      "required" : [ "sourceCode" ]
+    },
+    "SourceCodeUrl" : {
+      "description" : "Source Code Url Entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Source Code Url Types",
+          "$ref" : "#/definitions/SourceCodeUrlType"
+        },
+        "sourceCodeUrl" : {
+          "description" : "Source Code Url",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type", "sourceCodeUrl" ]
+    },
+    "SourceCodeUrlType" : {
+      "enum" : [ "ML_MODEL_SOURCE_CODE", "TRAINING_PIPELINE_SOURCE_CODE", "EVALUATION_PIPELINE_SOURCE_CODE" ]
+    }
+  },
+  "$ref" : "#/definitions/SourceCode"
+}

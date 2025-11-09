@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "EditableMLModelGroupProperties" : {
+      "description" : "Properties associated with an ML Model Group editable from the UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the ml model group",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/EditableMLModelGroupProperties"
+}

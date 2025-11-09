@@ -1,0 +1,66 @@
+package com.linkedin.datahub.graphql.generated;
+
+import java.util.StringJoiner;
+
+public class MLModelGroupEditableProperties implements java.io.Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    private String description;
+
+    public MLModelGroupEditableProperties() {
+    }
+
+    public MLModelGroupEditableProperties(String description) {
+        this.description = description;
+    }
+
+    /**
+     * The edited description
+     */
+    public String getDescription() {
+        return description;
+    }
+    /**
+     * The edited description
+     */
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+    @Override
+    public String toString() {
+        StringJoiner joiner = new StringJoiner(", ", "{ ", " }");
+        if (description != null) {
+            joiner.add("description: \"" + description + "\"");
+        }
+        return joiner.toString();
+    }
+
+    public static MLModelGroupEditableProperties.Builder builder() {
+        return new MLModelGroupEditableProperties.Builder();
+    }
+
+    public static class Builder {
+
+        private String description;
+
+        public Builder() {
+        }
+
+        /**
+         * The edited description
+         */
+        public Builder setDescription(String description) {
+            this.description = description;
+            return this;
+        }
+
+
+        public MLModelGroupEditableProperties build() {
+            return new MLModelGroupEditableProperties(description);
+        }
+
+    }
+}

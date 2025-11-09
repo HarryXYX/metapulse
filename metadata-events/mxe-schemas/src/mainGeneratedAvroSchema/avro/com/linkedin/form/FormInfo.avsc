@@ -1,0 +1,156 @@
+{
+  "type" : "record",
+  "name" : "FormInfo",
+  "namespace" : "com.linkedin.form",
+  "doc" : "Information about a form to help with filling out metadata on entities.",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the form",
+    "Searchable" : {
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "Description of the form",
+    "default" : null
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "FormType",
+      "symbols" : [ "COMPLETION", "VERIFICATION" ],
+      "symbolDocs" : {
+        "COMPLETION" : "A form simply used for collecting metadata fields for an entity.",
+        "VERIFICATION" : "This form is used for \"verifying\" that entities comply with a policy via presence of a specific set of metadata fields."
+      }
+    },
+    "doc" : "The type of this form",
+    "default" : "COMPLETION",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "prompts",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "FormPrompt",
+        "doc" : "A prompt to present to the user to encourage filling out metadata",
+        "fields" : [ {
+          "name" : "id",
+          "type" : "string",
+          "doc" : "The unique id for this prompt. This must be GLOBALLY unique.",
+          "Searchable" : {
+            "fieldName" : "promptId",
+            "fieldType" : "KEYWORD",
+            "queryByDefault" : false
+          }
+        }, {
+          "name" : "title",
+          "type" : "string",
+          "doc" : "The title of this prompt"
+        }, {
+          "name" : "description",
+          "type" : [ "null", "string" ],
+          "doc" : "The description of this prompt",
+          "default" : null
+        }, {
+          "name" : "type",
+          "type" : {
+            "type" : "enum",
+            "name" : "FormPromptType",
+            "symbols" : [ "STRUCTURED_PROPERTY", "FIELDS_STRUCTURED_PROPERTY" ],
+            "symbolDocs" : {
+              "FIELDS_STRUCTURED_PROPERTY" : "This prompt is meant to apply a structured property to a schema fields entity",
+              "STRUCTURED_PROPERTY" : "This prompt is meant to apply a structured property to an entity"
+            }
+          },
+          "doc" : "The type of prompt"
+        }, {
+          "name" : "structuredPropertyParams",
+          "type" : [ "null", {
+            "type" : "record",
+            "name" : "StructuredPropertyParams",
+            "fields" : [ {
+              "name" : "urn",
+              "type" : "string",
+              "doc" : "The structured property that is required on this entity",
+              "Searchable" : {
+                "fieldName" : "structuredPropertyPromptUrns",
+                "fieldType" : "URN"
+              },
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            } ]
+          } ],
+          "doc" : "An optional set of information specific to structured properties prompts.\nThis should be filled out if the prompt is type STRUCTURED_PROPERTY or FIELDS_STRUCTURED_PROPERTY.",
+          "default" : null
+        }, {
+          "name" : "required",
+          "type" : "boolean",
+          "doc" : "Whether the prompt is required to be completed, in order for the form to be marked as complete.",
+          "default" : false
+        } ]
+      }
+    },
+    "doc" : "List of prompts to present to the user to encourage filling out metadata",
+    "default" : [ ]
+  }, {
+    "name" : "actors",
+    "type" : {
+      "type" : "record",
+      "name" : "FormActorAssignment",
+      "fields" : [ {
+        "name" : "owners",
+        "type" : "boolean",
+        "doc" : "Whether the form should be assigned to the owners of assets that it is applied to.\nThis is the default.",
+        "default" : true,
+        "Searchable" : {
+          "fieldName" : "isOwnershipForm",
+          "fieldType" : "BOOLEAN"
+        }
+      }, {
+        "name" : "groups",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "string"
+        } ],
+        "doc" : "Optional: Specific set of groups that are targeted by this form assignment.",
+        "default" : null,
+        "Searchable" : {
+          "/*" : {
+            "fieldName" : "assignedGroups",
+            "fieldType" : "URN"
+          }
+        }
+      }, {
+        "name" : "users",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "string"
+        } ],
+        "doc" : "Optional: Specific set of users that are targeted by this form assignment.",
+        "default" : null,
+        "Searchable" : {
+          "/*" : {
+            "fieldName" : "assignedUsers",
+            "fieldType" : "URN"
+          }
+        }
+      } ]
+    },
+    "doc" : "Who the form is assigned to, e.g. who should see the form when visiting the entity page or governance center",
+    "default" : {
+      "groups" : null,
+      "owners" : true,
+      "users" : null
+    }
+  } ],
+  "Aspect" : {
+    "name" : "formInfo"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "definitions" : {
+    "GroupingBucket" : {
+      "description" : "Defines the group by bucket definitions for time series requests.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Type of the grouping bucket.",
+          "$ref" : "#/definitions/GroupingBucketType"
+        },
+        "key" : {
+          "description" : "Key that specifies the column name to be used as the timestamp field for bucketing.",
+          "type" : "string"
+        },
+        "timeWindowSize" : {
+          "default" : null,
+          "description" : "Bucket size (like a day/hour etc) for the date grouping buckets.",
+          "$ref" : "#/definitions/TimeWindowSize"
+        },
+        "timeZone" : {
+          "default" : null,
+          "description" : "Optional specified time zone to take into account when grouping by date",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type", "key" ]
+    },
+    "GroupingBucketType" : {
+      "description" : "Defines a grouping bucket type.",
+      "enum" : [ "DATE_GROUPING_BUCKET", "STRING_GROUPING_BUCKET" ]
+    },
+    "TimeWindowSize" : {
+      "description" : "Defines the size of a time window.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "unit" : {
+          "description" : "Interval unit such as minute/hour/day etc.",
+          "$ref" : "#/definitions/CalendarInterval"
+        },
+        "multiple" : {
+          "default" : 1,
+          "description" : "How many units. Defaults to 1.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "unit", "multiple" ]
+    },
+    "CalendarInterval" : {
+      "enum" : [ "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR" ]
+    }
+  },
+  "$ref" : "#/definitions/GroupingBucket"
+}

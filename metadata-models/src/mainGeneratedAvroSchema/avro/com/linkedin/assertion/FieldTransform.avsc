@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "FieldTransform",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Definition of a transform applied to the values of a column / field.\nNote that the applicability of a field transform ultimately depends on the native type\nof the field / column.\n\nModel has single field to permit extension.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "FieldTransformType",
+      "symbols" : [ "LENGTH" ],
+      "symbolDocs" : {
+        "LENGTH" : "Obtain the length of a string field / column (applicable to string types)"
+      }
+    },
+    "doc" : "The type of the field transform, e.g. the transformation\nfunction / operator to apply."
+  } ]
+}

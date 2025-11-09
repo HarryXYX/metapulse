@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "AssertionStdParameters",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Parameters for AssertionStdOperators.",
+  "fields" : [ {
+    "name" : "value",
+    "type" : "AssertionStdParameter",
+    "doc" : "The value parameter of an assertion",
+    "optional" : true
+  }, {
+    "name" : "maxValue",
+    "type" : "AssertionStdParameter",
+    "doc" : "The maxValue parameter of an assertion",
+    "optional" : true
+  }, {
+    "name" : "minValue",
+    "type" : "AssertionStdParameter",
+    "doc" : "The minValue parameter of an assertion",
+    "optional" : true
+  } ]
+}

@@ -1,0 +1,21 @@
+{
+  "type" : "record",
+  "name" : "DataPlatformInstanceKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a Dataset",
+  "fields" : [ {
+    "name" : "platform",
+    "type" : "string",
+    "doc" : "Data platform urn associated with the instance",
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "instance",
+    "type" : "string",
+    "doc" : "Unique instance id"
+  } ],
+  "Aspect" : {
+    "name" : "dataPlatformInstanceKey"
+  }
+}

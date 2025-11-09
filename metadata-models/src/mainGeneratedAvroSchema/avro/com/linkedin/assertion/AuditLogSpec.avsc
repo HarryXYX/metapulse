@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "AuditLogSpec",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Information about the Audit Log operation to use in evaluating an assertion.",
+  "fields" : [ {
+    "name" : "operationTypes",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "The list of operation types that should be monitored. If not provided, a default set will be used.",
+    "default" : null
+  }, {
+    "name" : "userName",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional: The user name associated with the operation.",
+    "default" : null
+  } ]
+}

@@ -1,0 +1,35 @@
+{
+  "type" : "record",
+  "name" : "DataTransform",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about a transformation. It may be a query,",
+  "fields" : [ {
+    "name" : "queryStatement",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "QueryStatement",
+      "namespace" : "com.linkedin.query",
+      "doc" : "A query statement against one or more data assets.",
+      "fields" : [ {
+        "name" : "value",
+        "type" : "string",
+        "doc" : "The query text"
+      }, {
+        "name" : "language",
+        "type" : {
+          "type" : "enum",
+          "name" : "QueryLanguage",
+          "symbols" : [ "SQL", "UNKNOWN" ],
+          "symbolDocs" : {
+            "SQL" : "A SQL Query",
+            "UNKNOWN" : "Unknown query language"
+          }
+        },
+        "doc" : "The language of the Query, e.g. SQL.",
+        "default" : "SQL"
+      } ]
+    } ],
+    "doc" : "The data transform may be defined by a query statement",
+    "default" : null
+  } ]
+}

@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "IncrementingSegmentFieldTransformer" : {
+      "description" : "The definition of the transformer function  that should be applied to a given field / column value in a dataset\nin order to determine the segment or bucket that it belongs to, which in turn is used to evaluate\nvolume assertions.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "A 'standard' transformer type. Note that not all source systems will support all operators.",
+          "$ref" : "#/definitions/IncrementingSegmentFieldTransformerType"
+        },
+        "nativeType" : {
+          "default" : null,
+          "description" : "The 'native' transformer type, useful as a back door if a custom operator is required.\nThis field is required if the type is NATIVE.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "IncrementingSegmentFieldTransformerType" : {
+      "enum" : [ "TIMESTAMP_MS_TO_MINUTE", "TIMESTAMP_MS_TO_HOUR", "TIMESTAMP_MS_TO_DATE", "TIMESTAMP_MS_TO_MONTH", "TIMESTAMP_MS_TO_YEAR", "FLOOR", "CEILING", "NATIVE" ]
+    }
+  },
+  "$ref" : "#/definitions/IncrementingSegmentFieldTransformer"
+}

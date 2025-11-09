@@ -1,0 +1,13 @@
+{
+  "type" : "record",
+  "name" : "StructuredPropertyKey",
+  "namespace" : "com.linkedin.structured",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The id for a structured proeprty."
+  } ],
+  "Aspect" : {
+    "name" : "structuredPropertyKey"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "type" : "record",
+  "name" : "DatasetProfile",
+  "namespace" : "com.linkedin.dataset",
+  "doc" : "Stats corresponding to datasets",
+  "include" : [ "com.linkedin.timeseries.TimeseriesAspectBase" ],
+  "fields" : [ {
+    "name" : "rowCount",
+    "type" : "long",
+    "doc" : "The total number of rows",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "COUNT",
+      "hasValuesFieldName" : "hasRowCount"
+    }
+  }, {
+    "name" : "columnCount",
+    "type" : "long",
+    "doc" : "The total number of columns (or schema fields)",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "COUNT",
+      "hasValuesFieldName" : "hasColumnCount"
+    }
+  }, {
+    "name" : "fieldProfiles",
+    "type" : {
+      "type" : "array",
+      "items" : "DatasetFieldProfile"
+    },
+    "doc" : "Profiles for each column (or schema field)",
+    "optional" : true
+  }, {
+    "name" : "sizeInBytes",
+    "type" : "long",
+    "doc" : "Storage size in bytes",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "COUNT",
+      "hasValuesFieldName" : "hasSizeInBytes"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "datasetProfile",
+    "type" : "timeseries"
+  }
+}

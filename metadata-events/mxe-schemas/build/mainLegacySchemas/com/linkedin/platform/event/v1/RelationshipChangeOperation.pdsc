@@ -1,0 +1,6 @@
+{
+  "type" : "enum",
+  "name" : "RelationshipChangeOperation",
+  "namespace" : "com.linkedin.platform.event.v1",
+  "symbols" : [ "ADD", "REMOVE", "RESTATE" ]
+}

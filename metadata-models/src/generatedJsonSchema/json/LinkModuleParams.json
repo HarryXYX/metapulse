@@ -1,0 +1,23 @@
+{
+  "definitions" : {
+    "LinkModuleParams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "linkUrl" : {
+          "type" : "string"
+        },
+        "imageUrl" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "type" : "string"
+        }
+      },
+      "required" : [ "linkUrl" ]
+    }
+  },
+  "$ref" : "#/definitions/LinkModuleParams"
+}

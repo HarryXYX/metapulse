@@ -1,0 +1,47 @@
+{
+  "type" : "record",
+  "name" : "QueryUsageStatistics",
+  "namespace" : "com.linkedin.query",
+  "doc" : "Stats corresponding to dataset's usage.",
+  "include" : [ "com.linkedin.timeseries.TimeseriesAspectBase" ],
+  "fields" : [ {
+    "name" : "queryCount",
+    "type" : "int",
+    "doc" : "Total query count in this bucket",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "queryCost",
+    "type" : "double",
+    "doc" : "Query cost for this query and bucket",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "lastExecutedAt",
+    "type" : "long",
+    "doc" : "Last executed timestamp",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "uniqueUserCount",
+    "type" : "int",
+    "doc" : "Unique user count",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "userCounts",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.dataset.DatasetUserUsageCounts"
+    },
+    "doc" : "Users within this bucket, with frequency counts",
+    "optional" : true,
+    "TimeseriesFieldCollection" : {
+      "key" : "user"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "queryUsageStatistics",
+    "type" : "timeseries"
+  }
+}

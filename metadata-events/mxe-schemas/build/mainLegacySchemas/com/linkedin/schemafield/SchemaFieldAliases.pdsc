@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "SchemaFieldAliases",
+  "namespace" : "com.linkedin.schemafield",
+  "fields" : [ {
+    "name" : "aliases",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Used to store aliases",
+    "optional" : true,
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "schemaFieldAliases",
+        "fieldType" : "URN",
+        "queryByDefault" : false
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "schemaFieldAliases"
+  }
+}

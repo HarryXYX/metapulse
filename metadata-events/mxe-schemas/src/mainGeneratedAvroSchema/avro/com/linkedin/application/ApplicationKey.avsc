@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "ApplicationKey",
+  "namespace" : "com.linkedin.application",
+  "doc" : "Key for a Query",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the Application."
+  } ],
+  "Aspect" : {
+    "name" : "applicationKey"
+  }
+}

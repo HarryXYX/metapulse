@@ -1,0 +1,52 @@
+{
+  "type" : "record",
+  "name" : "OwnershipTypeInfo",
+  "namespace" : "com.linkedin.ownership",
+  "doc" : "Information about an ownership type",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the Ownership Type",
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "WORD_GRAM"
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Description of the Ownership Type",
+    "optional" : true
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp capturing the time and actor who created the Ownership Type.",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "createdBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp capturing the time and actor who last modified the Ownership Type.",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "lastModifiedBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "ownershipTypeInfo"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type" : "record",
+  "name" : "NotificationSetting",
+  "namespace" : "com.linkedin.settings",
+  "fields" : [ {
+    "name" : "value",
+    "type" : {
+      "type" : "enum",
+      "name" : "NotificationSettingValue",
+      "symbols" : [ "ENABLED", "DISABLED" ],
+      "symbolDocs" : {
+        "DISABLED" : "Setting is disabled.",
+        "ENABLED" : "Setting is enabled."
+      }
+    },
+    "doc" : "Integrations between DataHub & other platforms."
+  }, {
+    "name" : "params",
+    "type" : [ "null", {
+      "type" : "map",
+      "values" : "string"
+    } ],
+    "doc" : "Custom set of setting parameters.",
+    "default" : null
+  } ]
+}

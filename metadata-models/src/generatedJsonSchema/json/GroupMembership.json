@@ -1,0 +1,19 @@
+{
+  "definitions" : {
+    "GroupMembership" : {
+      "description" : "Carries information about the CorpGroups a user is in.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "groups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "groups" ]
+    }
+  },
+  "$ref" : "#/definitions/GroupMembership"
+}

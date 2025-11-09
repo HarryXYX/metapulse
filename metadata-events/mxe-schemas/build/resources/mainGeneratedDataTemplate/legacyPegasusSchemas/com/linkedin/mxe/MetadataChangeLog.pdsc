@@ -1,0 +1,23 @@
+{
+  "type" : "record",
+  "name" : "MetadataChangeLog",
+  "namespace" : "com.linkedin.mxe",
+  "doc" : "Kafka event for capturing update made to an entity's metadata.",
+  "include" : [ "MetadataChangeProposal" ],
+  "fields" : [ {
+    "name" : "previousAspectValue",
+    "type" : "GenericAspect",
+    "doc" : "The previous value of the aspect that has changed.",
+    "optional" : true
+  }, {
+    "name" : "previousSystemMetadata",
+    "type" : "SystemMetadata",
+    "doc" : "The previous value of the system metadata field that has changed.",
+    "optional" : true
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "An audit stamp detailing who and when the aspect was changed by. Required for all intents and purposes.",
+    "optional" : true
+  } ]
+}

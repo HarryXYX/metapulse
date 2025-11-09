@@ -1,0 +1,98 @@
+{
+  "type" : "record",
+  "name" : "OidcSettings",
+  "namespace" : "com.linkedin.settings.global",
+  "doc" : "Settings for OIDC SSO integration.",
+  "fields" : [ {
+    "name" : "enabled",
+    "type" : "boolean",
+    "doc" : "Whether OIDC SSO is enabled."
+  }, {
+    "name" : "clientId",
+    "type" : "string",
+    "doc" : "Unique client id issued by the identity provider."
+  }, {
+    "name" : "clientSecret",
+    "type" : "string",
+    "doc" : "Unique client secret issued by the identity provider."
+  }, {
+    "name" : "discoveryUri",
+    "type" : "string",
+    "doc" : "The IdP OIDC discovery url."
+  }, {
+    "name" : "userNameClaim",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. The attribute / claim used to derive the DataHub username. Defaults to \"preferred_username\".",
+    "default" : null
+  }, {
+    "name" : "userNameClaimRegex",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. TThe regex used to parse the DataHub username from the user name claim. Defaults to (.*) (all).",
+    "default" : null
+  }, {
+    "name" : "scope",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. String representing the requested scope from the IdP. Defaults to \"oidc email profile\".",
+    "default" : null
+  }, {
+    "name" : "clientAuthenticationMethod",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. Which authentication method to use to pass credentials (clientId and clientSecret) to the token endpoint: Defaults to \"client_secret_basic\".",
+    "default" : null
+  }, {
+    "name" : "jitProvisioningEnabled",
+    "type" : [ "null", "boolean" ],
+    "doc" : "ADVANCED. Whether DataHub users should be provisioned on login if they do not exist. Defaults to true.",
+    "default" : null
+  }, {
+    "name" : "preProvisioningRequired",
+    "type" : [ "null", "boolean" ],
+    "doc" : "ADVANCED. Whether the user should already exist in DataHub on login, failing login if they are not. Defaults to false.",
+    "default" : null
+  }, {
+    "name" : "extractGroupsEnabled",
+    "type" : [ "null", "boolean" ],
+    "doc" : "ADVANCED. Whether groups should be extracted from a claim in the OIDC profile. Only applies if JIT provisioning is enabled. Groups will be created if they do not exist. Defaults to true.",
+    "default" : null
+  }, {
+    "name" : "groupsClaim",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. The OIDC claim to extract groups information from. Defaults to 'groups'.",
+    "default" : null
+  }, {
+    "name" : "responseType",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. Response type.",
+    "default" : null
+  }, {
+    "name" : "responseMode",
+    "type" : [ "null", "string" ],
+    "doc" : "ADVANCED. Response mode.",
+    "default" : null
+  }, {
+    "name" : "useNonce",
+    "type" : [ "null", "boolean" ],
+    "doc" : "ADVANCED. Use Nonce.",
+    "default" : null
+  }, {
+    "name" : "readTimeout",
+    "type" : [ "null", "long" ],
+    "doc" : "ADVANCED. Read timeout.",
+    "default" : null
+  }, {
+    "name" : "extractJwtAccessTokenClaims",
+    "type" : [ "null", "boolean" ],
+    "doc" : "ADVANCED. Whether to extract claims from JWT access token.  Defaults to false.",
+    "default" : null
+  }, {
+    "name" : "preferredJwsAlgorithm",
+    "type" : [ "null", "string" ],
+    "doc" : " ADVANCED. Which jws algorithm to use. Unused.",
+    "default" : null
+  }, {
+    "name" : "preferredJwsAlgorithm2",
+    "type" : [ "null", "string" ],
+    "doc" : " ADVANCED. Which jws algorithm to use.",
+    "default" : null
+  } ]
+}

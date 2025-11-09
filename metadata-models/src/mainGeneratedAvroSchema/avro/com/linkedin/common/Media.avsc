@@ -1,0 +1,27 @@
+{
+  "type" : "record",
+  "name" : "Media",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Carries information about which roles a user is assigned to.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "MediaType",
+      "doc" : "Enum defining the type of content a Media object holds.",
+      "symbols" : [ "IMAGE" ],
+      "symbolDocs" : {
+        "IMAGE" : "The Media holds an image."
+      }
+    },
+    "doc" : "Type of content the Media is storing, e.g. image, video, etc."
+  }, {
+    "name" : "location",
+    "type" : "string",
+    "doc" : "Where the media content is stored.",
+    "java" : {
+      "class" : "com.linkedin.common.url.Url",
+      "coercerClass" : "com.linkedin.common.url.UrlCoercer"
+    }
+  } ]
+}

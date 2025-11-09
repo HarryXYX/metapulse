@@ -1,0 +1,62 @@
+{
+  "type" : "record",
+  "name" : "FormPrompt",
+  "namespace" : "com.linkedin.form",
+  "doc" : "A prompt to present to the user to encourage filling out metadata",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The unique id for this prompt. This must be GLOBALLY unique.",
+    "Searchable" : {
+      "fieldName" : "promptId",
+      "fieldType" : "KEYWORD",
+      "queryByDefault" : false
+    }
+  }, {
+    "name" : "title",
+    "type" : "string",
+    "doc" : "The title of this prompt"
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "The description of this prompt",
+    "default" : null
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "FormPromptType",
+      "symbols" : [ "STRUCTURED_PROPERTY", "FIELDS_STRUCTURED_PROPERTY" ],
+      "symbolDocs" : {
+        "FIELDS_STRUCTURED_PROPERTY" : "This prompt is meant to apply a structured property to a schema fields entity",
+        "STRUCTURED_PROPERTY" : "This prompt is meant to apply a structured property to an entity"
+      }
+    },
+    "doc" : "The type of prompt"
+  }, {
+    "name" : "structuredPropertyParams",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "StructuredPropertyParams",
+      "fields" : [ {
+        "name" : "urn",
+        "type" : "string",
+        "doc" : "The structured property that is required on this entity",
+        "Searchable" : {
+          "fieldName" : "structuredPropertyPromptUrns",
+          "fieldType" : "URN"
+        },
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      } ]
+    } ],
+    "doc" : "An optional set of information specific to structured properties prompts.\nThis should be filled out if the prompt is type STRUCTURED_PROPERTY or FIELDS_STRUCTURED_PROPERTY.",
+    "default" : null
+  }, {
+    "name" : "required",
+    "type" : "boolean",
+    "doc" : "Whether the prompt is required to be completed, in order for the form to be marked as complete.",
+    "default" : false
+  } ]
+}

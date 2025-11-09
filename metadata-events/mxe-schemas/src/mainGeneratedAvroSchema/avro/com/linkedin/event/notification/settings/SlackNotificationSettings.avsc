@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "SlackNotificationSettings",
+  "namespace" : "com.linkedin.event.notification.settings",
+  "doc" : "Slack Notification settings for an actor.",
+  "fields" : [ {
+    "name" : "userHandle",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional user handle",
+    "default" : null
+  }, {
+    "name" : "channels",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "Optional list of channels to send notifications to",
+    "default" : null
+  } ]
+}

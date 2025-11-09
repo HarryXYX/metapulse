@@ -1,0 +1,10 @@
+{
+  "type" : "record",
+  "name" : "TimeBasedRetention",
+  "namespace" : "com.linkedin.retention",
+  "doc" : "Keep records that are less than X seconds old",
+  "fields" : [ {
+    "name" : "maxAgeInSeconds",
+    "type" : "int"
+  } ]
+}

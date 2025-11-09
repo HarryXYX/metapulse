@@ -1,0 +1,10 @@
+{
+  "type" : "enum",
+  "name" : "SsoType",
+  "namespace" : "com.linkedin.settings.global",
+  "doc" : "Enum to define SSO protocol type.",
+  "symbols" : [ "OIDC" ],
+  "symbolDocs" : {
+    "OIDC" : "OIDC SSO is used."
+  }
+}

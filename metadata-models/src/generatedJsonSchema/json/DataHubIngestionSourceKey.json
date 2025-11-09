@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubIngestionSourceKey" : {
+      "description" : "Key for a DataHub ingestion source",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the Ingestion Source, either generated or provided",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubIngestionSourceKey"
+}

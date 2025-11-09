@@ -1,0 +1,29 @@
+{
+  "type" : "record",
+  "name" : "FieldMetricAssertion",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes defining a field metric assertion, which asserts an expectation against\na common metric derived from the set of field / column values, for example:\nmax, min, median, null count, null percentage, unique count, unique percentage, and more.",
+  "fields" : [ {
+    "name" : "field",
+    "type" : "com.linkedin.schema.SchemaFieldSpec",
+    "doc" : "The field under evaluation",
+    "Searchable" : {
+      "/path" : {
+        "fieldName" : "fieldPath"
+      }
+    }
+  }, {
+    "name" : "metric",
+    "type" : "FieldMetricType",
+    "doc" : "The specific metric to assert against. This is the value that\nwill be obtained by applying a standard operation, such as an aggregation,\nto the selected field."
+  }, {
+    "name" : "operator",
+    "type" : "AssertionStdOperator",
+    "doc" : "The predicate to evaluate against the metric for the field / column.\nDepending on the operator, parameters may be required in order to successfully\nevaluate the assertion against the metric value."
+  }, {
+    "name" : "parameters",
+    "type" : "AssertionStdParameters",
+    "doc" : "Standard parameters required for the assertion. e.g. min_value, max_value, value, columns",
+    "optional" : true
+  } ]
+}

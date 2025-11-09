@@ -1,0 +1,202 @@
+{
+  "type" : "record",
+  "name" : "DataJobInputOutput",
+  "namespace" : "com.linkedin.datajob",
+  "doc" : "Information about the inputs and outputs of a Data processing job",
+  "fields" : [ {
+    "name" : "inputDatasets",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.DatasetUrn"
+    },
+    "doc" : "Input datasets consumed by the data job during processing\nDeprecated! Use inputDatasetEdges instead.",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset" ],
+        "isLineage" : true,
+        "name" : "Consumes"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "inputs",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numInputDatasets",
+        "queryByDefault" : false
+      }
+    },
+    "deprecated" : true
+  }, {
+    "name" : "inputDatasetEdges",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Input datasets consumed by the data job during processing",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "inputDatasetEdges/*/created/actor",
+        "createdOn" : "inputDatasetEdges/*/created/time",
+        "entityTypes" : [ "dataset" ],
+        "isLineage" : true,
+        "name" : "Consumes",
+        "properties" : "inputDatasetEdges/*/properties",
+        "updatedActor" : "inputDatasetEdges/*/lastModified/actor",
+        "updatedOn" : "inputDatasetEdges/*/lastModified/time"
+      }
+    },
+    "Searchable" : {
+      "/*/destinationUrn" : {
+        "fieldName" : "inputDatasetEdges",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numInputDatasets",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "outputDatasets",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.DatasetUrn"
+    },
+    "doc" : "Output datasets produced by the data job during processing\nDeprecated! Use outputDatasetEdges instead.",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset" ],
+        "isLineage" : true,
+        "isUpstream" : false,
+        "name" : "Produces"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "outputs",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numOutputDatasets",
+        "queryByDefault" : false
+      }
+    },
+    "deprecated" : true
+  }, {
+    "name" : "outputDatasetEdges",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Output datasets produced by the data job during processing",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "outputDatasetEdges/*/created/actor",
+        "createdOn" : "outputDatasetEdges/*/created/time",
+        "entityTypes" : [ "dataset" ],
+        "isLineage" : true,
+        "isUpstream" : false,
+        "name" : "Produces",
+        "properties" : "outputDatasetEdges/*/properties",
+        "updatedActor" : "outputDatasetEdges/*/lastModified/actor",
+        "updatedOn" : "outputDatasetEdges/*/lastModified/time"
+      }
+    },
+    "Searchable" : {
+      "/*/destinationUrn" : {
+        "fieldName" : "outputDatasetEdges",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numOutputDatasets",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "inputDatajobs",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.DataJobUrn"
+    },
+    "doc" : "Input datajobs that this data job depends on\nDeprecated! Use inputDatajobEdges instead.",
+    "optional" : true,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataJob" ],
+        "isLineage" : true,
+        "name" : "DownstreamOf"
+      }
+    },
+    "deprecated" : true
+  }, {
+    "name" : "inputDatajobEdges",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Input datajobs that this data job depends on",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "inputDatajobEdges/*/created/actor",
+        "createdOn" : "inputDatajobEdges/*/created/time",
+        "entityTypes" : [ "dataJob" ],
+        "isLineage" : true,
+        "name" : "DownstreamOf",
+        "properties" : "inputDatajobEdges/*/properties",
+        "updatedActor" : "inputDatajobEdges/*/lastModified/actor",
+        "updatedOn" : "inputDatajobEdges/*/lastModified/time"
+      }
+    }
+  }, {
+    "name" : "inputDatasetFields",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Fields of the input datasets used by this job",
+    "optional" : true,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "schemaField" ],
+        "name" : "Consumes"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "inputFields",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numInputFields",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "outputDatasetFields",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Fields of the output datasets this job writes to",
+    "optional" : true,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "schemaField" ],
+        "name" : "Produces"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "outputFields",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numOutputFields",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "fineGrainedLineages",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.dataset.FineGrainedLineage"
+    },
+    "doc" : "Fine-grained column-level lineages\nNot currently supported in the UI\nUse UpstreamLineage aspect for datasets to express Column Level Lineage for the UI",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "dataJobInputOutput"
+  }
+}

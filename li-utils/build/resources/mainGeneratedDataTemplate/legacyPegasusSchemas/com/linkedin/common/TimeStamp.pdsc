@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "TimeStamp",
+  "namespace" : "com.linkedin.common",
+  "doc" : "A standard event timestamp",
+  "fields" : [ {
+    "name" : "time",
+    "type" : "Time",
+    "doc" : "When did the event occur"
+  }, {
+    "name" : "actor",
+    "type" : "Urn",
+    "doc" : "Optional: The actor urn involved in the event.",
+    "optional" : true
+  } ]
+}

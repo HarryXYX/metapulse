@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "SchemaMetadataKey" : {
+      "description" : "Key to retrieve schema metadata.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schemaName" : {
+          "description" : "Schema name e.g. PageViewEvent, identity.Profile, ams.account_management_tracking",
+          "type" : "string"
+        },
+        "platform" : {
+          "description" : "Standardized platform urn where schema is defined. The data platform Urn (urn:li:platform:{platform_name})",
+          "type" : "string"
+        },
+        "version" : {
+          "description" : "Every change to SchemaMetadata in the resource results in a new version. Version is server assigned. This version is differ from platform native schema version.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "schemaName", "platform", "version" ]
+    }
+  },
+  "$ref" : "#/definitions/SchemaMetadataKey"
+}

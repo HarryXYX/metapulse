@@ -1,0 +1,142 @@
+{
+  "definitions" : {
+    "CorpUserSettings" : {
+      "description" : "Settings that a user can customize through the datahub ui",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "appearance" : {
+          "description" : "Settings for a user around the appearance of their DataHub U",
+          "$ref" : "#/definitions/CorpUserAppearanceSettings"
+        },
+        "views" : {
+          "default" : null,
+          "description" : "User preferences for the Views feature.",
+          "$ref" : "#/definitions/CorpUserViewsSettings"
+        },
+        "notificationSettings" : {
+          "default" : null,
+          "description" : "Notification settings for a user",
+          "$ref" : "#/definitions/NotificationSettings"
+        },
+        "homePage" : {
+          "default" : null,
+          "description" : "Settings related to the home page for a user",
+          "$ref" : "#/definitions/CorpUserHomePageSettings"
+        }
+      },
+      "required" : [ "appearance" ]
+    },
+    "CorpUserAppearanceSettings" : {
+      "description" : "Settings for a user around the appearance of their DataHub UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "showSimplifiedHomepage" : {
+          "default" : null,
+          "description" : "Flag whether the user should see a homepage with only datasets, charts and dashboards. Intended for users\nwho have less operational use cases for the datahub tool.",
+          "type" : "boolean"
+        },
+        "showThemeV2" : {
+          "default" : null,
+          "description" : "Flag controlling whether the V2 UI for DataHub is shown.",
+          "type" : "boolean"
+        }
+      }
+    },
+    "CorpUserViewsSettings" : {
+      "description" : "Settings related to the 'Views' feature.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "defaultView" : {
+          "default" : null,
+          "description" : "The default View which is selected for the user.\nIf none is chosen, then this value will be left blank.",
+          "type" : "string"
+        }
+      }
+    },
+    "NotificationSettings" : {
+      "description" : "Notification settings for an actor or subscription.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "sinkTypes" : {
+          "description" : "Sink types that notifications are sent to.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/NotificationSinkType"
+          }
+        },
+        "slackSettings" : {
+          "default" : null,
+          "description" : "Slack Notification Settings",
+          "$ref" : "#/definitions/SlackNotificationSettings"
+        },
+        "emailSettings" : {
+          "default" : null,
+          "description" : "Email Notification Settings",
+          "$ref" : "#/definitions/EmailNotificationSettings"
+        }
+      },
+      "required" : [ "sinkTypes" ]
+    },
+    "NotificationSinkType" : {
+      "description" : "A type of sink / platform to send a notification to.",
+      "enum" : [ "SLACK", "EMAIL" ]
+    },
+    "SlackNotificationSettings" : {
+      "description" : "Slack Notification settings for an actor.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "userHandle" : {
+          "default" : null,
+          "description" : "Optional user handle",
+          "type" : "string"
+        },
+        "channels" : {
+          "default" : null,
+          "description" : "Optional list of channels to send notifications to",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "EmailNotificationSettings" : {
+      "description" : "Email Notification settings for an actor.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "email" : {
+          "description" : "Optional user or group email address",
+          "type" : "string"
+        }
+      },
+      "required" : [ "email" ]
+    },
+    "CorpUserHomePageSettings" : {
+      "description" : "Settings related to the home page for a user",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "pageTemplate" : {
+          "default" : null,
+          "description" : "The page template that will be rendered in the UI by default for this user",
+          "type" : "string"
+        },
+        "dismissedAnnouncements" : {
+          "default" : null,
+          "description" : "The list of announcement urns that have been dismissed by the user",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/CorpUserSettings"
+}

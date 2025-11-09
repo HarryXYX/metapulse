@@ -1,0 +1,12 @@
+{
+  "type" : "enum",
+  "name" : "PolicyMatchCondition",
+  "namespace" : "com.linkedin.policy",
+  "doc" : "The matching condition in a filter criterion",
+  "symbols" : [ "EQUALS", "STARTS_WITH", "NOT_EQUALS" ],
+  "symbolDocs" : {
+    "EQUALS" : "Whether the field matches the value",
+    "NOT_EQUALS" : "Whether the field does not match the value",
+    "STARTS_WITH" : "Whether the field value starts with the value"
+  }
+}

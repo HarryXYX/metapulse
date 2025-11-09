@@ -1,0 +1,53 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageModuleProperties",
+  "namespace" : "com.linkedin.module",
+  "doc" : "The main properties of a DataHub page module",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "The display name of this module"
+  }, {
+    "name" : "type",
+    "type" : "DataHubPageModuleType",
+    "doc" : "The type of this module - the purpose it serves",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "visibility",
+    "type" : "DataHubPageModuleVisibility",
+    "doc" : "Info about the visibility of this module"
+  }, {
+    "name" : "params",
+    "type" : "DataHubPageModuleParams",
+    "doc" : "The specific parameters stored for this module"
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp for when and by whom this template was created",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "createdBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp for when and by whom this template was last updated",
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataHubPageModuleProperties"
+  }
+}

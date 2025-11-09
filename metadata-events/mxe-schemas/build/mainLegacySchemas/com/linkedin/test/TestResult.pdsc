@@ -1,0 +1,33 @@
+{
+  "type" : "record",
+  "name" : "TestResult",
+  "namespace" : "com.linkedin.test",
+  "doc" : "Information about a Test Result",
+  "fields" : [ {
+    "name" : "test",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The urn of the test"
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "TestResultType",
+      "symbols" : [ "SUCCESS", "FAILURE" ],
+      "symbolDocs" : {
+        "FAILURE" : " The Test Failed",
+        "SUCCESS" : " The Test Succeeded"
+      }
+    },
+    "doc" : "The type of the result"
+  }, {
+    "name" : "testDefinitionMd5",
+    "type" : "string",
+    "doc" : "The md5 of the test definition that was used to compute this result.\nSee TestInfo.testDefinition.md5 for more information.",
+    "optional" : true
+  }, {
+    "name" : "lastComputed",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The audit stamp of when the result was computed, including the actor who computed it.",
+    "optional" : true
+  } ]
+}

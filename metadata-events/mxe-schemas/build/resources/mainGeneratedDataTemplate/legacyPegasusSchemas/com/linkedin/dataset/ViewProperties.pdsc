@@ -1,0 +1,33 @@
+{
+  "type" : "record",
+  "name" : "ViewProperties",
+  "namespace" : "com.linkedin.dataset",
+  "doc" : "Details about a View. \ne.g. Gets activated when subTypes is view",
+  "fields" : [ {
+    "name" : "materialized",
+    "type" : "boolean",
+    "doc" : "Whether the view is materialized",
+    "Searchable" : {
+      "fieldType" : "BOOLEAN",
+      "weightsPerFieldValue" : {
+        "true" : 0.5
+      }
+    }
+  }, {
+    "name" : "viewLogic",
+    "type" : "string",
+    "doc" : "The view logic"
+  }, {
+    "name" : "formattedViewLogic",
+    "type" : "string",
+    "doc" : "The formatted view logic. This is particularly used for SQL sources, where the SQL\nlogic is formatted for better readability, and with dbt, where this contains the\ncompiled SQL logic.",
+    "optional" : true
+  }, {
+    "name" : "viewLanguage",
+    "type" : "string",
+    "doc" : "The view logic language / dialect"
+  } ],
+  "Aspect" : {
+    "name" : "viewProperties"
+  }
+}

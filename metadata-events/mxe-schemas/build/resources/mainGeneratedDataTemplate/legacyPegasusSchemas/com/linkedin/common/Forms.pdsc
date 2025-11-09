@@ -1,0 +1,83 @@
+{
+  "type" : "record",
+  "name" : "Forms",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Forms that are assigned to this entity to be filled out",
+  "fields" : [ {
+    "name" : "incompleteForms",
+    "type" : {
+      "type" : "array",
+      "items" : "FormAssociation"
+    },
+    "doc" : "All incomplete forms assigned to the entity.",
+    "Searchable" : {
+      "/*/completedPrompts/*/id" : {
+        "fieldName" : "incompleteFormsCompletedPromptIds",
+        "fieldType" : "KEYWORD",
+        "queryByDefault" : false
+      },
+      "/*/completedPrompts/*/lastModified/time" : {
+        "fieldName" : "incompleteFormsCompletedPromptResponseTimes",
+        "fieldType" : "DATETIME",
+        "queryByDefault" : false
+      },
+      "/*/incompletePrompts/*/id" : {
+        "fieldName" : "incompleteFormsIncompletePromptIds",
+        "fieldType" : "KEYWORD",
+        "queryByDefault" : false
+      },
+      "/*/urn" : {
+        "fieldName" : "incompleteForms",
+        "fieldType" : "URN",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "completedForms",
+    "type" : {
+      "type" : "array",
+      "items" : "FormAssociation"
+    },
+    "doc" : "All complete forms assigned to the entity.",
+    "Searchable" : {
+      "/*/completedPrompts/*/id" : {
+        "fieldName" : "completedFormsCompletedPromptIds",
+        "fieldType" : "KEYWORD",
+        "queryByDefault" : false
+      },
+      "/*/completedPrompts/*/lastModified/time" : {
+        "fieldName" : "completedFormsCompletedPromptResponseTimes",
+        "fieldType" : "DATETIME",
+        "queryByDefault" : false
+      },
+      "/*/incompletePrompts/*/id" : {
+        "fieldName" : "completedFormsIncompletePromptIds",
+        "fieldType" : "KEYWORD",
+        "queryByDefault" : false
+      },
+      "/*/urn" : {
+        "fieldName" : "completedForms",
+        "fieldType" : "URN",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "verifications",
+    "type" : {
+      "type" : "array",
+      "items" : "FormVerificationAssociation"
+    },
+    "doc" : "Verifications that have been applied to the entity via completed forms.",
+    "default" : [ ],
+    "Searchable" : {
+      "/*/form" : {
+        "fieldName" : "verifiedForms",
+        "fieldType" : "URN",
+        "queryByDefault" : false
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "forms"
+  }
+}

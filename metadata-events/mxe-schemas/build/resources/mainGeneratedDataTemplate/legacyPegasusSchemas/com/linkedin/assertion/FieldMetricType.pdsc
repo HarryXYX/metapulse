@@ -1,0 +1,26 @@
+{
+  "type" : "enum",
+  "name" : "FieldMetricType",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "A standard metric that can be derived from the set of values\nfor a specific field / column of a dataset / table.",
+  "symbols" : [ "UNIQUE_COUNT", "UNIQUE_PERCENTAGE", "NULL_COUNT", "NULL_PERCENTAGE", "MIN", "MAX", "MEAN", "MEDIAN", "STDDEV", "NEGATIVE_COUNT", "NEGATIVE_PERCENTAGE", "ZERO_COUNT", "ZERO_PERCENTAGE", "MIN_LENGTH", "MAX_LENGTH", "EMPTY_COUNT", "EMPTY_PERCENTAGE" ],
+  "symbolDocs" : {
+    "EMPTY_COUNT" : "The number of empty string values found in the value set (applies to string columns).\nNote: This is a completely different metric different from NULL_COUNT!",
+    "EMPTY_PERCENTAGE" : "The percentage of empty string values to total rows for the dataset (applies to string columns)\nNote: This is a completely different metric different from NULL_PERCENTAGE!",
+    "MAX" : "The maximum value in the column set (applies to numeric columns)",
+    "MAX_LENGTH" : "The maximum length found in the column set (applies to string columns)",
+    "MEAN" : "The mean length found in the column set (applies to numeric columns)",
+    "MEDIAN" : "The median length found in the column set (applies to numeric columns)",
+    "MIN" : "The minimum value in the column set (applies to numeric columns)",
+    "MIN_LENGTH" : "The minimum length found in the column set (applies to string columns)",
+    "NEGATIVE_COUNT" : "The number of negative values found in the value set (applies to numeric columns)",
+    "NEGATIVE_PERCENTAGE" : "The percentage of negative values to total rows for the dataset (applies to numeric columns)",
+    "NULL_COUNT" : "The number of null values found in the column value set",
+    "NULL_PERCENTAGE" : "The percentage of null values to total rows for the dataset",
+    "STDDEV" : "The stddev length found in the column set (applies to numeric columns)",
+    "UNIQUE_COUNT" : "The number of unique values found in the column value set",
+    "UNIQUE_PERCENTAGE" : "The percentage of unique values to total rows for the dataset",
+    "ZERO_COUNT" : "The number of zero values found in the value set (applies to numeric columns)",
+    "ZERO_PERCENTAGE" : "The percentage of zero values to total rows for the dataset (applies to numeric columns)"
+  }
+}

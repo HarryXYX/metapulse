@@ -1,0 +1,22 @@
+{
+  "definitions" : {
+    "BrowsePathEntry" : {
+      "description" : "Represents a single level in an entity's browsePathV2",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The ID of the browse path entry. This is what gets stored in the index.\nIf there's an urn associated with this entry, id and urn will be the same",
+          "type" : "string"
+        },
+        "urn" : {
+          "default" : null,
+          "description" : "Optional urn pointing to some entity in DataHub",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/BrowsePathEntry"
+}

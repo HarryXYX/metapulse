@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "AutoCompleteEntity" : {
+      "description" : "Data model for an entity returned as an autocomplete suggestion",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "Urn of the entity",
+          "type" : "string"
+        }
+      },
+      "required" : [ "urn" ]
+    }
+  },
+  "$ref" : "#/definitions/AutoCompleteEntity"
+}

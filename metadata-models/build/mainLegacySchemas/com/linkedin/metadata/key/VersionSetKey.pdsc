@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "VersionSetKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a Version Set entity",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "ID of the Version Set, generated from platform + asset id / name"
+  }, {
+    "name" : "entityType",
+    "type" : "string",
+    "doc" : "Type of entities included in version set, limits to a single entity type between linked versioned entities"
+  } ],
+  "Aspect" : {
+    "name" : "versionSetKey"
+  }
+}

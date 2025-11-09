@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "DataHubPersonaKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a persona type",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the persona type"
+  } ],
+  "Aspect" : {
+    "name" : "dataHubPersonaKey"
+  }
+}

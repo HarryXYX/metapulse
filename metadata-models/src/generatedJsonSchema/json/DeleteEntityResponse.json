@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "DeleteEntityResponse" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "type" : "string"
+        },
+        "rows" : {
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "timeseriesRows" : {
+          "default" : null,
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "urn", "rows" ]
+    }
+  },
+  "$ref" : "#/definitions/DeleteEntityResponse"
+}

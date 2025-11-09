@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "QuerySubject",
+  "namespace" : "com.linkedin.query",
+  "doc" : "A single subject of a particular query.\nIn the future, we may evolve this model to include richer details\nabout the Query Subject in relation to the query.",
+  "fields" : [ {
+    "name" : "entity",
+    "type" : "string",
+    "doc" : "An entity which is the subject of a query.",
+    "Searchable" : {
+      "fieldName" : "entities",
+      "fieldType" : "URN"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  } ]
+}

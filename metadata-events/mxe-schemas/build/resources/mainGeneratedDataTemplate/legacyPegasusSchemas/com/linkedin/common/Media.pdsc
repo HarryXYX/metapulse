@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "Media",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Carries information about which roles a user is assigned to.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "MediaType",
+    "doc" : "Type of content the Media is storing, e.g. image, video, etc."
+  }, {
+    "name" : "location",
+    "type" : "Url",
+    "doc" : "Where the media content is stored."
+  } ]
+}

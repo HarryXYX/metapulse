@@ -1,0 +1,19 @@
+{
+  "definitions" : {
+    "SchemaFieldAliases" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "aliases" : {
+          "default" : null,
+          "description" : "Used to store aliases",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/SchemaFieldAliases"
+}

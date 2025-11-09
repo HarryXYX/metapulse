@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "PropertyBag",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Misc. properties about anything.\nNot indexed by default. See CustomProperties if you want an auto-indexed property bag",
+  "fields" : [ {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "default" : { }
+  } ]
+}

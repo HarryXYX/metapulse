@@ -1,0 +1,35 @@
+{
+  "type" : "record",
+  "name" : "LogicalParent",
+  "namespace" : "com.linkedin.logical",
+  "doc" : "Relates a physical asset to a logical model.",
+  "fields" : [ {
+    "name" : "parent",
+    "type" : "com.linkedin.common.Edge",
+    "optional" : true,
+    "Relationship" : {
+      "/destinationUrn" : {
+        "createdActor" : "parent/created/actor",
+        "createdOn" : "parent/created/time",
+        "entityTypes" : [ "dataset", "schemaField" ],
+        "name" : "PhysicalInstanceOf",
+        "properties" : "parent/properties",
+        "updatedActor" : "parent/lastModified/actor",
+        "updatedOn" : "parent/lastModified/time"
+      }
+    },
+    "Searchable" : {
+      "/destinationUrn" : {
+        "addToFilters" : true,
+        "fieldName" : "logicalParent",
+        "fieldType" : "URN",
+        "filterNameOverride" : "Physical Instance Of",
+        "hasValuesFieldName" : "hasLogicalParent",
+        "queryByDefault" : false
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "logicalParent"
+  }
+}

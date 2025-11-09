@@ -1,0 +1,10 @@
+{
+  "type" : "typeref",
+  "name" : "VersionedUrn",
+  "namespace" : "com.linkedin.common.versioned",
+  "ref" : "string",
+  "java" : {
+    "class" : "com.linkedin.common.urn.VersionedUrn",
+    "coercerClass" : "com.linkedin.util.VersionedUrnCoercer"
+  }
+}

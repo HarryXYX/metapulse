@@ -1,0 +1,11 @@
+{
+  "type" : "enum",
+  "name" : "LineageDirection",
+  "namespace" : "com.linkedin.metadata.graph",
+  "doc" : "Direction between two nodes in the lineage graph",
+  "symbols" : [ "UPSTREAM", "DOWNSTREAM" ],
+  "symbolDocs" : {
+    "DOWNSTREAM" : "Downstream, or right-to-left in the lineage visualization",
+    "UPSTREAM" : "Upstream, or left-to-right in the lineage visualization"
+  }
+}

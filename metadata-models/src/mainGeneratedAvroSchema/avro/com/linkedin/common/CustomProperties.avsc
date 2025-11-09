@@ -1,0 +1,21 @@
+{
+  "type" : "record",
+  "name" : "CustomProperties",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Misc. properties about an entity.",
+  "fields" : [ {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Custom property bag.",
+    "default" : { },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "TEXT",
+        "queryByDefault" : true
+      }
+    }
+  } ]
+}

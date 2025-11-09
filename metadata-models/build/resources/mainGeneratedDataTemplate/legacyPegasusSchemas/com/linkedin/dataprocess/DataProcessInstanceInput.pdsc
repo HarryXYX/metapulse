@@ -1,0 +1,52 @@
+{
+  "type" : "record",
+  "name" : "DataProcessInstanceInput",
+  "namespace" : "com.linkedin.dataprocess",
+  "doc" : "Information about the inputs datasets of a Data process",
+  "fields" : [ {
+    "name" : "inputs",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Input assets consumed",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset", "mlModel" ],
+        "name" : "Consumes"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "addToFilters" : true,
+        "fieldName" : "inputs",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numInputs",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "inputEdges",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Edge"
+    },
+    "doc" : "Input assets consumed by the data process instance, with additional metadata.\nCounts as lineage.\nWill eventually deprecate the inputs field.",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "inputEdges/*/created/actor",
+        "createdOn" : "inputEdges/*/created/time",
+        "entityTypes" : [ "dataset", "mlModel", "dataProcessInstance" ],
+        "isLineage" : true,
+        "name" : "DataProcessInstanceConsumes",
+        "properties" : "inputEdges/*/properties",
+        "updatedActor" : "inputEdges/*/lastModified/actor",
+        "updatedOn" : "inputEdges/*/lastModified/time"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataProcessInstanceInput"
+  }
+}

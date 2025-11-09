@@ -1,0 +1,58 @@
+{
+  "type" : "record",
+  "name" : "SlackConversation",
+  "namespace" : "com.linkedin.dataplatform.slack",
+  "doc" : "Information about a Slack conversation.",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The unique ID of the Slack conversation."
+  }, {
+    "name" : "displayName",
+    "type" : "string",
+    "doc" : "The display name of the Slack conversation."
+  }, {
+    "name" : "isChannel",
+    "type" : "boolean",
+    "doc" : "If this is a channel."
+  }, {
+    "name" : "isGroup",
+    "type" : "boolean",
+    "doc" : "If this is a channel."
+  }, {
+    "name" : "isPrivate",
+    "type" : "boolean",
+    "doc" : "If this is a private conversation."
+  }, {
+    "name" : "isArchived",
+    "type" : "boolean",
+    "doc" : "If this conversation is archived."
+  }, {
+    "name" : "isShared",
+    "type" : "boolean",
+    "doc" : "If this is a shared channel."
+  }, {
+    "name" : "isExtShared",
+    "type" : "boolean",
+    "doc" : "If this is an externally shared channel."
+  }, {
+    "name" : "isGeneral",
+    "type" : "boolean",
+    "doc" : "If this is a general channel."
+  }, {
+    "name" : "contextTeamID",
+    "type" : "string",
+    "doc" : "The team this conversation lives within.",
+    "optional" : true
+  }, {
+    "name" : "purpose",
+    "type" : "string",
+    "doc" : "The purpose of this Slack channel, if set.",
+    "optional" : true
+  }, {
+    "name" : "topic",
+    "type" : "string",
+    "doc" : "The topic of this Slack channel, if set.",
+    "optional" : true
+  } ]
+}

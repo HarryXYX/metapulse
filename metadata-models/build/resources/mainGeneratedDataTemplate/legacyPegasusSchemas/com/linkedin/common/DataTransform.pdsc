@@ -1,0 +1,12 @@
+{
+  "type" : "record",
+  "name" : "DataTransform",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about a transformation. It may be a query,",
+  "fields" : [ {
+    "name" : "queryStatement",
+    "type" : "com.linkedin.query.QueryStatement",
+    "doc" : "The data transform may be defined by a query statement",
+    "optional" : true
+  } ]
+}

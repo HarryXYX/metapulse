@@ -1,0 +1,112 @@
+{
+  "definitions" : {
+    "DatasetAssertionInfo" : {
+      "description" : "Attributes that are applicable to single-Dataset Assertions",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dataset" : {
+          "description" : "The dataset targeted by this assertion.",
+          "type" : "string"
+        },
+        "scope" : {
+          "description" : "Scope of the Assertion. What part of the dataset does this assertion apply to?",
+          "$ref" : "#/definitions/DatasetAssertionScope"
+        },
+        "fields" : {
+          "default" : null,
+          "description" : "One or more dataset schema fields that are targeted by this assertion.\n\nThis field is expected to be provided if the assertion scope is DATASET_COLUMN.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "aggregation" : {
+          "default" : null,
+          "description" : "Standardized assertion operator\nThis field is left blank if there is no selected aggregation or metric for a particular column.",
+          "$ref" : "#/definitions/AssertionStdAggregation"
+        },
+        "operator" : {
+          "description" : "Standardized assertion operator",
+          "$ref" : "#/definitions/AssertionStdOperator"
+        },
+        "parameters" : {
+          "default" : null,
+          "description" : "Standard parameters required for the assertion. e.g. min_value, max_value, value, columns",
+          "$ref" : "#/definitions/AssertionStdParameters"
+        },
+        "nativeType" : {
+          "default" : null,
+          "description" : "Native assertion type",
+          "type" : "string"
+        },
+        "nativeParameters" : {
+          "default" : null,
+          "description" : "Native parameters required for the assertion.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "logic" : {
+          "default" : null,
+          "type" : "string"
+        }
+      },
+      "required" : [ "dataset", "scope", "operator" ]
+    },
+    "DatasetAssertionScope" : {
+      "enum" : [ "DATASET_COLUMN", "DATASET_ROWS", "DATASET_STORAGE_SIZE", "DATASET_SCHEMA", "UNKNOWN" ]
+    },
+    "AssertionStdAggregation" : {
+      "description" : "The function that is applied to the aggregation input (schema, rows, column values) before evaluating an operator.",
+      "enum" : [ "ROW_COUNT", "COLUMNS", "COLUMN_COUNT", "IDENTITY", "MEAN", "MEDIAN", "UNIQUE_COUNT", "UNIQUE_PROPORTION", "UNIQUE_PROPOTION", "NULL_COUNT", "NULL_PROPORTION", "STDDEV", "MIN", "MAX", "SUM", "_NATIVE_" ]
+    },
+    "AssertionStdOperator" : {
+      "description" : "A boolean operator that is applied on the input to an assertion, after an aggregation function has been applied.",
+      "enum" : [ "BETWEEN", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "EQUAL_TO", "NOT_EQUAL_TO", "NULL", "NOT_NULL", "CONTAIN", "END_WITH", "START_WITH", "REGEX_MATCH", "IN", "NOT_IN", "IS_TRUE", "IS_FALSE", "_NATIVE_" ]
+    },
+    "AssertionStdParameters" : {
+      "description" : "Parameters for AssertionStdOperators.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "default" : null,
+          "description" : "The value parameter of an assertion",
+          "$ref" : "#/definitions/AssertionStdParameter"
+        },
+        "maxValue" : {
+          "default" : null,
+          "description" : "The maxValue parameter of an assertion",
+          "$ref" : "#/definitions/AssertionStdParameter"
+        },
+        "minValue" : {
+          "default" : null,
+          "description" : "The minValue parameter of an assertion",
+          "$ref" : "#/definitions/AssertionStdParameter"
+        }
+      }
+    },
+    "AssertionStdParameter" : {
+      "description" : "Single parameter for AssertionStdOperators.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The parameter value",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the parameter",
+          "$ref" : "#/definitions/AssertionStdParameterType"
+        }
+      },
+      "required" : [ "value", "type" ]
+    },
+    "AssertionStdParameterType" : {
+      "enum" : [ "STRING", "NUMBER", "LIST", "SET", "UNKNOWN" ]
+    }
+  },
+  "$ref" : "#/definitions/DatasetAssertionInfo"
+}

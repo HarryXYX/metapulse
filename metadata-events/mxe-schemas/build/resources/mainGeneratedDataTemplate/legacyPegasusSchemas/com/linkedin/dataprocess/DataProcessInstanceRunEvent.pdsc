@@ -1,0 +1,42 @@
+{
+  "type" : "record",
+  "name" : "DataProcessInstanceRunEvent",
+  "namespace" : "com.linkedin.dataprocess",
+  "doc" : "An event representing the current status of data process run.\nDataProcessRunEvent should be used for reporting the status of a dataProcess' run.",
+  "include" : [ "com.linkedin.timeseries.TimeseriesAspectBase", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "status",
+    "type" : {
+      "type" : "enum",
+      "name" : "DataProcessRunStatus",
+      "symbols" : [ "STARTED", "COMPLETE" ],
+      "symbolDocs" : {
+        "STARTED" : "The status where the Data processing run is in."
+      }
+    },
+    "Searchable" : {
+      "hasValuesFieldName" : "hasRunEvents"
+    },
+    "TimeseriesField" : { }
+  }, {
+    "name" : "attempt",
+    "type" : "int",
+    "doc" : "Return the try number that this Instance Run is in",
+    "optional" : true
+  }, {
+    "name" : "result",
+    "type" : "DataProcessInstanceRunResult",
+    "doc" : "The final result of the Data Processing run.",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "durationMillis",
+    "type" : "long",
+    "doc" : "The duration of the run in milliseconds.",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "dataProcessInstanceRunEvent",
+    "type" : "timeseries"
+  }
+}

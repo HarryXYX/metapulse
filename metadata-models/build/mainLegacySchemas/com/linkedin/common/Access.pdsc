@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "Access",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Aspect used for associating roles to a dataset or any asset",
+  "fields" : [ {
+    "name" : "roles",
+    "type" : {
+      "type" : "array",
+      "items" : "RoleAssociation"
+    },
+    "doc" : "List of Roles which needs to be associated",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "access"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "PolicyMatchFilter",
+  "namespace" : "com.linkedin.policy",
+  "doc" : "The filter for specifying the resource or actor to apply privileges to",
+  "fields" : [ {
+    "name" : "criteria",
+    "type" : {
+      "type" : "array",
+      "items" : "PolicyMatchCriterion"
+    },
+    "doc" : "A list of criteria to apply conjunctively (so all criteria must pass)"
+  } ]
+}

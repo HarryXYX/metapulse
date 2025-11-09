@@ -1,0 +1,38 @@
+{
+  "type" : "record",
+  "name" : "DataHubIngestionSourceConfig",
+  "namespace" : "com.linkedin.ingestion",
+  "fields" : [ {
+    "name" : "recipe",
+    "type" : "string",
+    "doc" : "The JSON recipe to use for ingestion"
+  }, {
+    "name" : "version",
+    "type" : [ "null", "string" ],
+    "doc" : "The PyPI version of the datahub CLI to use when executing a recipe",
+    "default" : null
+  }, {
+    "name" : "executorId",
+    "type" : [ "null", "string" ],
+    "doc" : "The id of the executor to use to execute the ingestion run",
+    "default" : null,
+    "Searchable" : {
+      "fieldName" : "sourceExecutorId",
+      "fieldType" : "KEYWORD",
+      "queryByDefault" : false
+    }
+  }, {
+    "name" : "debugMode",
+    "type" : [ "null", "boolean" ],
+    "doc" : "Whether or not to run this ingestion source in debug mode",
+    "default" : null
+  }, {
+    "name" : "extraArgs",
+    "type" : [ "null", {
+      "type" : "map",
+      "values" : "string"
+    } ],
+    "doc" : "Extra arguments for the ingestion run.",
+    "default" : null
+  } ]
+}

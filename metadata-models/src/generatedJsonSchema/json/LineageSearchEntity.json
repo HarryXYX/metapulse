@@ -1,0 +1,118 @@
+{
+  "definitions" : {
+    "LineageSearchEntity" : {
+      "description" : "The model for each entity returned by the lineage search query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "entity" : {
+          "description" : "Urn of the entity being returned",
+          "type" : "string"
+        },
+        "matchedFields" : {
+          "default" : [ ],
+          "description" : "Matched field name and values",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MatchedField"
+          }
+        },
+        "features" : {
+          "default" : null,
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "number"
+          }
+        },
+        "score" : {
+          "default" : null,
+          "type" : "number"
+        },
+        "restrictedAspects" : {
+          "default" : null,
+          "description" : "A list of the the restricted aspects on the entity.\nIf the key aspect is present, assume ALL aspects should be restricted including the entity's Urn.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "extraFields" : {
+          "default" : null,
+          "description" : "Extra fields from the search document based on what is requested in the search request",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "paths" : {
+          "default" : [ ],
+          "description" : "Optional list of entities between the source and destination node.\nThere can be multiple paths from the source to the destination.",
+          "type" : "array",
+          "items" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "path" : {
+          "default" : [ ],
+          "description" : "Optional list of entities between the source and destination node",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "degree" : {
+          "default" : 1,
+          "description" : "Degree of relationship (number of hops to get to entity)",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "degrees" : {
+          "default" : [ ],
+          "description" : "The degrees of separation (number of hops) between the source and this entity ",
+          "type" : "array",
+          "items" : {
+            "type" : "integer",
+            "minimum" : -2147483648,
+            "maximum" : 2147483647
+          }
+        },
+        "explored" : {
+          "default" : null,
+          "description" : "Marks an entity as having been explored for as a part of the graph walk",
+          "type" : "boolean"
+        },
+        "truncatedChildren" : {
+          "default" : null,
+          "description" : "Indicates this destination node has additional unexplored child relationships",
+          "type" : "boolean"
+        },
+        "ignoredAsHop" : {
+          "default" : null,
+          "description" : "Whether this relationship was ignored as a hop while performing the graph walk",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "entity", "matchedFields", "paths", "path", "degree", "degrees" ]
+    },
+    "MatchedField" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Matched field name",
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Matched field value",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "value" ]
+    }
+  },
+  "$ref" : "#/definitions/LineageSearchEntity"
+}

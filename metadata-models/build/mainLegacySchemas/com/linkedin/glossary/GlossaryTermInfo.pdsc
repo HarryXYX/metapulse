@@ -1,0 +1,77 @@
+{
+  "type" : "record",
+  "name" : "GlossaryTermInfo",
+  "namespace" : "com.linkedin.glossary",
+  "doc" : "Properties associated with a GlossaryTerm",
+  "include" : [ "com.linkedin.common.CustomProperties" ],
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "Optional id for the term",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the term",
+    "optional" : true,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "definition",
+    "type" : "string",
+    "doc" : "Definition of business term.",
+    "Searchable" : { }
+  }, {
+    "name" : "parentNode",
+    "type" : "com.linkedin.common.GlossaryNodeUrn",
+    "doc" : "Parent node of the glossary term",
+    "optional" : true,
+    "Relationship" : {
+      "entityTypes" : [ "glossaryNode" ],
+      "name" : "IsPartOf"
+    },
+    "Searchable" : {
+      "fieldName" : "parentNode",
+      "fieldType" : "URN",
+      "hasValuesFieldName" : "hasParentNode"
+    }
+  }, {
+    "name" : "termSource",
+    "type" : "string",
+    "doc" : "Source of the Business Term (INTERNAL or EXTERNAL) with default value as INTERNAL",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "sourceRef",
+    "type" : "string",
+    "doc" : "External Reference to the business-term",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "sourceUrl",
+    "type" : "com.linkedin.common.Url",
+    "doc" : "The abstracted URL such as https://spec.edmcouncil.org/fibo/ontology/FBC/FinancialInstruments/FinancialInstruments/CashInstrument.",
+    "optional" : true
+  }, {
+    "name" : "rawSchema",
+    "type" : "string",
+    "doc" : "Schema definition of the glossary term",
+    "optional" : true,
+    "deprecated" : true
+  } ],
+  "Aspect" : {
+    "name" : "glossaryTermInfo"
+  }
+}

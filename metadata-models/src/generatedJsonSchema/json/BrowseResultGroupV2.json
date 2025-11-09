@@ -1,0 +1,33 @@
+{
+  "definitions" : {
+    "BrowseResultGroupV2" : {
+      "description" : "The model for the result of a browse query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the group",
+          "type" : "string"
+        },
+        "urn" : {
+          "default" : null,
+          "description" : "Urn of the group if this is an entity",
+          "type" : "string"
+        },
+        "count" : {
+          "description" : "Number of entities that can be reached from this path",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "hasSubGroups" : {
+          "description" : "Whether or not this group has any sub-groups underneath it",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "name", "count", "hasSubGroups" ]
+    }
+  },
+  "$ref" : "#/definitions/BrowseResultGroupV2"
+}

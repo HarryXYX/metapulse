@@ -1,0 +1,18 @@
+{
+  "definitions" : {
+    "Quantile" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "quantile" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "quantile", "value" ]
+    }
+  },
+  "$ref" : "#/definitions/Quantile"
+}

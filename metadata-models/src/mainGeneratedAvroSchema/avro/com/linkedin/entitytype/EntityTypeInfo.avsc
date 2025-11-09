@@ -1,0 +1,28 @@
+{
+  "type" : "record",
+  "name" : "EntityTypeInfo",
+  "namespace" : "com.linkedin.entitytype",
+  "fields" : [ {
+    "name" : "qualifiedName",
+    "type" : "string",
+    "doc" : "The fully qualified name for the entity type, which usually consists of a namespace\nplus an identifier or name, e.g. datahub.dataset",
+    "Searchable" : {
+      "fieldType" : "KEYWORD",
+      "searchLabel" : "qualifiedName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "displayName",
+    "type" : [ "null", "string" ],
+    "doc" : "The display name for the Entity Type.",
+    "default" : null
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "A description for the Entity Type: what is it for?",
+    "default" : null
+  } ],
+  "Aspect" : {
+    "name" : "entityTypeInfo"
+  }
+}

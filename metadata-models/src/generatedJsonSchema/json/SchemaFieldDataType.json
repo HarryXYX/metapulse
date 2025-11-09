@@ -1,0 +1,100 @@
+{
+  "definitions" : {
+    "SchemaFieldDataType" : {
+      "description" : "Schema field data types",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Data platform specific types",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/BooleanType"
+          }, {
+            "$ref" : "#/definitions/FixedType"
+          }, {
+            "$ref" : "#/definitions/StringType"
+          }, {
+            "$ref" : "#/definitions/BytesType"
+          }, {
+            "$ref" : "#/definitions/NumberType"
+          }, {
+            "$ref" : "#/definitions/DateType"
+          }, {
+            "$ref" : "#/definitions/TimeType"
+          }, {
+            "$ref" : "#/definitions/EnumType"
+          }, {
+            "$ref" : "#/definitions/NullType"
+          }, {
+            "$ref" : "#/definitions/MapType"
+          }, {
+            "$ref" : "#/definitions/ArrayType"
+          }, {
+            "$ref" : "#/definitions/UnionType"
+          }, {
+            "$ref" : "#/definitions/RecordType"
+          } ]
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "BooleanType" : { },
+    "FixedType" : { },
+    "StringType" : { },
+    "BytesType" : { },
+    "NumberType" : { },
+    "DateType" : { },
+    "TimeType" : { },
+    "EnumType" : { },
+    "NullType" : { },
+    "MapType" : {
+      "description" : "Map field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "keyType" : {
+          "default" : null,
+          "description" : "Key type in a map",
+          "type" : "string"
+        },
+        "valueType" : {
+          "default" : null,
+          "description" : "Type of the value in a map",
+          "type" : "string"
+        }
+      }
+    },
+    "ArrayType" : {
+      "description" : "Array field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedType" : {
+          "default" : null,
+          "description" : "List of types this array holds.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "UnionType" : {
+      "description" : "Union field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedTypes" : {
+          "default" : null,
+          "description" : "List of types in union type.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "RecordType" : { }
+  },
+  "$ref" : "#/definitions/SchemaFieldDataType"
+}

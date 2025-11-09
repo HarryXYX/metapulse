@@ -1,0 +1,29 @@
+{
+  "definitions" : {
+    "IconProperties" : {
+      "description" : "Properties describing an icon associated with an entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "iconLibrary" : {
+          "description" : "The source of the icon: e.g. Antd, Material, etc",
+          "$ref" : "#/definitions/IconLibrary"
+        },
+        "name" : {
+          "description" : "The name of the icon",
+          "type" : "string"
+        },
+        "style" : {
+          "description" : "Any modifier for the icon, this will be library-specific, e.g. filled/outlined, etc",
+          "type" : "string"
+        }
+      },
+      "required" : [ "iconLibrary", "name", "style" ]
+    },
+    "IconLibrary" : {
+      "description" : "Enum of possible icon sources",
+      "enum" : [ "MATERIAL" ]
+    }
+  },
+  "$ref" : "#/definitions/IconProperties"
+}

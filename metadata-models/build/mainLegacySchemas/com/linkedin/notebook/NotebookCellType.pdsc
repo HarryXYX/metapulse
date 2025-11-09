@@ -1,0 +1,12 @@
+{
+  "type" : "enum",
+  "name" : "NotebookCellType",
+  "namespace" : "com.linkedin.notebook",
+  "doc" : "Type of Notebook Cell",
+  "symbols" : [ "TEXT_CELL", "QUERY_CELL", "CHART_CELL" ],
+  "symbolDocs" : {
+    "CHART_CELL" : "CHART Notebook cell type. The cell content is chart only.",
+    "QUERY_CELL" : "QUERY Notebook cell type. The cell context is query only.",
+    "TEXT_CELL" : "TEXT Notebook cell type. The cell context is text only."
+  }
+}

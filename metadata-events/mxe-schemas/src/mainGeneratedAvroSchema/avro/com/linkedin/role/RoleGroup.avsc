@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "RoleGroup",
+  "namespace" : "com.linkedin.role",
+  "doc" : "Provisioned groups of a role",
+  "fields" : [ {
+    "name" : "group",
+    "type" : "string",
+    "doc" : "Link provisioned corp group for a role",
+    "Relationship" : {
+      "entityTypes" : [ "corpGroup" ],
+      "name" : "Has"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  } ]
+}

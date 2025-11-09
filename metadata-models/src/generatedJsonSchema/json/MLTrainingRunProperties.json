@@ -1,0 +1,115 @@
+{
+  "definitions" : {
+    "MLTrainingRunProperties" : {
+      "description" : "The inputs and outputs of this training run",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "id" : {
+          "default" : null,
+          "description" : "Run Id of the ML Training Run",
+          "type" : "string"
+        },
+        "outputUrls" : {
+          "default" : null,
+          "description" : "List of URLs for the Outputs of the ML Training Run",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "hyperParams" : {
+          "default" : null,
+          "description" : "Hyperparameters of the ML Training Run",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLHyperParam"
+          }
+        },
+        "trainingMetrics" : {
+          "default" : null,
+          "description" : "Metrics of the ML Training Run",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/MLMetric"
+          }
+        }
+      },
+      "required" : [ "customProperties" ]
+    },
+    "MLHyperParam" : {
+      "description" : "Properties associated with an ML Hyper Param",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the MLHyperParam",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLHyperParam",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the MLHyperParam",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the MLHyperParam was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    },
+    "MLMetric" : {
+      "description" : "Properties associated with an ML Metric",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the mlMetric",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the mlMetric",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the mlMetric",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the mlMetric was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/MLTrainingRunProperties"
+}

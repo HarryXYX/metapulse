@@ -1,0 +1,6 @@
+{
+  "definitions" : {
+    "Parameters" : { }
+  },
+  "$ref" : "#/definitions/Parameters"
+}

@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "DatasetFilter" : {
+      "description" : "A definition of filters that should be used when\nquerying an external Dataset or Table.\n\nNote that this models should NOT be used for working with\nsearch / filter on DataHub Platform itself.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "How the partition will be represented in this model.\n\nIn the future, we'll likely add support for more structured\npredicates.",
+          "$ref" : "#/definitions/DatasetFilterType"
+        },
+        "sql" : {
+          "default" : null,
+          "description" : "The raw where clause string which will be used for monitoring.\nRequired if the type is SQL.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "DatasetFilterType" : {
+      "enum" : [ "SQL" ]
+    }
+  },
+  "$ref" : "#/definitions/DatasetFilter"
+}

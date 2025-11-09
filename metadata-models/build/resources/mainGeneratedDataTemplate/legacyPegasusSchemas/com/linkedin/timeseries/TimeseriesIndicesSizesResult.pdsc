@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "TimeseriesIndicesSizesResult",
+  "namespace" : "com.linkedin.timeseries",
+  "doc" : "Encapsulates the response of the getIndexSizes API",
+  "fields" : [ {
+    "name" : "indexSizes",
+    "type" : {
+      "type" : "array",
+      "items" : "TimeseriesIndexSizeResult"
+    },
+    "doc" : "Collection of index sizes for all indices in the result"
+  } ]
+}

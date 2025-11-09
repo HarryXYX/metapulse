@@ -1,0 +1,45 @@
+{
+  "type" : "record",
+  "name" : "VersionSetProperties",
+  "namespace" : "com.linkedin.versionset",
+  "fields" : [ {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Custom property bag.",
+    "default" : { },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "TEXT",
+        "queryByDefault" : true
+      }
+    }
+  }, {
+    "name" : "latest",
+    "type" : "string",
+    "doc" : "The latest versioned entity linked to in this version set",
+    "Searchable" : {
+      "queryByDefault" : "false"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "versioningScheme",
+    "type" : {
+      "type" : "enum",
+      "name" : "VersioningScheme",
+      "symbols" : [ "LEXICOGRAPHIC_STRING", "ALPHANUMERIC_GENERATED_BY_DATAHUB" ],
+      "symbolDocs" : {
+        "ALPHANUMERIC_GENERATED_BY_DATAHUB" : "String managed by DataHub. Currently, an 8 character alphabetical string.",
+        "LEXICOGRAPHIC_STRING" : "String sorted lexicographically."
+      }
+    },
+    "doc" : "What versioning scheme is being utilized for the versioned entities sort criterion. Static once set"
+  } ],
+  "Aspect" : {
+    "name" : "versionSetProperties"
+  }
+}

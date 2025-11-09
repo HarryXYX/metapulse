@@ -1,0 +1,37 @@
+{
+  "type" : "record",
+  "name" : "DataHubUpgradeResult",
+  "namespace" : "com.linkedin.upgrade",
+  "doc" : "Information collected when a DataHubUpgrade successfully finishes",
+  "fields" : [ {
+    "name" : "state",
+    "type" : [ {
+      "type" : "enum",
+      "name" : "DataHubUpgradeState",
+      "symbols" : [ "IN_PROGRESS", "SUCCEEDED", "FAILED", "ABORTED" ],
+      "symbolDocs" : {
+        "ABORTED" : "Upgrade with an error state and should not be re-run.",
+        "FAILED" : "Upgrade with an error state, however the upgrade should be re-run.",
+        "IN_PROGRESS" : "Upgrade in progress.",
+        "SUCCEEDED" : "Upgrade was successful."
+      }
+    }, "null" ],
+    "doc" : "Upgrade state  UpgradeResult.Result",
+    "default" : "SUCCEEDED"
+  }, {
+    "name" : "timestampMs",
+    "type" : "long",
+    "doc" : "Timestamp when we started this DataHubUpgrade"
+  }, {
+    "name" : "result",
+    "type" : [ "null", {
+      "type" : "map",
+      "values" : "string"
+    } ],
+    "doc" : "Result map to place helpful information about this upgrade job",
+    "default" : null
+  } ],
+  "Aspect" : {
+    "name" : "dataHubUpgradeResult"
+  }
+}

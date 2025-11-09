@@ -1,0 +1,40 @@
+{
+  "definitions" : {
+    "SchemaFieldSnapshot" : {
+      "description" : "A metadata snapshot for a specific schema field entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the dataset. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SchemaFieldKey"
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "SchemaFieldKey" : {
+      "description" : "Key for a SchemaField",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "parent" : {
+          "description" : "Parent associated with the schema field",
+          "type" : "string"
+        },
+        "fieldPath" : {
+          "description" : "fieldPath identifying the schema field",
+          "type" : "string"
+        }
+      },
+      "required" : [ "parent", "fieldPath" ]
+    }
+  },
+  "$ref" : "#/definitions/SchemaFieldSnapshot"
+}

@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubStepStateKey" : {
+      "description" : "Key for a DataHub Step State",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the state",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubStepStateKey"
+}

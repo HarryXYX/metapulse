@@ -1,0 +1,19 @@
+{
+  "definitions" : {
+    "BrowsePath" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "path" : {
+          "description" : "An array of strings comprising the path",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "path" ]
+    }
+  },
+  "$ref" : "#/definitions/BrowsePath"
+}

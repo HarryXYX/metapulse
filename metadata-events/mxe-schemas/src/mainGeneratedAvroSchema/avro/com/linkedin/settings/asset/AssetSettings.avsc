@@ -1,0 +1,46 @@
+{
+  "type" : "record",
+  "name" : "AssetSettings",
+  "namespace" : "com.linkedin.settings.asset",
+  "doc" : "Settings associated with this asset",
+  "fields" : [ {
+    "name" : "assetSummary",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AssetSummarySettings",
+      "doc" : "Information related to the asset summary for this asset",
+      "fields" : [ {
+        "name" : "templates",
+        "type" : [ {
+          "type" : "array",
+          "items" : {
+            "type" : "record",
+            "name" : "AssetSummarySettingsTemplate",
+            "doc" : "Object containing the template and any additional info for asset summary settings",
+            "fields" : [ {
+              "name" : "template",
+              "type" : "string",
+              "doc" : "The urn of the template",
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            } ]
+          }
+        }, "null" ],
+        "doc" : "The list of templates applied to this asset in order. Right now we only expect one.",
+        "default" : [ ],
+        "Relationship" : {
+          "/*/template" : {
+            "entityTypes" : [ "dataHubPageTemplate" ],
+            "name" : "HasSummaryTemplate"
+          }
+        }
+      } ]
+    } ],
+    "doc" : "Information related to the asset summary for this asset",
+    "default" : null
+  } ],
+  "Aspect" : {
+    "name" : "assetSettings"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "definitions" : {
+    "TimeType" : { }
+  },
+  "$ref" : "#/definitions/TimeType"
+}

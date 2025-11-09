@@ -1,0 +1,16 @@
+{
+  "definitions" : {
+    "BusinessAttributeAssociation" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "businessAttributeUrn" : {
+          "description" : "Urn of the applied businessAttribute",
+          "type" : "string"
+        }
+      },
+      "required" : [ "businessAttributeUrn" ]
+    }
+  },
+  "$ref" : "#/definitions/BusinessAttributeAssociation"
+}

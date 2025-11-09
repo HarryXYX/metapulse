@@ -1,0 +1,69 @@
+{
+  "type" : "record",
+  "name" : "StructuredPropertySettings",
+  "namespace" : "com.linkedin.structured",
+  "doc" : "Settings specific to a structured property entity",
+  "fields" : [ {
+    "name" : "isHidden",
+    "type" : "boolean",
+    "doc" : "Whether or not this asset should be hidden in the main application",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "showInSearchFilters",
+    "type" : "boolean",
+    "doc" : "Whether or not this asset should be displayed as a search filter",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "showInAssetSummary",
+    "type" : "boolean",
+    "doc" : "Whether or not this asset should be displayed in the asset sidebar",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "hideInAssetSummaryWhenEmpty",
+    "type" : "boolean",
+    "doc" : "Whether or not this asset should be hidden in the asset sidebar (showInAssetSummary should be enabled)\nwhen its value is empty",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "showAsAssetBadge",
+    "type" : "boolean",
+    "doc" : "Whether or not this asset should be displayed as an asset badge on other\nasset's headers",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "showInColumnsTable",
+    "type" : "boolean",
+    "doc" : "Whether or not this asset should be displayed as a column in the schema field table\nin a Dataset's \"Columns\" tab.",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Last Modified Audit stamp",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModifiedSettings",
+        "fieldType" : "DATETIME"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "structuredPropertySettings"
+  }
+}

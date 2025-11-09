@@ -1,0 +1,1501 @@
+
+package com.linkedin.ml.metadata;
+
+import java.util.List;
+import java.util.function.Function;
+import javax.annotation.Generated;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import com.linkedin.common.TimeStamp;
+import com.linkedin.common.UrnArray;
+import com.linkedin.common.VersionTag;
+import com.linkedin.common.url.UrlCoercer;
+import com.linkedin.data.DataList;
+import com.linkedin.data.DataMap;
+import com.linkedin.data.collections.CheckedUtil;
+import com.linkedin.data.schema.MaskMap;
+import com.linkedin.data.schema.PathSpec;
+import com.linkedin.data.schema.RecordDataSchema;
+import com.linkedin.data.schema.SchemaFormatType;
+import com.linkedin.data.template.Custom;
+import com.linkedin.data.template.DataTemplateUtil;
+import com.linkedin.data.template.GetMode;
+import com.linkedin.data.template.RecordTemplate;
+import com.linkedin.data.template.SetMode;
+import com.linkedin.data.template.StringMap;
+
+
+/**
+ * Properties associated with an ML Model Group
+ * 
+ */
+@Generated(value = "com.linkedin.pegasus.generator.JavaCodeUtil", comments = "Rest.li Data Template. Generated from metadata-events/mxe-schemas/src/main/pegasus/com/linkedin/ml/metadata/MLModelGroupProperties.pdl.")
+public class MLModelGroupProperties
+    extends RecordTemplate
+{
+
+    private final static MLModelGroupProperties.Fields _fields = new MLModelGroupProperties.Fields();
+    private final static RecordDataSchema SCHEMA = ((RecordDataSchema) DataTemplateUtil.parseSchema("namespace com.linkedin.ml.metadata/**Properties associated with an ML Model Group*/@Aspect.name=\"mlModelGroupProperties\"record MLModelGroupProperties includes{namespace com.linkedin.common/**Misc. properties about an entity.*/record CustomProperties{/**Custom property bag.*/@Searchable.`/*`={\"fieldType\":\"TEXT\",\"queryByDefault\":true}customProperties:map[string,string]={}}}/**A set of re-usable fields used to capture lineage information for ML Models and ML Model Groups*/record MLModelLineageInfo{/**List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.*/@Relationship.`/*`={\"entityTypes\":[\"dataJob\",\"dataProcessInstance\"],\"isLineage\":true,\"name\":\"TrainedBy\"}trainingJobs:optional array[{namespace com.linkedin.common@java.class=\"com.linkedin.common.urn.Urn\"typeref Urn=string}]/**List of jobs or process instances (if any) that use the model or group.*/@Relationship.`/*`={\"entityTypes\":[\"dataJob\",\"dataProcessInstance\"],\"isLineage\":true,\"isUpstream\":false,\"name\":\"UsedBy\"}downstreamJobs:optional array[com.linkedin.common.Urn]}{namespace com.linkedin.common/**A reference to an external platform.*/record ExternalReference{/**URL where the reference exist*/@Searchable.fieldType=\"KEYWORD\"externalUrl:optional@java={\"class\":\"com.linkedin.common.url.Url\",\"coercerClass\":\"com.linkedin.common.url.UrlCoercer\"}typeref Url=string}}{/**Display name of the MLModelGroup*/@Searchable={\"boostScore\":10.0,\"enableAutocomplete\":true,\"fieldType\":\"WORD_GRAM\",\"queryByDefault\":true}name:optional string/**Documentation of the MLModelGroup*/@Searchable={\"fieldType\":\"TEXT\",\"hasValuesFieldName\":\"hasDescription\"}description:optional string/**Date when the MLModelGroup was developed*/@deprecated,createdAt:optional{namespace com.linkedin.common/**Number of milliseconds since midnight, January 1, 1970 UTC. It must be a positive number*/typeref Time=long}/**Time and Actor who created the MLModelGroup*/created:optional{namespace com.linkedin.common/**A standard event timestamp*/record TimeStamp{/**When did the event occur*/time:Time/**Optional: The actor urn involved in the event.*/actor:optional Urn}}/**Date when the MLModelGroup was last modified*/lastModified:optional com.linkedin.common.TimeStamp/**Version of the MLModelGroup*/version:optional{namespace com.linkedin.common/**A resource-defined string representing the resource state for the purpose of concurrency control*/record VersionTag{versionTag:optional string,metadataAttribution:optional/**Information about who, why, and how this metadata was applied*/record MetadataAttribution{/**When this metadata was updated.*/time:Time/**The entity (e.g. a member URN) responsible for applying the assocated metadata. This can\neither be a user (in case of UI edits) or the datahub system for automation.*/actor:Urn/**The DataHub source responsible for applying the associated metadata. This will only be filled out\nwhen a DataHub source is responsible. This includes the specific metadata test urn, the automation urn.*/source:optional Urn/**The details associated with why this metadata was applied. For example, this could include\nthe actual regex rule, sql statement, ingestion pipeline ID, etc.*/sourceDetail:map[string,string]={}}}}}", SchemaFormatType.PDL));
+    private StringMap _customPropertiesField = null;
+    private UrnArray _trainingJobsField = null;
+    private UrnArray _downstreamJobsField = null;
+    private com.linkedin.common.url.Url _externalUrlField = null;
+    private String _nameField = null;
+    private String _descriptionField = null;
+    private Long _createdAtField = null;
+    private TimeStamp _createdField = null;
+    private TimeStamp _lastModifiedField = null;
+    private VersionTag _versionField = null;
+    private MLModelGroupProperties.ChangeListener __changeListener = new MLModelGroupProperties.ChangeListener(this);
+    private final static RecordDataSchema.Field FIELD_CustomProperties = SCHEMA.getField("customProperties");
+    private final static StringMap DEFAULT_CustomProperties;
+    private final static RecordDataSchema.Field FIELD_TrainingJobs = SCHEMA.getField("trainingJobs");
+    private final static RecordDataSchema.Field FIELD_DownstreamJobs = SCHEMA.getField("downstreamJobs");
+    private final static RecordDataSchema.Field FIELD_ExternalUrl = SCHEMA.getField("externalUrl");
+    private final static RecordDataSchema.Field FIELD_Name = SCHEMA.getField("name");
+    private final static RecordDataSchema.Field FIELD_Description = SCHEMA.getField("description");
+    private final static RecordDataSchema.Field FIELD_CreatedAt = SCHEMA.getField("createdAt");
+    private final static RecordDataSchema.Field FIELD_Created = SCHEMA.getField("created");
+    private final static RecordDataSchema.Field FIELD_LastModified = SCHEMA.getField("lastModified");
+    private final static RecordDataSchema.Field FIELD_Version = SCHEMA.getField("version");
+
+    static {
+        Custom.initializeCustomClass(com.linkedin.common.url.Url.class);
+        Custom.initializeCoercerClass(UrlCoercer.class);
+        DEFAULT_CustomProperties = ((FIELD_CustomProperties.getDefault() == null)?null:new StringMap(DataTemplateUtil.castOrThrow(FIELD_CustomProperties.getDefault(), DataMap.class)));
+    }
+
+    public MLModelGroupProperties() {
+        super(new DataMap(14, 0.75F), SCHEMA, 8);
+        addChangeListener(__changeListener);
+    }
+
+    public MLModelGroupProperties(DataMap data) {
+        super(data, SCHEMA);
+        addChangeListener(__changeListener);
+    }
+
+    public static MLModelGroupProperties.Fields fields() {
+        return _fields;
+    }
+
+    public static MLModelGroupProperties.ProjectionMask createMask() {
+        return new MLModelGroupProperties.ProjectionMask();
+    }
+
+    public static RecordDataSchema dataSchema() {
+        return SCHEMA;
+    }
+
+    /**
+     * Existence checker for customProperties
+     * 
+     * @see MLModelGroupProperties.Fields#customProperties
+     */
+    public boolean hasCustomProperties() {
+        if (_customPropertiesField!= null) {
+            return true;
+        }
+        return super._map.containsKey("customProperties");
+    }
+
+    /**
+     * Remover for customProperties
+     * 
+     * @see MLModelGroupProperties.Fields#customProperties
+     */
+    public void removeCustomProperties() {
+        super._map.remove("customProperties");
+    }
+
+    /**
+     * Getter for customProperties
+     * 
+     * @see MLModelGroupProperties.Fields#customProperties
+     */
+    @Nullable
+    public StringMap getCustomProperties(GetMode mode) {
+        switch (mode) {
+            case STRICT:
+            case DEFAULT:
+                return getCustomProperties();
+            case NULL:
+                if (_customPropertiesField!= null) {
+                    return _customPropertiesField;
+                } else {
+                    Object __rawValue = super._map.get("customProperties");
+                    _customPropertiesField = ((__rawValue == null)?null:new StringMap(DataTemplateUtil.castOrThrow(__rawValue, DataMap.class)));
+                    return _customPropertiesField;
+                }
+        }
+        throw new IllegalStateException(("Unknown mode "+ mode));
+    }
+
+    /**
+     * Getter for customProperties
+     * 
+     * @return
+     *     Required field. Could be null for partial record.
+     * @see MLModelGroupProperties.Fields#customProperties
+     */
+    @Nonnull
+    public StringMap getCustomProperties() {
+        if (_customPropertiesField!= null) {
+            return _customPropertiesField;
+        } else {
+            Object __rawValue = super._map.get("customProperties");
+            if (__rawValue == null) {
+                return DEFAULT_CustomProperties;
+            }
+            _customPropertiesField = ((__rawValue == null)?null:new StringMap(DataTemplateUtil.castOrThrow(__rawValue, DataMap.class)));
+            return _customPropertiesField;
+        }
+    }
+
+    /**
+     * Setter for customProperties
+     * 
+     * @see MLModelGroupProperties.Fields#customProperties
+     */
+    public MLModelGroupProperties setCustomProperties(
+        @Nullable
+        StringMap value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setCustomProperties(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+                if (value == null) {
+                    throw new IllegalArgumentException("Cannot remove mandatory field customProperties of com.linkedin.ml.metadata.MLModelGroupProperties");
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "customProperties", value.data());
+                    _customPropertiesField = value;
+                }
+                break;
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeCustomProperties();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "customProperties", value.data());
+                    _customPropertiesField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "customProperties", value.data());
+                    _customPropertiesField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for customProperties
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#customProperties
+     */
+    public MLModelGroupProperties setCustomProperties(
+        @Nonnull
+        StringMap value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field customProperties of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "customProperties", value.data());
+            _customPropertiesField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for trainingJobs
+     * 
+     * @see MLModelGroupProperties.Fields#trainingJobs
+     */
+    public boolean hasTrainingJobs() {
+        if (_trainingJobsField!= null) {
+            return true;
+        }
+        return super._map.containsKey("trainingJobs");
+    }
+
+    /**
+     * Remover for trainingJobs
+     * 
+     * @see MLModelGroupProperties.Fields#trainingJobs
+     */
+    public void removeTrainingJobs() {
+        super._map.remove("trainingJobs");
+    }
+
+    /**
+     * Getter for trainingJobs
+     * 
+     * @see MLModelGroupProperties.Fields#trainingJobs
+     */
+    @Nullable
+    public UrnArray getTrainingJobs(GetMode mode) {
+        return getTrainingJobs();
+    }
+
+    /**
+     * Getter for trainingJobs
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#trainingJobs
+     */
+    @Nullable
+    public UrnArray getTrainingJobs() {
+        if (_trainingJobsField!= null) {
+            return _trainingJobsField;
+        } else {
+            Object __rawValue = super._map.get("trainingJobs");
+            _trainingJobsField = ((__rawValue == null)?null:new UrnArray(DataTemplateUtil.castOrThrow(__rawValue, DataList.class)));
+            return _trainingJobsField;
+        }
+    }
+
+    /**
+     * Setter for trainingJobs
+     * 
+     * @see MLModelGroupProperties.Fields#trainingJobs
+     */
+    public MLModelGroupProperties setTrainingJobs(
+        @Nullable
+        UrnArray value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setTrainingJobs(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeTrainingJobs();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "trainingJobs", value.data());
+                    _trainingJobsField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "trainingJobs", value.data());
+                    _trainingJobsField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for trainingJobs
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#trainingJobs
+     */
+    public MLModelGroupProperties setTrainingJobs(
+        @Nonnull
+        UrnArray value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field trainingJobs of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "trainingJobs", value.data());
+            _trainingJobsField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for downstreamJobs
+     * 
+     * @see MLModelGroupProperties.Fields#downstreamJobs
+     */
+    public boolean hasDownstreamJobs() {
+        if (_downstreamJobsField!= null) {
+            return true;
+        }
+        return super._map.containsKey("downstreamJobs");
+    }
+
+    /**
+     * Remover for downstreamJobs
+     * 
+     * @see MLModelGroupProperties.Fields#downstreamJobs
+     */
+    public void removeDownstreamJobs() {
+        super._map.remove("downstreamJobs");
+    }
+
+    /**
+     * Getter for downstreamJobs
+     * 
+     * @see MLModelGroupProperties.Fields#downstreamJobs
+     */
+    @Nullable
+    public UrnArray getDownstreamJobs(GetMode mode) {
+        return getDownstreamJobs();
+    }
+
+    /**
+     * Getter for downstreamJobs
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#downstreamJobs
+     */
+    @Nullable
+    public UrnArray getDownstreamJobs() {
+        if (_downstreamJobsField!= null) {
+            return _downstreamJobsField;
+        } else {
+            Object __rawValue = super._map.get("downstreamJobs");
+            _downstreamJobsField = ((__rawValue == null)?null:new UrnArray(DataTemplateUtil.castOrThrow(__rawValue, DataList.class)));
+            return _downstreamJobsField;
+        }
+    }
+
+    /**
+     * Setter for downstreamJobs
+     * 
+     * @see MLModelGroupProperties.Fields#downstreamJobs
+     */
+    public MLModelGroupProperties setDownstreamJobs(
+        @Nullable
+        UrnArray value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setDownstreamJobs(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeDownstreamJobs();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "downstreamJobs", value.data());
+                    _downstreamJobsField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "downstreamJobs", value.data());
+                    _downstreamJobsField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for downstreamJobs
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#downstreamJobs
+     */
+    public MLModelGroupProperties setDownstreamJobs(
+        @Nonnull
+        UrnArray value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field downstreamJobs of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "downstreamJobs", value.data());
+            _downstreamJobsField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for externalUrl
+     * 
+     * @see MLModelGroupProperties.Fields#externalUrl
+     */
+    public boolean hasExternalUrl() {
+        if (_externalUrlField!= null) {
+            return true;
+        }
+        return super._map.containsKey("externalUrl");
+    }
+
+    /**
+     * Remover for externalUrl
+     * 
+     * @see MLModelGroupProperties.Fields#externalUrl
+     */
+    public void removeExternalUrl() {
+        super._map.remove("externalUrl");
+    }
+
+    /**
+     * Getter for externalUrl
+     * 
+     * @see MLModelGroupProperties.Fields#externalUrl
+     */
+    @Nullable
+    public com.linkedin.common.url.Url getExternalUrl(GetMode mode) {
+        return getExternalUrl();
+    }
+
+    /**
+     * Getter for externalUrl
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#externalUrl
+     */
+    @Nullable
+    public com.linkedin.common.url.Url getExternalUrl() {
+        if (_externalUrlField!= null) {
+            return _externalUrlField;
+        } else {
+            Object __rawValue = super._map.get("externalUrl");
+            _externalUrlField = DataTemplateUtil.coerceCustomOutput(__rawValue, com.linkedin.common.url.Url.class);
+            return _externalUrlField;
+        }
+    }
+
+    /**
+     * Setter for externalUrl
+     * 
+     * @see MLModelGroupProperties.Fields#externalUrl
+     */
+    public MLModelGroupProperties setExternalUrl(
+        @Nullable
+        com.linkedin.common.url.Url value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setExternalUrl(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeExternalUrl();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "externalUrl", DataTemplateUtil.coerceCustomInput(value, com.linkedin.common.url.Url.class));
+                    _externalUrlField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "externalUrl", DataTemplateUtil.coerceCustomInput(value, com.linkedin.common.url.Url.class));
+                    _externalUrlField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for externalUrl
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#externalUrl
+     */
+    public MLModelGroupProperties setExternalUrl(
+        @Nonnull
+        com.linkedin.common.url.Url value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field externalUrl of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "externalUrl", DataTemplateUtil.coerceCustomInput(value, com.linkedin.common.url.Url.class));
+            _externalUrlField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for name
+     * 
+     * @see MLModelGroupProperties.Fields#name
+     */
+    public boolean hasName() {
+        if (_nameField!= null) {
+            return true;
+        }
+        return super._map.containsKey("name");
+    }
+
+    /**
+     * Remover for name
+     * 
+     * @see MLModelGroupProperties.Fields#name
+     */
+    public void removeName() {
+        super._map.remove("name");
+    }
+
+    /**
+     * Getter for name
+     * 
+     * @see MLModelGroupProperties.Fields#name
+     */
+    @Nullable
+    public String getName(GetMode mode) {
+        return getName();
+    }
+
+    /**
+     * Getter for name
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#name
+     */
+    @Nullable
+    public String getName() {
+        if (_nameField!= null) {
+            return _nameField;
+        } else {
+            Object __rawValue = super._map.get("name");
+            _nameField = DataTemplateUtil.coerceStringOutput(__rawValue);
+            return _nameField;
+        }
+    }
+
+    /**
+     * Setter for name
+     * 
+     * @see MLModelGroupProperties.Fields#name
+     */
+    public MLModelGroupProperties setName(
+        @Nullable
+        String value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setName(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeName();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "name", value);
+                    _nameField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "name", value);
+                    _nameField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for name
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#name
+     */
+    public MLModelGroupProperties setName(
+        @Nonnull
+        String value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field name of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "name", value);
+            _nameField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for description
+     * 
+     * @see MLModelGroupProperties.Fields#description
+     */
+    public boolean hasDescription() {
+        if (_descriptionField!= null) {
+            return true;
+        }
+        return super._map.containsKey("description");
+    }
+
+    /**
+     * Remover for description
+     * 
+     * @see MLModelGroupProperties.Fields#description
+     */
+    public void removeDescription() {
+        super._map.remove("description");
+    }
+
+    /**
+     * Getter for description
+     * 
+     * @see MLModelGroupProperties.Fields#description
+     */
+    @Nullable
+    public String getDescription(GetMode mode) {
+        return getDescription();
+    }
+
+    /**
+     * Getter for description
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#description
+     */
+    @Nullable
+    public String getDescription() {
+        if (_descriptionField!= null) {
+            return _descriptionField;
+        } else {
+            Object __rawValue = super._map.get("description");
+            _descriptionField = DataTemplateUtil.coerceStringOutput(__rawValue);
+            return _descriptionField;
+        }
+    }
+
+    /**
+     * Setter for description
+     * 
+     * @see MLModelGroupProperties.Fields#description
+     */
+    public MLModelGroupProperties setDescription(
+        @Nullable
+        String value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setDescription(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeDescription();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "description", value);
+                    _descriptionField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "description", value);
+                    _descriptionField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for description
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#description
+     */
+    public MLModelGroupProperties setDescription(
+        @Nonnull
+        String value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field description of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "description", value);
+            _descriptionField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for createdAt
+     * 
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    public boolean hasCreatedAt() {
+        if (_createdAtField!= null) {
+            return true;
+        }
+        return super._map.containsKey("createdAt");
+    }
+
+    /**
+     * Remover for createdAt
+     * 
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    public void removeCreatedAt() {
+        super._map.remove("createdAt");
+    }
+
+    /**
+     * Getter for createdAt
+     * 
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    @Nullable
+    public Long getCreatedAt(GetMode mode) {
+        return getCreatedAt();
+    }
+
+    /**
+     * Getter for createdAt
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    @Nullable
+    public Long getCreatedAt() {
+        if (_createdAtField!= null) {
+            return _createdAtField;
+        } else {
+            Object __rawValue = super._map.get("createdAt");
+            _createdAtField = DataTemplateUtil.coerceLongOutput(__rawValue);
+            return _createdAtField;
+        }
+    }
+
+    /**
+     * Setter for createdAt
+     * 
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    public MLModelGroupProperties setCreatedAt(
+        @Nullable
+        Long value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setCreatedAt(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeCreatedAt();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "createdAt", DataTemplateUtil.coerceLongInput(value));
+                    _createdAtField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "createdAt", DataTemplateUtil.coerceLongInput(value));
+                    _createdAtField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for createdAt
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    public MLModelGroupProperties setCreatedAt(
+        @Nonnull
+        Long value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field createdAt of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "createdAt", DataTemplateUtil.coerceLongInput(value));
+            _createdAtField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for createdAt
+     * 
+     * @see MLModelGroupProperties.Fields#createdAt
+     */
+    @Deprecated
+    public MLModelGroupProperties setCreatedAt(long value) {
+        CheckedUtil.putWithoutChecking(super._map, "createdAt", DataTemplateUtil.coerceLongInput(value));
+        _createdAtField = value;
+        return this;
+    }
+
+    /**
+     * Existence checker for created
+     * 
+     * @see MLModelGroupProperties.Fields#created
+     */
+    public boolean hasCreated() {
+        if (_createdField!= null) {
+            return true;
+        }
+        return super._map.containsKey("created");
+    }
+
+    /**
+     * Remover for created
+     * 
+     * @see MLModelGroupProperties.Fields#created
+     */
+    public void removeCreated() {
+        super._map.remove("created");
+    }
+
+    /**
+     * Getter for created
+     * 
+     * @see MLModelGroupProperties.Fields#created
+     */
+    @Nullable
+    public TimeStamp getCreated(GetMode mode) {
+        return getCreated();
+    }
+
+    /**
+     * Getter for created
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#created
+     */
+    @Nullable
+    public TimeStamp getCreated() {
+        if (_createdField!= null) {
+            return _createdField;
+        } else {
+            Object __rawValue = super._map.get("created");
+            _createdField = ((__rawValue == null)?null:new TimeStamp(DataTemplateUtil.castOrThrow(__rawValue, DataMap.class)));
+            return _createdField;
+        }
+    }
+
+    /**
+     * Setter for created
+     * 
+     * @see MLModelGroupProperties.Fields#created
+     */
+    public MLModelGroupProperties setCreated(
+        @Nullable
+        TimeStamp value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setCreated(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeCreated();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "created", value.data());
+                    _createdField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "created", value.data());
+                    _createdField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for created
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#created
+     */
+    public MLModelGroupProperties setCreated(
+        @Nonnull
+        TimeStamp value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field created of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "created", value.data());
+            _createdField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for lastModified
+     * 
+     * @see MLModelGroupProperties.Fields#lastModified
+     */
+    public boolean hasLastModified() {
+        if (_lastModifiedField!= null) {
+            return true;
+        }
+        return super._map.containsKey("lastModified");
+    }
+
+    /**
+     * Remover for lastModified
+     * 
+     * @see MLModelGroupProperties.Fields#lastModified
+     */
+    public void removeLastModified() {
+        super._map.remove("lastModified");
+    }
+
+    /**
+     * Getter for lastModified
+     * 
+     * @see MLModelGroupProperties.Fields#lastModified
+     */
+    @Nullable
+    public TimeStamp getLastModified(GetMode mode) {
+        return getLastModified();
+    }
+
+    /**
+     * Getter for lastModified
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#lastModified
+     */
+    @Nullable
+    public TimeStamp getLastModified() {
+        if (_lastModifiedField!= null) {
+            return _lastModifiedField;
+        } else {
+            Object __rawValue = super._map.get("lastModified");
+            _lastModifiedField = ((__rawValue == null)?null:new TimeStamp(DataTemplateUtil.castOrThrow(__rawValue, DataMap.class)));
+            return _lastModifiedField;
+        }
+    }
+
+    /**
+     * Setter for lastModified
+     * 
+     * @see MLModelGroupProperties.Fields#lastModified
+     */
+    public MLModelGroupProperties setLastModified(
+        @Nullable
+        TimeStamp value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setLastModified(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeLastModified();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "lastModified", value.data());
+                    _lastModifiedField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "lastModified", value.data());
+                    _lastModifiedField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for lastModified
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#lastModified
+     */
+    public MLModelGroupProperties setLastModified(
+        @Nonnull
+        TimeStamp value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field lastModified of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "lastModified", value.data());
+            _lastModifiedField = value;
+        }
+        return this;
+    }
+
+    /**
+     * Existence checker for version
+     * 
+     * @see MLModelGroupProperties.Fields#version
+     */
+    public boolean hasVersion() {
+        if (_versionField!= null) {
+            return true;
+        }
+        return super._map.containsKey("version");
+    }
+
+    /**
+     * Remover for version
+     * 
+     * @see MLModelGroupProperties.Fields#version
+     */
+    public void removeVersion() {
+        super._map.remove("version");
+    }
+
+    /**
+     * Getter for version
+     * 
+     * @see MLModelGroupProperties.Fields#version
+     */
+    @Nullable
+    public VersionTag getVersion(GetMode mode) {
+        return getVersion();
+    }
+
+    /**
+     * Getter for version
+     * 
+     * @return
+     *     Optional field. Always check for null.
+     * @see MLModelGroupProperties.Fields#version
+     */
+    @Nullable
+    public VersionTag getVersion() {
+        if (_versionField!= null) {
+            return _versionField;
+        } else {
+            Object __rawValue = super._map.get("version");
+            _versionField = ((__rawValue == null)?null:new VersionTag(DataTemplateUtil.castOrThrow(__rawValue, DataMap.class)));
+            return _versionField;
+        }
+    }
+
+    /**
+     * Setter for version
+     * 
+     * @see MLModelGroupProperties.Fields#version
+     */
+    public MLModelGroupProperties setVersion(
+        @Nullable
+        VersionTag value, SetMode mode) {
+        switch (mode) {
+            case DISALLOW_NULL:
+                return setVersion(value);
+            case REMOVE_OPTIONAL_IF_NULL:
+            case REMOVE_IF_NULL:
+                if (value == null) {
+                    removeVersion();
+                } else {
+                    CheckedUtil.putWithoutChecking(super._map, "version", value.data());
+                    _versionField = value;
+                }
+                break;
+            case IGNORE_NULL:
+                if (value!= null) {
+                    CheckedUtil.putWithoutChecking(super._map, "version", value.data());
+                    _versionField = value;
+                }
+                break;
+        }
+        return this;
+    }
+
+    /**
+     * Setter for version
+     * 
+     * @param value
+     *     Must not be null. For more control, use setters with mode instead.
+     * @see MLModelGroupProperties.Fields#version
+     */
+    public MLModelGroupProperties setVersion(
+        @Nonnull
+        VersionTag value) {
+        if (value == null) {
+            throw new NullPointerException("Cannot set field version of com.linkedin.ml.metadata.MLModelGroupProperties to null");
+        } else {
+            CheckedUtil.putWithoutChecking(super._map, "version", value.data());
+            _versionField = value;
+        }
+        return this;
+    }
+
+    @Override
+    public MLModelGroupProperties clone()
+        throws CloneNotSupportedException
+    {
+        MLModelGroupProperties __clone = ((MLModelGroupProperties) super.clone());
+        __clone.__changeListener = new MLModelGroupProperties.ChangeListener(__clone);
+        __clone.addChangeListener(__clone.__changeListener);
+        return __clone;
+    }
+
+    @Override
+    public MLModelGroupProperties copy()
+        throws CloneNotSupportedException
+    {
+        MLModelGroupProperties __copy = ((MLModelGroupProperties) super.copy());
+        __copy._externalUrlField = null;
+        __copy._createdAtField = null;
+        __copy._customPropertiesField = null;
+        __copy._createdField = null;
+        __copy._downstreamJobsField = null;
+        __copy._nameField = null;
+        __copy._descriptionField = null;
+        __copy._lastModifiedField = null;
+        __copy._versionField = null;
+        __copy._trainingJobsField = null;
+        __copy.__changeListener = new MLModelGroupProperties.ChangeListener(__copy);
+        __copy.addChangeListener(__copy.__changeListener);
+        return __copy;
+    }
+
+    private static class ChangeListener
+        implements com.linkedin.data.collections.CheckedMap.ChangeListener<String, Object>
+    {
+
+        private final MLModelGroupProperties __objectRef;
+
+        private ChangeListener(MLModelGroupProperties reference) {
+            __objectRef = reference;
+        }
+
+        @Override
+        public void onUnderlyingMapChanged(String key, Object value) {
+            switch (key) {
+                case "externalUrl":
+                    __objectRef._externalUrlField = null;
+                    break;
+                case "createdAt":
+                    __objectRef._createdAtField = null;
+                    break;
+                case "customProperties":
+                    __objectRef._customPropertiesField = null;
+                    break;
+                case "created":
+                    __objectRef._createdField = null;
+                    break;
+                case "downstreamJobs":
+                    __objectRef._downstreamJobsField = null;
+                    break;
+                case "name":
+                    __objectRef._nameField = null;
+                    break;
+                case "description":
+                    __objectRef._descriptionField = null;
+                    break;
+                case "lastModified":
+                    __objectRef._lastModifiedField = null;
+                    break;
+                case "version":
+                    __objectRef._versionField = null;
+                    break;
+                case "trainingJobs":
+                    __objectRef._trainingJobsField = null;
+                    break;
+            }
+        }
+
+    }
+
+    public static class Fields
+        extends PathSpec
+    {
+
+
+        public Fields(List<String> path, String name) {
+            super(path, name);
+        }
+
+        public Fields() {
+            super();
+        }
+
+        /**
+         * Custom property bag.
+         * 
+         */
+        public PathSpec customProperties() {
+            return new PathSpec(getPathComponents(), "customProperties");
+        }
+
+        /**
+         * List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.
+         * 
+         */
+        public PathSpec trainingJobs() {
+            return new PathSpec(getPathComponents(), "trainingJobs");
+        }
+
+        /**
+         * List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.
+         * 
+         */
+        public PathSpec trainingJobs(Integer start, Integer count) {
+            PathSpec arrayPathSpec = new PathSpec(getPathComponents(), "trainingJobs");
+            if (start!= null) {
+                arrayPathSpec.setAttribute("start", start);
+            }
+            if (count!= null) {
+                arrayPathSpec.setAttribute("count", count);
+            }
+            return arrayPathSpec;
+        }
+
+        /**
+         * List of jobs or process instances (if any) that use the model or group.
+         * 
+         */
+        public PathSpec downstreamJobs() {
+            return new PathSpec(getPathComponents(), "downstreamJobs");
+        }
+
+        /**
+         * List of jobs or process instances (if any) that use the model or group.
+         * 
+         */
+        public PathSpec downstreamJobs(Integer start, Integer count) {
+            PathSpec arrayPathSpec = new PathSpec(getPathComponents(), "downstreamJobs");
+            if (start!= null) {
+                arrayPathSpec.setAttribute("start", start);
+            }
+            if (count!= null) {
+                arrayPathSpec.setAttribute("count", count);
+            }
+            return arrayPathSpec;
+        }
+
+        /**
+         * URL where the reference exist
+         * 
+         */
+        public PathSpec externalUrl() {
+            return new PathSpec(getPathComponents(), "externalUrl");
+        }
+
+        /**
+         * Display name of the MLModelGroup
+         * 
+         */
+        public PathSpec name() {
+            return new PathSpec(getPathComponents(), "name");
+        }
+
+        /**
+         * Documentation of the MLModelGroup
+         * 
+         */
+        public PathSpec description() {
+            return new PathSpec(getPathComponents(), "description");
+        }
+
+        /**
+         * Date when the MLModelGroup was developed
+         * 
+         */
+        @Deprecated
+        public PathSpec createdAt() {
+            return new PathSpec(getPathComponents(), "createdAt");
+        }
+
+        /**
+         * Time and Actor who created the MLModelGroup
+         * 
+         */
+        public com.linkedin.common.TimeStamp.Fields created() {
+            return new com.linkedin.common.TimeStamp.Fields(getPathComponents(), "created");
+        }
+
+        /**
+         * Date when the MLModelGroup was last modified
+         * 
+         */
+        public com.linkedin.common.TimeStamp.Fields lastModified() {
+            return new com.linkedin.common.TimeStamp.Fields(getPathComponents(), "lastModified");
+        }
+
+        /**
+         * Version of the MLModelGroup
+         * 
+         */
+        public com.linkedin.common.VersionTag.Fields version() {
+            return new com.linkedin.common.VersionTag.Fields(getPathComponents(), "version");
+        }
+
+    }
+
+    public static class ProjectionMask
+        extends MaskMap
+    {
+
+        private com.linkedin.common.TimeStamp.ProjectionMask _createdMask;
+        private com.linkedin.common.TimeStamp.ProjectionMask _lastModifiedMask;
+        private com.linkedin.common.VersionTag.ProjectionMask _versionMask;
+
+        ProjectionMask() {
+            super(14);
+        }
+
+        /**
+         * Custom property bag.
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withCustomProperties() {
+            getDataMap().put("customProperties", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withTrainingJobs() {
+            getDataMap().put("trainingJobs", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withTrainingJobs(Integer start, Integer count) {
+            getDataMap().put("trainingJobs", new DataMap(3));
+            if (start!= null) {
+                getDataMap().getDataMap("trainingJobs").put("$start", start);
+            }
+            if (count!= null) {
+                getDataMap().getDataMap("trainingJobs").put("$count", count);
+            }
+            return this;
+        }
+
+        /**
+         * List of jobs or process instances (if any) that use the model or group.
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withDownstreamJobs() {
+            getDataMap().put("downstreamJobs", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * List of jobs or process instances (if any) that use the model or group.
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withDownstreamJobs(Integer start, Integer count) {
+            getDataMap().put("downstreamJobs", new DataMap(3));
+            if (start!= null) {
+                getDataMap().getDataMap("downstreamJobs").put("$start", start);
+            }
+            if (count!= null) {
+                getDataMap().getDataMap("downstreamJobs").put("$count", count);
+            }
+            return this;
+        }
+
+        /**
+         * URL where the reference exist
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withExternalUrl() {
+            getDataMap().put("externalUrl", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * Display name of the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withName() {
+            getDataMap().put("name", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * Documentation of the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withDescription() {
+            getDataMap().put("description", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * Date when the MLModelGroup was developed
+         * 
+         */
+        @Deprecated
+        public MLModelGroupProperties.ProjectionMask withCreatedAt() {
+            getDataMap().put("createdAt", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * Time and Actor who created the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withCreated(Function<com.linkedin.common.TimeStamp.ProjectionMask, com.linkedin.common.TimeStamp.ProjectionMask> nestedMask) {
+            _createdMask = nestedMask.apply(((_createdMask == null)?TimeStamp.createMask():_createdMask));
+            getDataMap().put("created", _createdMask.getDataMap());
+            return this;
+        }
+
+        /**
+         * Time and Actor who created the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withCreated(MaskMap nestedMask) {
+            getDataMap().put("created", nestedMask.getDataMap());
+            return this;
+        }
+
+        /**
+         * Time and Actor who created the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withCreated() {
+            _createdMask = null;
+            getDataMap().put("created", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * Date when the MLModelGroup was last modified
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withLastModified(Function<com.linkedin.common.TimeStamp.ProjectionMask, com.linkedin.common.TimeStamp.ProjectionMask> nestedMask) {
+            _lastModifiedMask = nestedMask.apply(((_lastModifiedMask == null)?TimeStamp.createMask():_lastModifiedMask));
+            getDataMap().put("lastModified", _lastModifiedMask.getDataMap());
+            return this;
+        }
+
+        /**
+         * Date when the MLModelGroup was last modified
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withLastModified(MaskMap nestedMask) {
+            getDataMap().put("lastModified", nestedMask.getDataMap());
+            return this;
+        }
+
+        /**
+         * Date when the MLModelGroup was last modified
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withLastModified() {
+            _lastModifiedMask = null;
+            getDataMap().put("lastModified", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+        /**
+         * Version of the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withVersion(Function<com.linkedin.common.VersionTag.ProjectionMask, com.linkedin.common.VersionTag.ProjectionMask> nestedMask) {
+            _versionMask = nestedMask.apply(((_versionMask == null)?VersionTag.createMask():_versionMask));
+            getDataMap().put("version", _versionMask.getDataMap());
+            return this;
+        }
+
+        /**
+         * Version of the MLModelGroup
+         * 
+         */
+        public MLModelGroupProperties.ProjectionMask withVersion() {
+            _versionMask = null;
+            getDataMap().put("version", MaskMap.POSITIVE_MASK);
+            return this;
+        }
+
+    }
+
+}

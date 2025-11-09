@@ -1,0 +1,79 @@
+{
+  "type" : "record",
+  "name" : "AssertionInfo",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Information about an assertion",
+  "include" : [ "com.linkedin.common.CustomProperties", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "AssertionType",
+      "symbols" : [ "DATASET", "FRESHNESS", "VOLUME", "SQL", "FIELD", "DATA_SCHEMA", "CUSTOM" ],
+      "symbolDocs" : {
+        "CUSTOM" : "A custom assertion. \nWhen this is the value, the customAssertion field will be populated.\nUse this assertion type when the exact type of assertion is not modeled in DataHub or\nas a starting point when integrating third-party data quality tools.",
+        "DATASET" : "A single-dataset assertion.\nWhen this is the value, the datasetAssertion field will be populated.",
+        "DATA_SCHEMA" : "A schema or structural assertion.\n\nWould have named this SCHEMA but the codegen for PDL does not allow this (reserved word).",
+        "FIELD" : "A structured assertion targeting a specific column or field of the Dataset.",
+        "FRESHNESS" : "A freshness assertion, or an assertion which indicates when a particular operation should occur\nto an asset.",
+        "SQL" : "A raw SQL-statement based assertion",
+        "VOLUME" : "A volume assertion, or an assertion which indicates how much data should be available for a\nparticular asset."
+      }
+    },
+    "doc" : "Type of assertion. Assertion types can evolve to span Datasets, Flows (Pipelines), Models, Features etc.",
+    "Searchable" : { }
+  }, {
+    "name" : "datasetAssertion",
+    "type" : "DatasetAssertionInfo",
+    "doc" : "A Dataset Assertion definition. This field is populated when the type is DATASET.",
+    "optional" : true
+  }, {
+    "name" : "freshnessAssertion",
+    "type" : "FreshnessAssertionInfo",
+    "doc" : "An Freshness Assertion definition. This field is populated when the type is FRESHNESS.",
+    "optional" : true
+  }, {
+    "name" : "volumeAssertion",
+    "type" : "VolumeAssertionInfo",
+    "doc" : "An Volume Assertion definition. This field is populated when the type is VOLUME.",
+    "optional" : true
+  }, {
+    "name" : "sqlAssertion",
+    "type" : "SqlAssertionInfo",
+    "doc" : "A SQL Assertion definition. This field is populated when the type is SQL.",
+    "optional" : true
+  }, {
+    "name" : "fieldAssertion",
+    "type" : "FieldAssertionInfo",
+    "doc" : "A Field Assertion definition. This field is populated when the type is FIELD.",
+    "optional" : true
+  }, {
+    "name" : "schemaAssertion",
+    "type" : "SchemaAssertionInfo",
+    "doc" : "An schema Assertion definition. This field is populated when the type is DATA_SCHEMA",
+    "optional" : true
+  }, {
+    "name" : "customAssertion",
+    "type" : "CustomAssertionInfo",
+    "doc" : "A Custom Assertion definition. This field is populated when type is CUSTOM.",
+    "optional" : true
+  }, {
+    "name" : "source",
+    "type" : "AssertionSource",
+    "doc" : "The source or origin of the Assertion definition.\n\nIf the source type of the Assertion is EXTERNAL, it is expected to have a corresponding dataPlatformInstance aspect detailing\nthe platform where it was ingested from.",
+    "optional" : true
+  }, {
+    "name" : "lastUpdated",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The time at which the assertion was last updated and the actor who updated it.\nThis field is only present for Native assertions updated after this field was introduced.",
+    "optional" : true
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "An optional human-readable description of the assertion",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "assertionInfo"
+  }
+}

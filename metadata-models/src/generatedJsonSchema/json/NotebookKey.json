@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "NotebookKey" : {
+      "description" : "Key for a Notebook",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "notebookTool" : {
+          "description" : "The name of the Notebook tool such as QueryBook, etc.",
+          "type" : "string"
+        },
+        "notebookId" : {
+          "description" : "Unique id for the Notebook. This id should be globally unique for a Notebook tool even when there are multiple deployments of it. As an example, Notebook URL could be used here for QueryBook such as 'querybook.com/notebook/773'",
+          "type" : "string"
+        }
+      },
+      "required" : [ "notebookTool", "notebookId" ]
+    }
+  },
+  "$ref" : "#/definitions/NotebookKey"
+}

@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "SchemaFieldSpec",
+  "namespace" : "com.linkedin.schema",
+  "doc" : "Lightweight spec used for referencing a particular schema field.\n",
+  "fields" : [ {
+    "name" : "path",
+    "type" : "string",
+    "doc" : "The field path"
+  }, {
+    "name" : "type",
+    "type" : "string",
+    "doc" : "The DataHub standard schema field type."
+  }, {
+    "name" : "nativeType",
+    "type" : "string",
+    "doc" : "The native field type"
+  } ]
+}

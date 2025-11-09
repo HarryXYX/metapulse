@@ -1,0 +1,48 @@
+{
+  "type" : "record",
+  "name" : "DataProductProperties",
+  "namespace" : "com.linkedin.dataproduct",
+  "doc" : "The main properties of a Data Product",
+  "include" : [ "com.linkedin.common.CustomProperties", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the Data Product",
+    "optional" : true,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Documentation of the data product",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "TEXT",
+      "hasValuesFieldName" : "hasDescription",
+      "searchTier" : 2
+    }
+  }, {
+    "name" : "assets",
+    "type" : {
+      "type" : "array",
+      "items" : "DataProductAssociation"
+    },
+    "doc" : "A list of assets that are part of this Data Product",
+    "optional" : true,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "entityTypes" : [ "dataset", "dataJob", "dataFlow", "chart", "dashboard", "notebook", "container", "mlModel", "mlModelGroup", "mlFeatureTable", "mlFeature", "mlPrimaryKey" ],
+        "name" : "DataProductContains"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataProductProperties"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "InviteToken",
+  "namespace" : "com.linkedin.identity",
+  "doc" : "Aspect used to store invite tokens.",
+  "fields" : [ {
+    "name" : "token",
+    "type" : "string",
+    "doc" : "The encrypted invite token."
+  }, {
+    "name" : "role",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The role that this invite token may be associated with",
+    "optional" : true,
+    "Searchable" : {
+      "fieldName" : "role",
+      "fieldType" : "KEYWORD",
+      "hasValuesFieldName" : "hasRole"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "inviteToken"
+  }
+}

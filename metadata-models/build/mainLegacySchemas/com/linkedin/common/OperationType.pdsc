@@ -1,0 +1,16 @@
+{
+  "type" : "enum",
+  "name" : "OperationType",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Enum to define the operation type when an entity changes.",
+  "symbols" : [ "INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP", "CUSTOM", "UNKNOWN" ],
+  "symbolDocs" : {
+    "ALTER" : "Asset was altered",
+    "CREATE" : "Asset was created",
+    "CUSTOM" : "Custom asset operation. If this is set, ensure customOperationType is filled out.",
+    "DELETE" : "Rows were deleted",
+    "DROP" : "Asset was dropped",
+    "INSERT" : "Rows were inserted",
+    "UPDATE" : "Rows were updated"
+  }
+}

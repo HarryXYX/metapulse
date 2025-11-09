@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubActionKey" : {
+      "description" : "Key for a DataHub Action Pipeline",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the Action, either generated or provided",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubActionKey"
+}

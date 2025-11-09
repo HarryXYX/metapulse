@@ -1,0 +1,23 @@
+{
+  "type" : "record",
+  "name" : "BatchSpec",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "A batch on which certain operations, e.g. data quality evaluation, is done.",
+  "include" : [ "com.linkedin.common.CustomProperties" ],
+  "fields" : [ {
+    "name" : "nativeBatchId",
+    "type" : "string",
+    "doc" : "The native identifier as specified by the system operating on the batch.",
+    "optional" : true
+  }, {
+    "name" : "query",
+    "type" : "string",
+    "doc" : "A query that identifies a batch of data",
+    "optional" : true
+  }, {
+    "name" : "limit",
+    "type" : "int",
+    "doc" : "Any limit to the number of rows in the batch, if applied",
+    "optional" : true
+  } ]
+}

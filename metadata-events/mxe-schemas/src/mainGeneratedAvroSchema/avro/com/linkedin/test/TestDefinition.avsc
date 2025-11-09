@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "TestDefinition",
+  "namespace" : "com.linkedin.test",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "TestDefinitionType",
+      "symbols" : [ "JSON" ],
+      "symbolDocs" : {
+        "JSON" : "JSON / YAML test def"
+      }
+    },
+    "doc" : "The Test Definition Type"
+  }, {
+    "name" : "json",
+    "type" : [ "null", "string" ],
+    "doc" : "JSON format configuration for the test",
+    "default" : null
+  } ]
+}

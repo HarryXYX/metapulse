@@ -1,0 +1,11 @@
+{
+  "type" : "record",
+  "name" : "EmailNotificationSettings",
+  "namespace" : "com.linkedin.event.notification.settings",
+  "doc" : "Email Notification settings for an actor.",
+  "fields" : [ {
+    "name" : "email",
+    "type" : "string",
+    "doc" : "Optional user or group email address"
+  } ]
+}

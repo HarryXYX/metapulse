@@ -1,0 +1,182 @@
+{
+  "definitions" : {
+    "ChartInfo" : {
+      "description" : "Information about a chart",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Title of the chart",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Detailed description about the chart",
+          "type" : "string"
+        },
+        "lastModified" : {
+          "description" : "Captures information about who created/last modified/deleted this chart and when",
+          "$ref" : "#/definitions/ChangeAuditStamps"
+        },
+        "chartUrl" : {
+          "default" : null,
+          "description" : "URL for the chart. This could be used as an external link on DataHub to allow users access/view the chart",
+          "type" : "string"
+        },
+        "inputs" : {
+          "default" : null,
+          "description" : "Data sources for the chart\nDeprecated! Use inputEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "inputEdges" : {
+          "default" : null,
+          "description" : "Data sources for the chart",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "type" : {
+          "default" : null,
+          "description" : "Type of the chart",
+          "$ref" : "#/definitions/ChartType"
+        },
+        "access" : {
+          "default" : null,
+          "description" : "Access level for the chart",
+          "$ref" : "#/definitions/AccessLevel"
+        },
+        "lastRefreshed" : {
+          "default" : null,
+          "description" : "The time when this chart last refreshed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "customProperties", "title", "description", "lastModified" ]
+    },
+    "ChangeAuditStamps" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into various lifecycle stages, and who acted to move it into those lifecycle stages. The recommended best practice is to include this record in your record schema, and annotate its fields as @readOnly in your resource. See https://github.com/linkedin/rest.li/wiki/Validation-in-Rest.li#restli-validation-annotations",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    },
+    "Edge" : {
+      "description" : "A common structure to represent all edges to entities when used inside aspects as collections\nThis ensures that all edges have common structure around audit-stamps and will support PATCH, time-travel automatically.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "sourceUrn" : {
+          "default" : null,
+          "description" : "Urn of the source of this relationship edge.\nIf not specified, assumed to be the entity that this aspect belongs to.",
+          "type" : "string"
+        },
+        "destinationUrn" : {
+          "description" : "Urn of the destination of this relationship edge.",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created this relationship edge and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Audit stamp containing who last modified this relationship edge and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : "A generic properties bag that allows us to store specific information on this graph edge.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "destinationUrn" ]
+    },
+    "ChartType" : {
+      "description" : "The various types of charts",
+      "enum" : [ "BAR", "PIE", "SCATTER", "TABLE", "TEXT", "LINE", "AREA", "HISTOGRAM", "BOX_PLOT", "WORD_CLOUD", "COHORT" ]
+    },
+    "AccessLevel" : {
+      "description" : "The various access levels",
+      "enum" : [ "PUBLIC", "PRIVATE" ]
+    }
+  },
+  "$ref" : "#/definitions/ChartInfo"
+}

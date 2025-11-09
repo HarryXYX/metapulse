@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "BusinessAttributeAssociation",
+  "namespace" : "com.linkedin.businessattribute",
+  "fields" : [ {
+    "name" : "businessAttributeUrn",
+    "type" : "string",
+    "doc" : "Urn of the applied businessAttribute",
+    "Searchable" : {
+      "fieldName" : "schemaFieldBusinessAttribute",
+      "includeSystemModifiedAt" : true,
+      "queryByDefault" : false,
+      "systemModifiedAtFieldName" : "schemaFieldBusinessAttributeModifiedAt"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.BusinessAttributeUrn"
+    }
+  } ]
+}

@@ -1,0 +1,17 @@
+{
+  "type" : "record",
+  "name" : "LinkModuleParams",
+  "namespace" : "com.linkedin.module",
+  "fields" : [ {
+    "name" : "linkUrl",
+    "type" : "string"
+  }, {
+    "name" : "imageUrl",
+    "type" : [ "null", "string" ],
+    "default" : null
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "default" : null
+  } ]
+}

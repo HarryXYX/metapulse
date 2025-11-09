@@ -1,0 +1,32 @@
+{
+  "type" : "record",
+  "name" : "Applications",
+  "namespace" : "com.linkedin.application",
+  "doc" : "Links from an Asset to its Applications",
+  "fields" : [ {
+    "name" : "applications",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "The Applications attached to an Asset",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "application" ],
+        "name" : "AssociatedWith"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "addToFilters" : true,
+        "fieldName" : "applications",
+        "fieldType" : "URN",
+        "filterNameOverride" : "Application",
+        "hasValuesFieldName" : "hasApplication"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "applications"
+  }
+}

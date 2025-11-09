@@ -1,0 +1,67 @@
+{
+  "type" : "record",
+  "name" : "IcebergWarehouseInfo",
+  "namespace" : "com.linkedin.dataplatforminstance",
+  "doc" : "An Iceberg warehouse location and credentails whose read/writes are governed by datahub catalog.",
+  "fields" : [ {
+    "name" : "dataRoot",
+    "type" : "string",
+    "doc" : "Path of the root for the backing store of the tables in the warehouse."
+  }, {
+    "name" : "clientId",
+    "type" : "string",
+    "doc" : "clientId to be used to authenticate with storage hosting this warehouse",
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "clientSecret",
+    "type" : "string",
+    "doc" : "client secret to authenticate with storage hosting this warehouse",
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "region",
+    "type" : "string",
+    "doc" : "region where the warehouse is located."
+  }, {
+    "name" : "role",
+    "type" : [ "null", "string" ],
+    "default" : null
+  }, {
+    "name" : "tempCredentialExpirationSeconds",
+    "type" : [ "null", "int" ],
+    "default" : null
+  }, {
+    "name" : "env",
+    "type" : {
+      "type" : "enum",
+      "name" : "FabricType",
+      "namespace" : "com.linkedin.common",
+      "doc" : "Fabric group type",
+      "symbols" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ],
+      "symbolDocs" : {
+        "CORP" : "Designates corporation fabrics",
+        "DEV" : "Designates development fabrics",
+        "EI" : "Designates early-integration fabrics",
+        "NON_PROD" : "Designates non-production fabrics",
+        "PRD" : "Alternative Prod spelling",
+        "PRE" : "Designates pre-production fabrics",
+        "PROD" : "Designates production fabrics",
+        "QA" : "Designates quality assurance fabrics",
+        "RVW" : "Designates review fabrics",
+        "SANDBOX" : "Designates sandbox fabrics",
+        "SBX" : "Alternative spelling for sandbox",
+        "SIT" : "System Integration Testing",
+        "STG" : "Designates staging fabrics",
+        "TEST" : "Designates testing fabrics",
+        "TST" : "Alternative Test spelling",
+        "UAT" : "Designates user acceptance testing fabrics"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "icebergWarehouseInfo"
+  }
+}

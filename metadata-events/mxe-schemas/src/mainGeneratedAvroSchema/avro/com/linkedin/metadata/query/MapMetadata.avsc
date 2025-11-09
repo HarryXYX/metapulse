@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "MapMetadata",
+  "namespace" : "com.linkedin.metadata.query",
+  "doc" : "The model for map metadata",
+  "fields" : [ {
+    "name" : "longMap",
+    "type" : {
+      "type" : "map",
+      "values" : "long"
+    },
+    "doc" : "Map for string keys to long values"
+  } ]
+}

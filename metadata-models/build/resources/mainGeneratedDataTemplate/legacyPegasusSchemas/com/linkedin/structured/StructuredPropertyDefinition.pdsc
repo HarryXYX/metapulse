@@ -1,0 +1,131 @@
+{
+  "type" : "record",
+  "name" : "StructuredPropertyDefinition",
+  "namespace" : "com.linkedin.structured",
+  "fields" : [ {
+    "name" : "qualifiedName",
+    "type" : "string",
+    "doc" : "The fully qualified name of the property. e.g. io.acryl.datahub.myProperty",
+    "Searchable" : {
+      "fieldType" : "KEYWORD",
+      "searchLabel" : "qualifiedName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "displayName",
+    "type" : "string",
+    "doc" : "The display name of the property. This is the name that will be shown in the UI and can be used to look up the property id.",
+    "optional" : true,
+    "Searchable" : { }
+  }, {
+    "name" : "valueType",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The value type of the property. Must be a dataType.\ne.g. To indicate that the property is of type DATE, use urn:li:dataType:datahub.date",
+    "UrnValidation" : {
+      "entityTypes" : [ "dataType" ],
+      "exist" : true,
+      "strict" : true
+    }
+  }, {
+    "name" : "typeQualifier",
+    "type" : {
+      "type" : "map",
+      "values" : {
+        "type" : "array",
+        "items" : "string"
+      }
+    },
+    "doc" : "A map that allows for type specialization of the valueType.\ne.g. a valueType of urn:li:dataType:datahub.urn\ncan be specialized to be a USER or GROUP URN by adding a typeQualifier like \n{ \"allowedTypes\": [\"urn:li:entityType:datahub.corpuser\", \"urn:li:entityType:datahub.corpGroup\"] }",
+    "optional" : true
+  }, {
+    "name" : "allowedValues",
+    "type" : {
+      "type" : "array",
+      "items" : "PropertyValue"
+    },
+    "doc" : "A list of allowed values that the property is allowed to take. \nIf this is not specified, then the property can take any value of given type.",
+    "optional" : true
+  }, {
+    "name" : "cardinality",
+    "type" : {
+      "type" : "enum",
+      "name" : "PropertyCardinality",
+      "symbols" : [ "SINGLE", "MULTIPLE" ]
+    },
+    "doc" : "The cardinality of the property. If not specified, then the property is assumed to be single valued..",
+    "default" : "SINGLE",
+    "optional" : true
+  }, {
+    "name" : "entityTypes",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "entityType" ],
+        "name" : "StructuredPropertyOf"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "entityTypes"
+      }
+    },
+    "UrnValidation" : {
+      "entityTypes" : [ "entityType" ],
+      "exist" : true,
+      "strict" : true
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "The description of the property. This is the description that will be shown in the UI.",
+    "optional" : true
+  }, {
+    "name" : "searchConfiguration",
+    "type" : "com.linkedin.datahub.DataHubSearchConfig",
+    "doc" : "Search configuration for this property. If not specified, then the property is indexed using the default mapping.\nfrom the logical type.",
+    "optional" : true
+  }, {
+    "name" : "immutable",
+    "type" : "boolean",
+    "doc" : "Whether the structured property value is immutable once applied to an entity.",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "version",
+    "type" : "string",
+    "doc" : "Definition version - Allows breaking schema changes. String is compared case-insensitive and new\n                     versions must be monotonically increasing. Cannot use periods/dots.\n                     Suggestions: v1, v2\n                                  20240610, 20240611",
+    "optional" : true
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Created Audit stamp",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "createdTime",
+        "fieldType" : "DATETIME",
+        "searchLabel" : "createdAt"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Last Modified Audit stamp",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModified",
+        "fieldType" : "DATETIME",
+        "searchLabel" : "lastModifiedAt"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "propertyDefinition"
+  }
+}

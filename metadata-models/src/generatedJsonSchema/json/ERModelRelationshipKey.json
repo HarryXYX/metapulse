@@ -1,0 +1,16 @@
+{
+  "definitions" : {
+    "ERModelRelationshipKey" : {
+      "description" : "Key for a ERModelRelationship",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/ERModelRelationshipKey"
+}

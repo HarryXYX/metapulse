@@ -1,0 +1,22 @@
+{
+  "definitions" : {
+    "GenericAspect" : {
+      "description" : "Generic record structure for serializing an Aspect",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The value of the aspect, serialized as bytes.",
+          "type" : "string",
+          "pattern" : "^[\u0000-ÿ]*$"
+        },
+        "contentType" : {
+          "description" : "The content type, which represents the fashion in which the aspect was serialized.\nThe only type currently supported is application/json.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "value", "contentType" ]
+    }
+  },
+  "$ref" : "#/definitions/GenericAspect"
+}

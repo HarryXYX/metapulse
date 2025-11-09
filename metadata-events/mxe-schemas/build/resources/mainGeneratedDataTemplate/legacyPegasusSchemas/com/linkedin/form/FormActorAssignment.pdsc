@@ -1,0 +1,43 @@
+{
+  "type" : "record",
+  "name" : "FormActorAssignment",
+  "namespace" : "com.linkedin.form",
+  "fields" : [ {
+    "name" : "owners",
+    "type" : "boolean",
+    "doc" : "Whether the form should be assigned to the owners of assets that it is applied to.\nThis is the default.",
+    "default" : true,
+    "Searchable" : {
+      "fieldName" : "isOwnershipForm",
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "groups",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Optional: Specific set of groups that are targeted by this form assignment.",
+    "optional" : true,
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "assignedGroups",
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "users",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "Optional: Specific set of users that are targeted by this form assignment.",
+    "optional" : true,
+    "Searchable" : {
+      "/*" : {
+        "fieldName" : "assignedUsers",
+        "fieldType" : "URN"
+      }
+    }
+  } ]
+}

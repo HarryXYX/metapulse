@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "DataContractKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a Data Contract",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "Unique id for the contract"
+  } ],
+  "Aspect" : {
+    "name" : "dataContractKey"
+  }
+}

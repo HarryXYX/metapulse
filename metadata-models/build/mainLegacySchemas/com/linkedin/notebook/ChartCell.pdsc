@@ -1,0 +1,8 @@
+{
+  "type" : "record",
+  "name" : "ChartCell",
+  "namespace" : "com.linkedin.notebook",
+  "doc" : "Chart cell in a notebook, which will present content in chart format",
+  "include" : [ "CommonCellAttributes" ],
+  "fields" : [ ]
+}

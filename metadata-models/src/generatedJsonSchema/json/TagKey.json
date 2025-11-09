@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "TagKey" : {
+      "description" : "Key for a Tag",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The tag name, which serves as a unique id",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/TagKey"
+}

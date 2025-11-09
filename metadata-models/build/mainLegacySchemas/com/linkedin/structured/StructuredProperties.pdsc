@@ -1,0 +1,17 @@
+{
+  "type" : "record",
+  "name" : "StructuredProperties",
+  "namespace" : "com.linkedin.structured",
+  "doc" : "Properties about an entity governed by StructuredPropertyDefinition",
+  "fields" : [ {
+    "name" : "properties",
+    "type" : {
+      "type" : "array",
+      "items" : "StructuredPropertyValueAssignment"
+    },
+    "doc" : "Custom property bag."
+  } ],
+  "Aspect" : {
+    "name" : "structuredProperties"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "definitions" : {
+    "VersionInfo" : {
+      "description" : "Information about a Data processing job",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "version" : {
+          "description" : "The version which can indentify a job version like a commit hash or md5 hash",
+          "type" : "string"
+        },
+        "versionType" : {
+          "description" : "The type of the version like git hash or md5 hash",
+          "type" : "string"
+        }
+      },
+      "required" : [ "customProperties", "version", "versionType" ]
+    }
+  },
+  "$ref" : "#/definitions/VersionInfo"
+}

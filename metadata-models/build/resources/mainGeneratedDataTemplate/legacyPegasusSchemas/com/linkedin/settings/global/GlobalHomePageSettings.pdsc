@@ -1,0 +1,11 @@
+{
+  "type" : "record",
+  "name" : "GlobalHomePageSettings",
+  "namespace" : "com.linkedin.settings.global",
+  "doc" : "Global settings related to the home page for an instance",
+  "fields" : [ {
+    "name" : "defaultTemplate",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The urn that will be rendered in the UI by default for all users"
+  } ]
+}

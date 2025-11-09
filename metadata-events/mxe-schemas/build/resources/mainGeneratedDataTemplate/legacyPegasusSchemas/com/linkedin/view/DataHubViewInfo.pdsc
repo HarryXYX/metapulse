@@ -1,0 +1,63 @@
+{
+  "type" : "record",
+  "name" : "DataHubViewInfo",
+  "namespace" : "com.linkedin.view",
+  "doc" : "Information about a DataHub View. -- TODO: Understand whether an entity type filter is required.",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "The name of the View",
+    "Searchable" : {
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Description of the view",
+    "optional" : true
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "DataHubViewType",
+      "symbols" : [ "PERSONAL", "GLOBAL" ],
+      "symbolDocs" : {
+        "GLOBAL" : "A global view, which all users can see and use.",
+        "PERSONAL" : "A view private for a specific person."
+      }
+    },
+    "doc" : "The type of View",
+    "Searchable" : { }
+  }, {
+    "name" : "definition",
+    "type" : "DataHubViewDefinition",
+    "doc" : "The view itself"
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp capturing the time and actor who created the View.",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "createdBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp capturing the time and actor who last modified the View.",
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataHubViewInfo"
+  }
+}

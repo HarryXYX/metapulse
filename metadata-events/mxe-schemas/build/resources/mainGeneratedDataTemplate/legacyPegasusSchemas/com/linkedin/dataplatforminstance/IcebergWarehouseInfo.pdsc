@@ -1,0 +1,37 @@
+{
+  "type" : "record",
+  "name" : "IcebergWarehouseInfo",
+  "namespace" : "com.linkedin.dataplatforminstance",
+  "doc" : "An Iceberg warehouse location and credentails whose read/writes are governed by datahub catalog.",
+  "fields" : [ {
+    "name" : "dataRoot",
+    "type" : "string",
+    "doc" : "Path of the root for the backing store of the tables in the warehouse."
+  }, {
+    "name" : "clientId",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "clientId to be used to authenticate with storage hosting this warehouse"
+  }, {
+    "name" : "clientSecret",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "client secret to authenticate with storage hosting this warehouse"
+  }, {
+    "name" : "region",
+    "type" : "string",
+    "doc" : "region where the warehouse is located."
+  }, {
+    "name" : "role",
+    "type" : "string",
+    "optional" : true
+  }, {
+    "name" : "tempCredentialExpirationSeconds",
+    "type" : "int",
+    "optional" : true
+  }, {
+    "name" : "env",
+    "type" : "com.linkedin.common.FabricType"
+  } ],
+  "Aspect" : {
+    "name" : "icebergWarehouseInfo"
+  }
+}

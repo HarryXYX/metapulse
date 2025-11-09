@@ -1,0 +1,46 @@
+{
+  "type" : "record",
+  "name" : "DataProcessInstanceProperties",
+  "namespace" : "com.linkedin.dataprocess",
+  "doc" : "The inputs and outputs of this data process",
+  "include" : [ "com.linkedin.common.CustomProperties", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Process name",
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "WORD_GRAM"
+    }
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "DataProcessType",
+      "symbols" : [ "BATCH_SCHEDULED", "BATCH_AD_HOC", "STREAMING" ]
+    },
+    "doc" : "Process type",
+    "optional" : true,
+    "Searchable" : {
+      "addToFilters" : true,
+      "fieldName" : "processType",
+      "fieldType" : "KEYWORD",
+      "filterNameOverride" : "Process Type"
+    }
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp containing who reported the lineage and when",
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "created",
+        "fieldType" : "COUNT",
+        "queryByDefault" : false
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataProcessInstanceProperties"
+  }
+}

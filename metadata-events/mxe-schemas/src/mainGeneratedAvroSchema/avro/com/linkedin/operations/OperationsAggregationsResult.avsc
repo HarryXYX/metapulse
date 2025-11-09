@@ -1,0 +1,55 @@
+{
+  "type" : "record",
+  "name" : "OperationsAggregationsResult",
+  "namespace" : "com.linkedin.operations",
+  "doc" : "Aggregation results for operations query",
+  "fields" : [ {
+    "name" : "totalOperations",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of operations in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalInserts",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of inserts in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalUpdates",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of updates in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalDeletes",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of deletes in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalCreates",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of creates in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalAlters",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of alters in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalDrops",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of drops in the bucket ",
+    "default" : null
+  }, {
+    "name" : "totalCustoms",
+    "type" : [ "null", "int" ],
+    "doc" : " Total number of custom types in the bucket ",
+    "default" : null
+  }, {
+    "name" : "customOperationsMap",
+    "type" : [ "null", {
+      "type" : "map",
+      "values" : "int"
+    } ],
+    "doc" : " A map from each custom operation type to the total count for that type",
+    "default" : null
+  } ]
+}

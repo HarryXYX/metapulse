@@ -1,0 +1,121 @@
+{
+  "type" : "record",
+  "name" : "SearchFlags",
+  "namespace" : "com.linkedin.metadata.query",
+  "doc" : "Set of flags to control search behavior",
+  "fields" : [ {
+    "name" : "skipCache",
+    "type" : "boolean",
+    "doc" : "Whether to skip cache",
+    "default" : false
+  }, {
+    "name" : "maxAggValues",
+    "type" : "int",
+    "doc" : "The maximum number of values in a facet aggregation",
+    "default" : 20
+  }, {
+    "name" : "fulltext",
+    "type" : [ "null", "boolean" ],
+    "doc" : "Structured or unstructured fulltext query",
+    "default" : null
+  }, {
+    "name" : "skipHighlighting",
+    "type" : [ "boolean", "null" ],
+    "doc" : "Whether to skip highlighting",
+    "default" : false
+  }, {
+    "name" : "skipAggregates",
+    "type" : [ "boolean", "null" ],
+    "doc" : "Whether to skip aggregates/facets",
+    "default" : false
+  }, {
+    "name" : "getSuggestions",
+    "type" : [ "boolean", "null" ],
+    "doc" : "Whether to request for search suggestions on the _entityName virtualized field",
+    "default" : false
+  }, {
+    "name" : "groupingSpec",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "GroupingSpec",
+      "doc" : "A set of directives to control how results are grouped.\nThe underlying generic groupings are nested to allow for further evolution of the grouping spec.",
+      "fields" : [ {
+        "name" : "groupingCriteria",
+        "type" : {
+          "type" : "array",
+          "items" : {
+            "type" : "record",
+            "name" : "GroupingCriterion",
+            "fields" : [ {
+              "name" : "baseEntityType",
+              "type" : [ "null", "string" ],
+              "doc" : "The type of the entity to be grouped.\ne.g. schemaField\nOmitting this field will result in all base entities being grouped.",
+              "default" : null
+            }, {
+              "name" : "groupingEntityType",
+              "type" : "string",
+              "doc" : "The type of the entity to be grouped into.\ne.g. dataset, domain, etc."
+            } ]
+          }
+        },
+        "doc" : "A list of generic directives to group results by.",
+        "default" : [ ]
+      } ]
+    } ],
+    "doc" : "Instructions for grouping results before returning",
+    "default" : null
+  }, {
+    "name" : "includeSoftDeleted",
+    "type" : [ "boolean", "null" ],
+    "doc" : "include soft deleted entities in results",
+    "default" : false
+  }, {
+    "name" : "includeRestricted",
+    "type" : [ "boolean", "null" ],
+    "doc" : "include restricted entities in results (default is to filter)",
+    "default" : false
+  }, {
+    "name" : "customHighlightingFields",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "Include mentioned fields inside elastic highlighting query",
+    "default" : null
+  }, {
+    "name" : "rewriteQuery",
+    "type" : [ "boolean", "null" ],
+    "doc" : "invoke query rewrite chain for filters based on configured rewriters",
+    "default" : true
+  }, {
+    "name" : "includeDefaultFacets",
+    "type" : [ "boolean", "null" ],
+    "doc" : "Include default facets when getting facets to aggregate on in search requests.\nBy default we include these, but custom aggregation requests don't need them.",
+    "default" : true
+  }, {
+    "name" : "filterNonLatestVersions",
+    "type" : [ "boolean", "null" ],
+    "doc" : "Include only latest versions in version sets, default true",
+    "default" : true
+  }, {
+    "name" : "fieldConfiguration",
+    "type" : [ "null", "string" ],
+    "doc" : "Which fieldConfiguration should be applied. The possible values\nare defined in the configuration file `search_config.yaml`",
+    "default" : null
+  }, {
+    "name" : "sliceOptions",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "SliceOptions",
+      "fields" : [ {
+        "name" : "id",
+        "type" : "int"
+      }, {
+        "name" : "max",
+        "type" : "int"
+      } ]
+    } ],
+    "doc" : "Sets slice parameter for elasticsearch query,\nto allow multiple clients to scroll the same query at once.\nOnly supported by the ElasticSearchService",
+    "default" : null
+  } ]
+}

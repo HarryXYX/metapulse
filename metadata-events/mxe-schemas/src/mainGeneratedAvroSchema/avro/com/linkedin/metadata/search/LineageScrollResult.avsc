@@ -1,0 +1,232 @@
+{
+  "type" : "record",
+  "name" : "LineageScrollResult",
+  "namespace" : "com.linkedin.metadata.search",
+  "doc" : "The model for the result of a lineage search query",
+  "fields" : [ {
+    "name" : "entities",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "LineageSearchEntity",
+        "doc" : "The model for each entity returned by the lineage search query",
+        "fields" : [ {
+          "name" : "entity",
+          "type" : "string",
+          "doc" : "Urn of the entity being returned",
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        }, {
+          "name" : "matchedFields",
+          "type" : {
+            "type" : "array",
+            "items" : {
+              "type" : "record",
+              "name" : "MatchedField",
+              "fields" : [ {
+                "name" : "name",
+                "type" : "string",
+                "doc" : "Matched field name"
+              }, {
+                "name" : "value",
+                "type" : "string",
+                "doc" : "Matched field value"
+              } ]
+            }
+          },
+          "doc" : "Matched field name and values",
+          "default" : [ ]
+        }, {
+          "name" : "features",
+          "type" : [ "null", {
+            "type" : "map",
+            "values" : "double"
+          } ],
+          "default" : null
+        }, {
+          "name" : "score",
+          "type" : [ "null", "double" ],
+          "default" : null
+        }, {
+          "name" : "restrictedAspects",
+          "type" : [ "null", {
+            "type" : "array",
+            "items" : "string"
+          } ],
+          "doc" : "A list of the the restricted aspects on the entity.\nIf the key aspect is present, assume ALL aspects should be restricted including the entity's Urn.",
+          "default" : null
+        }, {
+          "name" : "extraFields",
+          "type" : [ "null", {
+            "type" : "map",
+            "values" : "string"
+          } ],
+          "doc" : "Extra fields from the search document based on what is requested in the search request",
+          "default" : null
+        }, {
+          "name" : "paths",
+          "type" : {
+            "type" : "array",
+            "items" : {
+              "type" : "array",
+              "items" : "string"
+            }
+          },
+          "doc" : "Optional list of entities between the source and destination node.\nThere can be multiple paths from the source to the destination.",
+          "default" : [ ]
+        }, {
+          "name" : "path",
+          "type" : {
+            "type" : "array",
+            "items" : "string"
+          },
+          "doc" : "Optional list of entities between the source and destination node",
+          "default" : [ ],
+          "deprecated" : true
+        }, {
+          "name" : "degree",
+          "type" : "int",
+          "doc" : "Degree of relationship (number of hops to get to entity)",
+          "default" : 1,
+          "deprecated" : true
+        }, {
+          "name" : "degrees",
+          "type" : {
+            "type" : "array",
+            "items" : "int"
+          },
+          "doc" : "The degrees of separation (number of hops) between the source and this entity ",
+          "default" : [ ]
+        }, {
+          "name" : "explored",
+          "type" : [ "null", "boolean" ],
+          "doc" : "Marks an entity as having been explored for as a part of the graph walk",
+          "default" : null
+        }, {
+          "name" : "truncatedChildren",
+          "type" : [ "null", "boolean" ],
+          "doc" : "Indicates this destination node has additional unexplored child relationships",
+          "default" : null
+        }, {
+          "name" : "ignoredAsHop",
+          "type" : [ "null", "boolean" ],
+          "doc" : "Whether this relationship was ignored as a hop while performing the graph walk",
+          "default" : null
+        } ]
+      }
+    },
+    "doc" : "A list of entities returned from the search results"
+  }, {
+    "name" : "metadata",
+    "type" : {
+      "type" : "record",
+      "name" : "SearchResultMetadata",
+      "doc" : "The model for the search result",
+      "fields" : [ {
+        "name" : "aggregations",
+        "type" : {
+          "type" : "array",
+          "items" : {
+            "type" : "record",
+            "name" : "AggregationMetadata",
+            "fields" : [ {
+              "name" : "name",
+              "type" : "string",
+              "doc" : "The name of the aggregation, e.g, platform, origin"
+            }, {
+              "name" : "displayName",
+              "type" : [ "null", "string" ],
+              "doc" : "Name of the filter to be displayed in the UI",
+              "default" : null
+            }, {
+              "name" : "entity",
+              "type" : [ "null", "string" ],
+              "doc" : "Entity associated with this facet",
+              "default" : null,
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "aggregations",
+              "type" : {
+                "type" : "map",
+                "values" : "long"
+              },
+              "doc" : "List of aggregations showing the number of documents falling into each bucket. e.g, for platform aggregation, the bucket can be hive, kafka, etc"
+            }, {
+              "name" : "filterValues",
+              "type" : {
+                "type" : "array",
+                "items" : {
+                  "type" : "record",
+                  "name" : "FilterValue",
+                  "fields" : [ {
+                    "name" : "value",
+                    "type" : "string"
+                  }, {
+                    "name" : "entity",
+                    "type" : [ "null", "string" ],
+                    "default" : null,
+                    "java" : {
+                      "class" : "com.linkedin.common.urn.Urn"
+                    }
+                  }, {
+                    "name" : "facetCount",
+                    "type" : "long"
+                  }, {
+                    "name" : "filtered",
+                    "type" : [ "null", "boolean" ],
+                    "default" : null
+                  } ]
+                }
+              }
+            } ]
+          }
+        },
+        "doc" : "A list of search result metadata such as aggregations",
+        "default" : [ ]
+      }, {
+        "name" : "suggestions",
+        "type" : {
+          "type" : "array",
+          "items" : {
+            "type" : "record",
+            "name" : "SearchSuggestion",
+            "doc" : "The model for the search result",
+            "fields" : [ {
+              "name" : "text",
+              "type" : "string",
+              "doc" : "The suggestion text for this search query"
+            }, {
+              "name" : "score",
+              "type" : "float",
+              "doc" : "The score for how close this suggestion is to the original search query.\nThe closer to 1 means it is closer to the original query and 0 is further away."
+            }, {
+              "name" : "frequency",
+              "type" : "long",
+              "doc" : "How many matches there are with the suggested text for the given field"
+            } ]
+          }
+        },
+        "doc" : "A list of search query suggestions based on the given query",
+        "default" : [ ]
+      } ]
+    },
+    "doc" : "Metadata specific to the browse result of the queried path"
+  }, {
+    "name" : "scrollId",
+    "type" : [ "null", "string" ],
+    "doc" : "Scroll Identifier for subsequent requests, if not present then no further results to fetch",
+    "default" : null
+  }, {
+    "name" : "pageSize",
+    "type" : "int",
+    "doc" : "Size of each page in the result"
+  }, {
+    "name" : "numEntities",
+    "type" : "int",
+    "doc" : "The total number of entities directly under searched path"
+  } ]
+}

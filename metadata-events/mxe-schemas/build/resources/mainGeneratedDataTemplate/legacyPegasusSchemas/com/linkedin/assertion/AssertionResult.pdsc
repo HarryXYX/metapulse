@@ -1,0 +1,51 @@
+{
+  "type" : "record",
+  "name" : "AssertionResult",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "The result of running an assertion",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "AssertionResultType",
+    "doc" : " The final result, e.g. either SUCCESS, FAILURE, or ERROR.",
+    "Searchable" : { },
+    "TimeseriesField" : { }
+  }, {
+    "name" : "rowCount",
+    "type" : "long",
+    "doc" : "Number of rows for evaluated batch",
+    "optional" : true
+  }, {
+    "name" : "missingCount",
+    "type" : "long",
+    "doc" : "Number of rows with missing value for evaluated batch",
+    "optional" : true
+  }, {
+    "name" : "unexpectedCount",
+    "type" : "long",
+    "doc" : "Number of rows with unexpected value for evaluated batch",
+    "optional" : true
+  }, {
+    "name" : "actualAggValue",
+    "type" : "float",
+    "doc" : "Observed aggregate value for evaluated batch",
+    "optional" : true
+  }, {
+    "name" : "nativeResults",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Other results of evaluation",
+    "optional" : true
+  }, {
+    "name" : "externalUrl",
+    "type" : "string",
+    "doc" : "External URL where full results are available. Only present when assertion source is not native.",
+    "optional" : true
+  }, {
+    "name" : "error",
+    "type" : "AssertionResultError",
+    "doc" : " The error object if AssertionResultType is an Error",
+    "optional" : true
+  } ]
+}

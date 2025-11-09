@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "PartitionsSummary",
+  "namespace" : "com.linkedin.dataset",
+  "doc" : "Defines how the data is partitioned for Data Lake tables (e.g. Hive, S3, Iceberg, Delta, Hudi, etc).",
+  "fields" : [ {
+    "name" : "minPartition",
+    "type" : "PartitionSummary",
+    "doc" : "The minimum partition as ordered",
+    "optional" : true
+  }, {
+    "name" : "maxPartition",
+    "type" : "PartitionSummary",
+    "doc" : "The maximum partition as ordered",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "partitionsSummary"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "type" : "record",
+  "name" : "IncrementingSegmentFieldTransformer",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "The definition of the transformer function  that should be applied to a given field / column value in a dataset\nin order to determine the segment or bucket that it belongs to, which in turn is used to evaluate\nvolume assertions.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "IncrementingSegmentFieldTransformerType",
+      "symbols" : [ "TIMESTAMP_MS_TO_MINUTE", "TIMESTAMP_MS_TO_HOUR", "TIMESTAMP_MS_TO_DATE", "TIMESTAMP_MS_TO_MONTH", "TIMESTAMP_MS_TO_YEAR", "FLOOR", "CEILING", "NATIVE" ],
+      "symbolDocs" : {
+        "CEILING" : "Rounds a numeric value up to the nearest integer.",
+        "FLOOR" : "Rounds a numeric value down to the nearest integer.",
+        "NATIVE" : "A backdoor to provide a native operator type specific to a given source system like\nSnowflake, Redshift, BQ, etc.",
+        "TIMESTAMP_MS_TO_DATE" : "Rounds a timestamp (in milliseconds) down to the start of the day.",
+        "TIMESTAMP_MS_TO_HOUR" : "Rounds a timestamp (in milliseconds) down to the nearest hour.",
+        "TIMESTAMP_MS_TO_MINUTE" : "Rounds a timestamp (in seconds) down to the start of the month.",
+        "TIMESTAMP_MS_TO_MONTH" : "Rounds a timestamp (in milliseconds) down to the start of the month",
+        "TIMESTAMP_MS_TO_YEAR" : "Rounds a timestamp (in milliseconds) down to the start of the year"
+      }
+    },
+    "doc" : "A 'standard' transformer type. Note that not all source systems will support all operators."
+  }, {
+    "name" : "nativeType",
+    "type" : [ "null", "string" ],
+    "doc" : "The 'native' transformer type, useful as a back door if a custom operator is required.\nThis field is required if the type is NATIVE.",
+    "default" : null
+  } ]
+}

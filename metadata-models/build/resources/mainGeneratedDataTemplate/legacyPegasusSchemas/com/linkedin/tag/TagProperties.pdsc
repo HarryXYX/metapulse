@@ -1,0 +1,33 @@
+{
+  "type" : "record",
+  "name" : "TagProperties",
+  "namespace" : "com.linkedin.tag",
+  "doc" : "Properties associated with a Tag",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the tag",
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Documentation of the tag",
+    "optional" : true,
+    "Searchable" : { }
+  }, {
+    "name" : "colorHex",
+    "type" : "string",
+    "doc" : "The color associated with the Tag in Hex. For example #FFFFFF.",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "tagProperties"
+  }
+}

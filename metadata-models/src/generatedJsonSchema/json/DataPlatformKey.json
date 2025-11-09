@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataPlatformKey" : {
+      "description" : "Key for a Data Platform",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platformName" : {
+          "description" : "Data platform name i.e. hdfs, oracle, espresso",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platformName" ]
+    }
+  },
+  "$ref" : "#/definitions/DataPlatformKey"
+}

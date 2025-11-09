@@ -1,0 +1,39 @@
+{
+  "definitions" : {
+    "IntendedUse" : {
+      "description" : "Intended Use for the ML Model",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "primaryUses" : {
+          "default" : null,
+          "description" : "Primary Use cases for the MLModel.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "primaryUsers" : {
+          "default" : null,
+          "description" : "Primary Intended Users - For example, was the MLModel developed for entertainment purposes, for hobbyists, or enterprise solutions?",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IntendedUserType"
+          }
+        },
+        "outOfScopeUses" : {
+          "default" : null,
+          "description" : "Highlight technology that the MLModel might easily be confused with, or related contexts that users could try to apply the MLModel to.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "IntendedUserType" : {
+      "enum" : [ "ENTERPRISE", "HOBBY", "ENTERTAINMENT" ]
+    }
+  },
+  "$ref" : "#/definitions/IntendedUse"
+}

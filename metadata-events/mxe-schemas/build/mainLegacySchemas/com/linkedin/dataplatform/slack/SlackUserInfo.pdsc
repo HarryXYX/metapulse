@@ -1,0 +1,103 @@
+{
+  "type" : "record",
+  "name" : "SlackUserInfo",
+  "namespace" : "com.linkedin.dataplatform.slack",
+  "doc" : "Information about a Slack user.",
+  "fields" : [ {
+    "name" : "slackInstance",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The dataplatform instance that this Slack member belongs to.",
+    "Relationship" : {
+      "entityTypes" : [ "dataPlatformInstance" ],
+      "name" : "PartOfSlackWorkspace"
+    }
+  }, {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The unique identifier for the Slack member."
+  }, {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "The username of the Slack member."
+  }, {
+    "name" : "realName",
+    "type" : "string",
+    "doc" : "The real name of the Slack member."
+  }, {
+    "name" : "displayName",
+    "type" : "string",
+    "doc" : "The display name of the Slack member."
+  }, {
+    "name" : "email",
+    "type" : "string",
+    "doc" : "The email associated with the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "teamId",
+    "type" : "string",
+    "doc" : "The ID associated with the Slack team."
+  }, {
+    "name" : "isDeleted",
+    "type" : "boolean",
+    "doc" : "Whether the member is deleted or not."
+  }, {
+    "name" : "isAdmin",
+    "type" : "boolean",
+    "doc" : "Whether the member is an admin."
+  }, {
+    "name" : "isOwner",
+    "type" : "boolean",
+    "doc" : "Whether the member is an owner."
+  }, {
+    "name" : "isPrimaryOwner",
+    "type" : "boolean",
+    "doc" : "Whether the member is a primary owner."
+  }, {
+    "name" : "isBot",
+    "type" : "boolean",
+    "doc" : "Whether the member is a bot."
+  }, {
+    "name" : "timezone",
+    "type" : "string",
+    "doc" : "The timezone of the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "timezoneOffset",
+    "type" : "int",
+    "doc" : "The timezone offset of the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "title",
+    "type" : "string",
+    "doc" : "The title of the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "phone",
+    "type" : "string",
+    "doc" : "The phone number of the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "profilePictureUrl",
+    "type" : "string",
+    "doc" : "The URL of the member's profile picture.",
+    "optional" : true
+  }, {
+    "name" : "statusText",
+    "type" : "string",
+    "doc" : "The status text of the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "statusEmoji",
+    "type" : "string",
+    "doc" : "The status emoji of the Slack member.",
+    "optional" : true
+  }, {
+    "name" : "lastUpdatedSeconds",
+    "type" : "long",
+    "doc" : "The timestamp of when the member was last updated. (in seconds)",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "slackUserInfo"
+  }
+}

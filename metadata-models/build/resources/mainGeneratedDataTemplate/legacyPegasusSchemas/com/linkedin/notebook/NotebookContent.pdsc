@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "NotebookContent",
+  "namespace" : "com.linkedin.notebook",
+  "doc" : "Content in a Notebook\nNote: This is IN BETA version",
+  "fields" : [ {
+    "name" : "cells",
+    "type" : {
+      "type" : "array",
+      "items" : "NotebookCell"
+    },
+    "doc" : "The content of a Notebook which is composed by a list of NotebookCell",
+    "default" : [ ]
+  } ],
+  "Aspect" : {
+    "name" : "notebookContent"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "IncidentAssignee",
+  "namespace" : "com.linkedin.incident",
+  "doc" : "The incident assignee type.\nThis is in a record so that we can add additional fields if we need to later (e.g.\nthe type of the assignee.",
+  "fields" : [ {
+    "name" : "actor",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The user or group assigned to the incident.",
+    "Searchable" : {
+      "addToFilters" : true,
+      "fieldName" : "assignees",
+      "filterNameOverride" : "Assignee"
+    }
+  }, {
+    "name" : "assignedAt",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The time & actor responsible for assiging the assignee."
+  } ]
+}

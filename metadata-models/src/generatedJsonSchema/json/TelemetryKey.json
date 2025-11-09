@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "TelemetryKey" : {
+      "description" : "Key for the telemetry client ID, only one should ever exist",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The telemetry entity name, which serves as a unique id",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/TelemetryKey"
+}

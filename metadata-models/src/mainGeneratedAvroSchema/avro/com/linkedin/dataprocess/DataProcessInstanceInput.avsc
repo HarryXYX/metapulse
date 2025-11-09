@@ -1,0 +1,120 @@
+{
+  "type" : "record",
+  "name" : "DataProcessInstanceInput",
+  "namespace" : "com.linkedin.dataprocess",
+  "doc" : "Information about the inputs datasets of a Data process",
+  "fields" : [ {
+    "name" : "inputs",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "doc" : "Input assets consumed",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset", "mlModel" ],
+        "name" : "Consumes"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "addToFilters" : true,
+        "fieldName" : "inputs",
+        "fieldType" : "URN",
+        "numValuesFieldName" : "numInputs",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "inputEdges",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "Edge",
+        "namespace" : "com.linkedin.common",
+        "doc" : "A common structure to represent all edges to entities when used inside aspects as collections\nThis ensures that all edges have common structure around audit-stamps and will support PATCH, time-travel automatically.",
+        "fields" : [ {
+          "name" : "sourceUrn",
+          "type" : [ "null", "string" ],
+          "doc" : "Urn of the source of this relationship edge.\nIf not specified, assumed to be the entity that this aspect belongs to.",
+          "default" : null,
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        }, {
+          "name" : "destinationUrn",
+          "type" : "string",
+          "doc" : "Urn of the destination of this relationship edge.",
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        }, {
+          "name" : "created",
+          "type" : [ "null", {
+            "type" : "record",
+            "name" : "AuditStamp",
+            "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+            "fields" : [ {
+              "name" : "time",
+              "type" : "long",
+              "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+            }, {
+              "name" : "actor",
+              "type" : "string",
+              "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "impersonator",
+              "type" : [ "null", "string" ],
+              "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+              "default" : null,
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "message",
+              "type" : [ "null", "string" ],
+              "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+              "default" : null
+            } ]
+          } ],
+          "doc" : "Audit stamp containing who created this relationship edge and when",
+          "default" : null
+        }, {
+          "name" : "lastModified",
+          "type" : [ "null", "AuditStamp" ],
+          "doc" : "Audit stamp containing who last modified this relationship edge and when",
+          "default" : null
+        }, {
+          "name" : "properties",
+          "type" : [ "null", {
+            "type" : "map",
+            "values" : "string"
+          } ],
+          "doc" : "A generic properties bag that allows us to store specific information on this graph edge.",
+          "default" : null
+        } ]
+      }
+    } ],
+    "doc" : "Input assets consumed by the data process instance, with additional metadata.\nCounts as lineage.\nWill eventually deprecate the inputs field.",
+    "default" : null,
+    "Relationship" : {
+      "/*/destinationUrn" : {
+        "createdActor" : "inputEdges/*/created/actor",
+        "createdOn" : "inputEdges/*/created/time",
+        "entityTypes" : [ "dataset", "mlModel", "dataProcessInstance" ],
+        "isLineage" : true,
+        "name" : "DataProcessInstanceConsumes",
+        "properties" : "inputEdges/*/properties",
+        "updatedActor" : "inputEdges/*/lastModified/actor",
+        "updatedOn" : "inputEdges/*/lastModified/time"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataProcessInstanceInput"
+  }
+}

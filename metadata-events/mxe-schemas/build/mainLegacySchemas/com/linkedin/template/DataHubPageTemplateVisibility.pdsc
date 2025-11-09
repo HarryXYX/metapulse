@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageTemplateVisibility",
+  "namespace" : "com.linkedin.template",
+  "doc" : "Info about the visibility of this template",
+  "fields" : [ {
+    "name" : "scope",
+    "type" : {
+      "type" : "enum",
+      "name" : "PageTemplateScope",
+      "symbols" : [ "PERSONAL", "GLOBAL" ],
+      "symbolDocs" : {
+        "GLOBAL" : "This template is used across users",
+        "PERSONAL" : "This template is used for individual use only"
+      }
+    },
+    "doc" : "The scope of this template and who can use/see it",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  } ]
+}

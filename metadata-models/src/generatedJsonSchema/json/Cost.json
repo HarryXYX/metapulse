@@ -1,0 +1,44 @@
+{
+  "definitions" : {
+    "Cost" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "costType" : {
+          "$ref" : "#/definitions/CostType"
+        },
+        "cost" : {
+          "$ref" : "#/definitions/CostCost"
+        }
+      },
+      "required" : [ "costType", "cost" ]
+    },
+    "CostType" : {
+      "description" : "Type of Cost Code",
+      "enum" : [ "ORG_COST_TYPE" ]
+    },
+    "CostCost" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "costId" : {
+          "default" : null,
+          "type" : "number"
+        },
+        "costCode" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "fieldDiscriminator" : {
+          "description" : "Contains the name of the field that has its value set.",
+          "$ref" : "#/definitions/CostCostDiscriminator"
+        }
+      },
+      "required" : [ "fieldDiscriminator" ]
+    },
+    "CostCostDiscriminator" : {
+      "enum" : [ "costId", "costCode" ]
+    }
+  },
+  "$ref" : "#/definitions/Cost"
+}

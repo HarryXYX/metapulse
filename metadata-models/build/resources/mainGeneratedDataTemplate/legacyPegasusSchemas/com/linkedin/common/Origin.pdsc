@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "Origin",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Carries information about where an entity originated from.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : "OriginType",
+    "doc" : "Where an entity originated from. Either NATIVE or EXTERNAL."
+  }, {
+    "name" : "externalType",
+    "type" : "string",
+    "doc" : "Only populated if type is EXTERNAL. The externalType of the entity, such as the name of the identity provider.",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "origin"
+  }
+}

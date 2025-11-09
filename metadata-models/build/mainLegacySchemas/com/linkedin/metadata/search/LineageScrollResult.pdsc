@@ -1,0 +1,31 @@
+{
+  "type" : "record",
+  "name" : "LineageScrollResult",
+  "namespace" : "com.linkedin.metadata.search",
+  "doc" : "The model for the result of a lineage search query",
+  "fields" : [ {
+    "name" : "entities",
+    "type" : {
+      "type" : "array",
+      "items" : "LineageSearchEntity"
+    },
+    "doc" : "A list of entities returned from the search results"
+  }, {
+    "name" : "metadata",
+    "type" : "SearchResultMetadata",
+    "doc" : "Metadata specific to the browse result of the queried path"
+  }, {
+    "name" : "scrollId",
+    "type" : "string",
+    "doc" : "Scroll Identifier for subsequent requests, if not present then no further results to fetch",
+    "optional" : true
+  }, {
+    "name" : "pageSize",
+    "type" : "int",
+    "doc" : "Size of each page in the result"
+  }, {
+    "name" : "numEntities",
+    "type" : "int",
+    "doc" : "The total number of entities directly under searched path"
+  } ]
+}

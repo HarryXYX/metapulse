@@ -1,0 +1,66 @@
+{
+  "definitions" : {
+    "AggregationMetadata" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The name of the aggregation, e.g, platform, origin",
+          "type" : "string"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "Name of the filter to be displayed in the UI",
+          "type" : "string"
+        },
+        "entity" : {
+          "default" : null,
+          "description" : "Entity associated with this facet",
+          "type" : "string"
+        },
+        "aggregations" : {
+          "description" : "List of aggregations showing the number of documents falling into each bucket. e.g, for platform aggregation, the bucket can be hive, kafka, etc",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64",
+            "minimum" : -9223372036854775808,
+            "maximum" : 9223372036854775807
+          }
+        },
+        "filterValues" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FilterValue"
+          }
+        }
+      },
+      "required" : [ "name", "aggregations", "filterValues" ]
+    },
+    "FilterValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "entity" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "facetCount" : {
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "filtered" : {
+          "default" : null,
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "value", "facetCount" ]
+    }
+  },
+  "$ref" : "#/definitions/AggregationMetadata"
+}

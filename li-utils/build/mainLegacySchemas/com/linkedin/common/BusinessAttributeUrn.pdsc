@@ -1,0 +1,9 @@
+{
+  "type" : "typeref",
+  "name" : "BusinessAttributeUrn",
+  "namespace" : "com.linkedin.common",
+  "ref" : "string",
+  "java" : {
+    "class" : "com.linkedin.common.urn.BusinessAttributeUrn"
+  }
+}

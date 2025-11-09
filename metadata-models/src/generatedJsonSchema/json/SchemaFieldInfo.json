@@ -1,0 +1,23 @@
+{
+  "definitions" : {
+    "SchemaFieldInfo" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "schemaFieldAliases" : {
+          "default" : null,
+          "description" : "Used to store field path variations for the schemaField urn.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/SchemaFieldInfo"
+}

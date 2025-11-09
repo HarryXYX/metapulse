@@ -1,0 +1,52 @@
+{
+  "type" : "record",
+  "name" : "GlossaryNodeInfo",
+  "namespace" : "com.linkedin.glossary",
+  "doc" : "Properties associated with a GlossaryNode",
+  "include" : [ "com.linkedin.common.CustomProperties" ],
+  "fields" : [ {
+    "name" : "definition",
+    "type" : "string",
+    "doc" : "Definition of business node",
+    "Searchable" : { }
+  }, {
+    "name" : "parentNode",
+    "type" : "com.linkedin.common.GlossaryNodeUrn",
+    "doc" : "Parent node of the glossary term",
+    "optional" : true,
+    "Relationship" : {
+      "entityTypes" : [ "glossaryNode" ],
+      "name" : "IsPartOf"
+    },
+    "Searchable" : {
+      "fieldName" : "parentNode",
+      "fieldType" : "URN",
+      "hasValuesFieldName" : "hasParentNode"
+    }
+  }, {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the node",
+    "optional" : true,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldName" : "displayName",
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "Optional id for the GlossaryNode",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "glossaryNodeInfo"
+  }
+}

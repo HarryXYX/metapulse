@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "GroupingCriterion",
+  "namespace" : "com.linkedin.metadata.query",
+  "doc" : "\n",
+  "fields" : [ {
+    "name" : "baseEntityType",
+    "type" : "string",
+    "doc" : "The type of the entity to be grouped.\ne.g. schemaField\nOmitting this field will result in all base entities being grouped.",
+    "optional" : true
+  }, {
+    "name" : "groupingEntityType",
+    "type" : "string",
+    "doc" : "The type of the entity to be grouped into.\ne.g. dataset, domain, etc."
+  } ]
+}

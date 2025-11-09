@@ -1,0 +1,86 @@
+{
+  "type" : "record",
+  "name" : "DatasetProperties",
+  "namespace" : "com.linkedin.dataset",
+  "doc" : "Properties associated with a Dataset",
+  "include" : [ "com.linkedin.common.CustomProperties", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the Dataset",
+    "optional" : true,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "qualifiedName",
+    "type" : "string",
+    "doc" : "Fully-qualified name of the Dataset",
+    "optional" : true,
+    "Searchable" : {
+      "addToFilters" : false,
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "qualifiedName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Documentation of the dataset",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "TEXT",
+      "hasValuesFieldName" : "hasDescription",
+      "searchTier" : 2
+    }
+  }, {
+    "name" : "uri",
+    "type" : "com.linkedin.common.Uri",
+    "doc" : "The abstracted URI such as hdfs:///data/tracking/PageViewEvent, file:///dir/file_name. Uri should not include any environment specific properties. Some datasets might not have a standardized uri, which makes this field optional (i.e. kafka topic).",
+    "optional" : true,
+    "deprecated" : "Use ExternalReference.externalUrl field instead."
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.TimeStamp",
+    "doc" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME",
+        "searchLabel" : "createdAt"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.TimeStamp",
+    "doc" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME",
+        "searchLabel" : "lastModifiedAt"
+      }
+    }
+  }, {
+    "name" : "tags",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "doc" : "[Legacy] Unstructured tags for the dataset. Structured tags can be applied via the `GlobalTags` aspect.\nThis is now deprecated.",
+    "default" : [ ],
+    "deprecated" : "Use GlobalTags aspect instead."
+  } ],
+  "Aspect" : {
+    "name" : "datasetProperties"
+  }
+}

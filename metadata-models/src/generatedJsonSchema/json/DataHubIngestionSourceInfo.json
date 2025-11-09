@@ -1,0 +1,104 @@
+{
+  "definitions" : {
+    "DataHubIngestionSourceInfo" : {
+      "description" : "Info about a DataHub ingestion source",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The display name of the ingestion source",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the source itself, e.g. mysql, bigquery, bigquery-usage. Should match the recipe.",
+          "type" : "string"
+        },
+        "platform" : {
+          "default" : null,
+          "description" : "Data Platform URN associated with the source",
+          "type" : "string"
+        },
+        "schedule" : {
+          "default" : null,
+          "description" : "The schedule on which the ingestion source is executed",
+          "$ref" : "#/definitions/DataHubIngestionSourceSchedule"
+        },
+        "config" : {
+          "description" : "Parameters associated with the Ingestion Source",
+          "$ref" : "#/definitions/DataHubIngestionSourceConfig"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "The source or origin of the Ingestion Source\n\nCurrently CLI and UI do not provide an explicit source.",
+          "$ref" : "#/definitions/DataHubIngestionSourceSource"
+        }
+      },
+      "required" : [ "name", "type", "config" ]
+    },
+    "DataHubIngestionSourceSchedule" : {
+      "description" : "The schedule associated with an ingestion source.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "interval" : {
+          "description" : "A cron-formatted execution interval, as a cron string, e.g. * * * * *",
+          "type" : "string"
+        },
+        "timezone" : {
+          "description" : "Timezone in which the cron interval applies, e.g. America/Los Angeles",
+          "type" : "string"
+        }
+      },
+      "required" : [ "interval", "timezone" ]
+    },
+    "DataHubIngestionSourceConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "recipe" : {
+          "description" : "The JSON recipe to use for ingestion",
+          "type" : "string"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "The PyPI version of the datahub CLI to use when executing a recipe",
+          "type" : "string"
+        },
+        "executorId" : {
+          "default" : null,
+          "description" : "The id of the executor to use to execute the ingestion run",
+          "type" : "string"
+        },
+        "debugMode" : {
+          "default" : null,
+          "description" : "Whether or not to run this ingestion source in debug mode",
+          "type" : "boolean"
+        },
+        "extraArgs" : {
+          "default" : null,
+          "description" : "Extra arguments for the ingestion run.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "recipe" ]
+    },
+    "DataHubIngestionSourceSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The source type of the ingestion source",
+          "$ref" : "#/definitions/DataHubIngestionSourceSourceType"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "DataHubIngestionSourceSourceType" : {
+      "enum" : [ "SYSTEM" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubIngestionSourceInfo"
+}

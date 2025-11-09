@@ -1,0 +1,201 @@
+version: '3.8'
+
+# SwotData All-in-One部署配置
+# 包含所有必要的基础设施和单体应用
+
+services:
+  # PostgreSQL数据库
+  postgres:
+    image: postgres:14-alpine
+    container_name: swotdata-postgres
+    restart: unless-stopped
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-swotdata}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-swotdata}
+      POSTGRES_DB: ${POSTGRES_DB:-swotdata}
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "swotdata"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    networks:
+      - swotdata-network
+
+  # Elasticsearch搜索引擎
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: swotdata-elasticsearch
+    restart: unless-stopped
+    ports:
+      - "${ELASTICSEARCH_PORT:-9200}:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms${ES_HEAP:-512m} -Xmx${ES_HEAP:-1024m}
+      - cluster.name=swotdata-cluster
+      - bootstrap.memory_lock=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - swotdata-network
+
+  # Zookeeper（Kafka依赖）
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.6.0
+    container_name: swotdata-zookeeper
+    restart: unless-stopped
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_SYNC_LIMIT: 5
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+      - zookeeper-logs:/var/lib/zookeeper/log
+    networks:
+      - swotdata-network
+
+  # Kafka消息队列
+  kafka:
+    image: confluentinc/cp-kafka:7.6.0
+    container_name: swotdata-kafka
+    restart: unless-stopped
+    depends_on:
+      - zookeeper
+    ports:
+      - "${KAFKA_PORT:-9092}:9092"
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_COMPRESSION_TYPE: snappy
+      KAFKA_LOG_RETENTION_HOURS: 168
+      KAFKA_LOG_SEGMENT_BYTES: 1073741824
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 300000
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+    healthcheck:
+      test: ["CMD", "kafka-topics", "--bootstrap-server", "localhost:29092", "--list"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - swotdata-network
+
+  # SwotData All-in-One应用（Web + Consumers）
+  swotdata:
+    build:
+      context: .
+      dockerfile: docker/datahub-gms/Dockerfile
+    container_name: swotdata-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+    ports:
+      - "${SWOTDATA_PORT:-8080}:8080"
+    environment:
+      # ===== All-in-One关键配置 =====
+      - MAE_CONSUMER_ENABLED=true
+      - MCE_CONSUMER_ENABLED=true
+      - MCP_CONSUMER_ENABLED=true
+      - PE_CONSUMER_ENABLED=true
+
+      # ===== Entity Client模式 =====
+      - ENTITY_CLIENT_IMPL=java
+
+      # ===== 数据库配置 =====
+      - DB_TYPE=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_DATABASE=${POSTGRES_DB:-swotdata}
+      - DB_USERNAME=${POSTGRES_USER:-swotdata}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-swotdata}
+      - DB_POOL_MAX=50
+      - DB_POOL_MIN=10
+
+      # ===== Kafka配置 =====
+      - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
+      - KAFKA_SCHEMA_REGISTRY_URL=http://swotdata:8080/schema-registry/api
+      - KAFKA_SCHEMA_REGISTRY_TYPE=INTERNAL
+      - KAFKA_LISTENER_CONCURRENCY=4
+      - KAFKA_MAX_POLL_RECORDS=100
+
+      # ===== Elasticsearch配置 =====
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT=9200
+      - ELASTICSEARCH_SCHEME=http
+      - ELASTICSEARCH_THREAD_COUNT=4
+
+      # ===== JVM配置（重要！） =====
+      - JAVA_OPTS=-Xms${JVM_MIN_HEAP:-2g} -Xmx${JVM_MAX_HEAP:-4g} -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:G1HeapRegionSize=16m -XX:+ParallelRefProcEnabled -XX:+UseStringDeduplication -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/heap-dump.hprof
+
+      # ===== 应用配置 =====
+      - SERVER_PORT=8080
+      - AUTH_ENABLED=${AUTH_ENABLED:-true}
+      - DATAHUB_TELEMETRY_ENABLED=${TELEMETRY_ENABLED:-false}
+      - LOG_LEVEL=${LOG_LEVEL:-INFO}
+
+    volumes:
+      # 挂载构建的war包（开发模式）
+      - ./metadata-service/war/build/libs:/datahub/datahub-gms/bin
+      # 持久化数据
+      - swotdata-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s
+    networks:
+      - swotdata-network
+
+# 持久化存储卷
+volumes:
+  postgres-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
+  kafka-data:
+    driver: local
+  zookeeper-data:
+    driver: local
+  zookeeper-logs:
+    driver: local
+  swotdata-data:
+    driver: local
+
+# 网络配置
+networks:
+  swotdata-network:
+    driver: bridge

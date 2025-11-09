@@ -1,0 +1,22 @@
+{
+  "definitions" : {
+    "CorpUserAppearanceSettings" : {
+      "description" : "Settings for a user around the appearance of their DataHub UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "showSimplifiedHomepage" : {
+          "default" : null,
+          "description" : "Flag whether the user should see a homepage with only datasets, charts and dashboards. Intended for users\nwho have less operational use cases for the datahub tool.",
+          "type" : "boolean"
+        },
+        "showThemeV2" : {
+          "default" : null,
+          "description" : "Flag controlling whether the V2 UI for DataHub is shown.",
+          "type" : "boolean"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/CorpUserAppearanceSettings"
+}

@@ -1,0 +1,11 @@
+{
+  "type" : "enum",
+  "name" : "OriginType",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Enum to define where an entity originated from.",
+  "symbols" : [ "NATIVE", "EXTERNAL" ],
+  "symbolDocs" : {
+    "EXTERNAL" : "The entity is external to DataHub.",
+    "NATIVE" : "The entity is native to DataHub."
+  }
+}

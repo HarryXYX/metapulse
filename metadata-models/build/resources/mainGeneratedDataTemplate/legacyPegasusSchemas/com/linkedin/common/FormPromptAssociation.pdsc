@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "FormPromptAssociation",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about the status of a particular prompt.\nNote that this is where we can add additional information about individual responses:\nactor, timestamp, and the response itself.",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "The id for the prompt. This must be GLOBALLY UNIQUE."
+  }, {
+    "name" : "lastModified",
+    "type" : "AuditStamp",
+    "doc" : "The last time this prompt was touched for the entity (set, unset)"
+  }, {
+    "name" : "fieldAssociations",
+    "type" : "FormPromptFieldAssociations",
+    "doc" : "Optional information about the field-level prompt associations.",
+    "optional" : true
+  } ]
+}

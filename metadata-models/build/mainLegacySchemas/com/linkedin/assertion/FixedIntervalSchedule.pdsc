@@ -1,0 +1,8 @@
+{
+  "type" : "record",
+  "name" : "FixedIntervalSchedule",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes defining a relative fixed interval SLA schedule.",
+  "include" : [ "com.linkedin.timeseries.TimeWindowSize" ],
+  "fields" : [ ]
+}

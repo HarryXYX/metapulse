@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "Retention",
+  "namespace" : "com.linkedin.retention",
+  "doc" : "Base class that encapsulates different retention policies.\nOnly one of the fields should be set",
+  "fields" : [ {
+    "name" : "version",
+    "type" : "VersionBasedRetention",
+    "optional" : true
+  }, {
+    "name" : "time",
+    "type" : "TimeBasedRetention",
+    "optional" : true
+  } ]
+}

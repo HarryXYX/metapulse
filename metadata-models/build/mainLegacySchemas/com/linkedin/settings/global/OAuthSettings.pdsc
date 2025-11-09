@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "OAuthSettings",
+  "namespace" : "com.linkedin.settings.global",
+  "doc" : "Trust oauth providers to use for authentication.",
+  "fields" : [ {
+    "name" : "providers",
+    "type" : {
+      "type" : "array",
+      "items" : "OAuthProvider"
+    },
+    "doc" : "Trusted OAuth Providers"
+  } ]
+}

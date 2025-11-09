@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "Media" : {
+      "description" : "Carries information about which roles a user is assigned to.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Type of content the Media is storing, e.g. image, video, etc.",
+          "$ref" : "#/definitions/MediaType"
+        },
+        "location" : {
+          "description" : "Where the media content is stored.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type", "location" ]
+    },
+    "MediaType" : {
+      "description" : "Enum defining the type of content a Media object holds.",
+      "enum" : [ "IMAGE" ]
+    }
+  },
+  "$ref" : "#/definitions/Media"
+}

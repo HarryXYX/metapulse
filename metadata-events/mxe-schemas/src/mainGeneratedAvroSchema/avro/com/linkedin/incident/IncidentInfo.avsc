@@ -1,0 +1,258 @@
+{
+  "type" : "record",
+  "name" : "IncidentInfo",
+  "namespace" : "com.linkedin.incident",
+  "doc" : "Information about an incident raised on an asset.",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "IncidentType",
+      "doc" : "A type of asset incident",
+      "symbols" : [ "FRESHNESS", "VOLUME", "FIELD", "SQL", "DATA_SCHEMA", "OPERATIONAL", "CUSTOM" ],
+      "symbolDocs" : {
+        "CUSTOM" : "A custom type of incident",
+        "DATA_SCHEMA" : "A Data Schema assertion has failed, triggering the incident.\nRaised on entities where assertions are configured to generate incidents.",
+        "FIELD" : "A Field Assertion has failed, triggering the incident.\nRaised on entities where assertions are configured to generate incidents.",
+        "FRESHNESS" : "An Freshness Assertion has failed, triggering the incident.\nRaised on entities where assertions are configured to generate incidents.",
+        "OPERATIONAL" : "A misc. operational incident, e.g. failure to materialize a dataset.",
+        "SQL" : "A raw SQL-statement based assertion has failed, triggering the incident.\nRaised on entities where assertions are configured to generate incidents.",
+        "VOLUME" : "An Volume Assertion has failed, triggering the incident.\nRaised on entities where assertions are configured to generate incidents."
+      }
+    },
+    "doc" : "The type of incident",
+    "Searchable" : {
+      "addToFilters" : true,
+      "filterNameOverride" : "Type"
+    }
+  }, {
+    "name" : "customType",
+    "type" : [ "null", "string" ],
+    "doc" : "An optional custom incident type. Present only if type is 'CUSTOM'.",
+    "default" : null,
+    "Searchable" : {
+      "addToFilters" : true,
+      "filterNameOverride" : "Other Type"
+    }
+  }, {
+    "name" : "title",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional title associated with the incident",
+    "default" : null
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional description associated with the incident",
+    "default" : null
+  }, {
+    "name" : "entities",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "doc" : "A reference to the entity associated with the incident.",
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataset", "chart", "dashboard", "dataFlow", "dataJob", "schemaField" ],
+        "name" : "IncidentOn"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "priority",
+    "type" : [ "null", "int" ],
+    "doc" : "A numeric severity or priority for the incident. On the UI we will translate this into something easy to understand.\nCurrently supported: 0 - CRITICAL, 1 - HIGH, 2 - MED, 3 - LOW\n(We probably should have modeled as an enum)",
+    "default" : null,
+    "Searchable" : {
+      "addToFilters" : true,
+      "filterNameOverride" : "Priority"
+    }
+  }, {
+    "name" : "assignees",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "IncidentAssignee",
+        "doc" : "The incident assignee type.\nThis is in a record so that we can add additional fields if we need to later (e.g.\nthe type of the assignee.",
+        "fields" : [ {
+          "name" : "actor",
+          "type" : "string",
+          "doc" : "The user or group assigned to the incident.",
+          "Searchable" : {
+            "addToFilters" : true,
+            "fieldName" : "assignees",
+            "filterNameOverride" : "Assignee"
+          },
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        }, {
+          "name" : "assignedAt",
+          "type" : {
+            "type" : "record",
+            "name" : "AuditStamp",
+            "namespace" : "com.linkedin.common",
+            "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+            "fields" : [ {
+              "name" : "time",
+              "type" : "long",
+              "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+            }, {
+              "name" : "actor",
+              "type" : "string",
+              "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "impersonator",
+              "type" : [ "null", "string" ],
+              "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+              "default" : null,
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "message",
+              "type" : [ "null", "string" ],
+              "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+              "default" : null
+            } ]
+          },
+          "doc" : "The time & actor responsible for assiging the assignee."
+        } ]
+      }
+    } ],
+    "doc" : "The parties assigned with resolving the incident",
+    "default" : null
+  }, {
+    "name" : "status",
+    "type" : {
+      "type" : "record",
+      "name" : "IncidentStatus",
+      "doc" : "Information about an incident raised on an asset",
+      "fields" : [ {
+        "name" : "state",
+        "type" : {
+          "type" : "enum",
+          "name" : "IncidentState",
+          "symbols" : [ "ACTIVE", "RESOLVED" ],
+          "symbolDocs" : {
+            "ACTIVE" : "The incident is ongoing, or active.",
+            "RESOLVED" : "The incident is resolved."
+          }
+        },
+        "doc" : "The top-level state of the incident, whether it's active or resolved.",
+        "Searchable" : {
+          "addToFilters" : true,
+          "filterNameOverride" : "Status"
+        }
+      }, {
+        "name" : "stage",
+        "type" : [ "null", {
+          "type" : "enum",
+          "name" : "IncidentStage",
+          "symbols" : [ "TRIAGE", "INVESTIGATION", "WORK_IN_PROGRESS", "FIXED", "NO_ACTION_REQUIRED" ],
+          "symbolDocs" : {
+            "FIXED" : "The incident is in the resolved as completed stage.",
+            "INVESTIGATION" : "The incident root cause is being investigated.",
+            "NO_ACTION_REQUIRED" : "The incident is in the resolved with no action required state, e.g. the\nincident was a false positive, or was expected.",
+            "TRIAGE" : "The impact and priority of the incident is being actively assessed.",
+            "WORK_IN_PROGRESS" : "The incident is in the remediation stage."
+          }
+        } ],
+        "doc" : "The lifecycle stage for the incident - Null means no stage was assigned yet.\nIn the future, we may add CUSTOM here with a customStage string field for user-defined stages.",
+        "default" : null,
+        "Searchable" : {
+          "addToFilters" : true,
+          "filterNameOverride" : "Stage"
+        }
+      }, {
+        "name" : "message",
+        "type" : [ "null", "string" ],
+        "doc" : "Optional message associated with the incident",
+        "default" : null
+      }, {
+        "name" : "lastUpdated",
+        "type" : "com.linkedin.common.AuditStamp",
+        "doc" : "The time at which the request was initially created",
+        "Searchable" : {
+          "/time" : {
+            "fieldName" : "lastUpdated",
+            "fieldType" : "COUNT"
+          }
+        }
+      } ]
+    },
+    "doc" : "The current status of an incident, i.e. active or inactive."
+  }, {
+    "name" : "source",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "IncidentSource",
+      "doc" : "Information about the source of an incident raised on an asset.",
+      "fields" : [ {
+        "name" : "type",
+        "type" : {
+          "type" : "enum",
+          "name" : "IncidentSourceType",
+          "symbols" : [ "MANUAL", "ASSERTION_FAILURE" ],
+          "symbolDocs" : {
+            "ASSERTION_FAILURE" : "An assertion has failed, triggering the incident.",
+            "MANUAL" : "Manually created incident, via UI or API."
+          }
+        },
+        "doc" : "Message associated with the incident",
+        "Searchable" : {
+          "addToFilters" : true,
+          "filterNameOverride" : "Source"
+        }
+      }, {
+        "name" : "sourceUrn",
+        "type" : [ "null", "string" ],
+        "doc" : "Reference to an URN related to the source of an incident.",
+        "default" : null,
+        "Searchable" : {
+          "fieldType" : "URN"
+        },
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      } ],
+      "Aspect" : {
+        "name" : "incidentSource"
+      }
+    } ],
+    "doc" : "The source of an incident, i.e. how it was generated.",
+    "default" : null
+  }, {
+    "name" : "startedAt",
+    "type" : [ "null", "long" ],
+    "doc" : "The time at which the incident actually started (may be before the date it was raised).",
+    "default" : null,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "startedAt",
+        "fieldType" : "COUNT"
+      }
+    }
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The time at which the request was initially created",
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "created",
+        "fieldType" : "COUNT"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "incidentInfo"
+  }
+}

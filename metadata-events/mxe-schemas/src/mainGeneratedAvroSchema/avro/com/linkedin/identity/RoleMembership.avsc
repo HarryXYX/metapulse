@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "RoleMembership",
+  "namespace" : "com.linkedin.identity",
+  "doc" : "Carries information about which roles a user or group is assigned to.",
+  "fields" : [ {
+    "name" : "roles",
+    "type" : {
+      "type" : "array",
+      "items" : "string"
+    },
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataHubRole" ],
+        "name" : "IsMemberOfRole"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "roleMembership"
+  }
+}

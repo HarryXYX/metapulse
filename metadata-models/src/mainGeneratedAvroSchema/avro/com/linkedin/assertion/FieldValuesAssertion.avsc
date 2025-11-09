@@ -1,0 +1,160 @@
+{
+  "type" : "record",
+  "name" : "FieldValuesAssertion",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes defining a field values assertion, which asserts that the values for a field / column\nof a dataset / table matches a set of expectations.\n\nIn other words, this type of assertion acts as a semantic constraint applied to fields for a specific column.\n\nTODO: We should display the \"failed row count\" to the user if the column fails the verification rules.\nTODO: Determine whether we need an \"operator\" that can be applied to the field.",
+  "fields" : [ {
+    "name" : "field",
+    "type" : {
+      "type" : "record",
+      "name" : "SchemaFieldSpec",
+      "namespace" : "com.linkedin.schema",
+      "doc" : "Lightweight spec used for referencing a particular schema field.",
+      "fields" : [ {
+        "name" : "path",
+        "type" : "string",
+        "doc" : "The field path"
+      }, {
+        "name" : "type",
+        "type" : "string",
+        "doc" : "The DataHub standard schema field type."
+      }, {
+        "name" : "nativeType",
+        "type" : "string",
+        "doc" : "The native field type"
+      } ]
+    },
+    "doc" : "The field under evaluation",
+    "Searchable" : {
+      "/path" : {
+        "fieldName" : "fieldPath"
+      }
+    }
+  }, {
+    "name" : "transform",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "FieldTransform",
+      "doc" : "Definition of a transform applied to the values of a column / field.\nNote that the applicability of a field transform ultimately depends on the native type\nof the field / column.\n\nModel has single field to permit extension.",
+      "fields" : [ {
+        "name" : "type",
+        "type" : {
+          "type" : "enum",
+          "name" : "FieldTransformType",
+          "symbols" : [ "LENGTH" ],
+          "symbolDocs" : {
+            "LENGTH" : "Obtain the length of a string field / column (applicable to string types)"
+          }
+        },
+        "doc" : "The type of the field transform, e.g. the transformation\nfunction / operator to apply."
+      } ]
+    } ],
+    "doc" : "An optional transform to apply to field values\nbefore evaluating the operator.\n\nIf none is applied, the field value will be compared as is.",
+    "default" : null
+  }, {
+    "name" : "operator",
+    "type" : {
+      "type" : "enum",
+      "name" : "AssertionStdOperator",
+      "doc" : "A boolean operator that is applied on the input to an assertion, after an aggregation function has been applied.",
+      "symbols" : [ "BETWEEN", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "EQUAL_TO", "NOT_EQUAL_TO", "NULL", "NOT_NULL", "CONTAIN", "END_WITH", "START_WITH", "REGEX_MATCH", "IN", "NOT_IN", "IS_TRUE", "IS_FALSE", "_NATIVE_" ],
+      "symbolDocs" : {
+        "BETWEEN" : "Value being asserted is between min_value and max_value.  Requires 'minValue' & 'maxValue' parameters.",
+        "CONTAIN" : "Value being asserted contains value. Requires 'value' parameter.",
+        "END_WITH" : "Value being asserted ends with value. Requires 'value' parameter.",
+        "EQUAL_TO" : "Value being asserted is equal to value. Requires 'value' parameter.",
+        "GREATER_THAN" : "Value being asserted is greater than some value. Requires 'value' parameter.",
+        "GREATER_THAN_OR_EQUAL_TO" : "Value being asserted is greater than or equal to some value. Requires 'value' parameter.",
+        "IN" : "Value being asserted is one of the array values. Requires 'value' parameter.",
+        "IS_FALSE" : "Value being asserted is false. Requires no parameters.",
+        "IS_TRUE" : "Value being asserted is true. Requires no parameters.",
+        "LESS_THAN" : "Value being asserted is less than a max value. Requires 'value' parameter.",
+        "LESS_THAN_OR_EQUAL_TO" : "Value being asserted is less than or equal to some value. Requires 'value' parameter.",
+        "NOT_EQUAL_TO" : "Value being asserted is not equal to value. Requires 'value' parameter.",
+        "NOT_IN" : "Value being asserted is not in one of the array values. Requires 'value' parameter.",
+        "NOT_NULL" : "Value being asserted is not null. Requires no parameters.",
+        "NULL" : "Value being asserted is null. Requires no parameters.",
+        "REGEX_MATCH" : "Value being asserted matches the regex value. Requires 'value' parameter.",
+        "START_WITH" : "Value being asserted starts with value. Requires 'value' parameter.",
+        "_NATIVE_" : "Other"
+      }
+    },
+    "doc" : "The predicate to evaluate against a single value of the field.\nDepending on the operator, parameters may be required in order to successfully\nevaluate the assertion against the field value."
+  }, {
+    "name" : "parameters",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AssertionStdParameters",
+      "doc" : "Parameters for AssertionStdOperators.",
+      "fields" : [ {
+        "name" : "value",
+        "type" : [ "null", {
+          "type" : "record",
+          "name" : "AssertionStdParameter",
+          "doc" : "Single parameter for AssertionStdOperators.",
+          "fields" : [ {
+            "name" : "value",
+            "type" : "string",
+            "doc" : "The parameter value"
+          }, {
+            "name" : "type",
+            "type" : {
+              "type" : "enum",
+              "name" : "AssertionStdParameterType",
+              "symbols" : [ "STRING", "NUMBER", "LIST", "SET", "UNKNOWN" ],
+              "symbolDocs" : {
+                "LIST" : "A list of values. When used, value should be formatted as a serialized JSON array.",
+                "NUMBER" : "A numeric value",
+                "SET" : "A set of values. When used, value should be formatted as a serialized JSON array.",
+                "STRING" : "A string value",
+                "UNKNOWN" : "A value of unknown type"
+              }
+            },
+            "doc" : "The type of the parameter"
+          } ]
+        } ],
+        "doc" : "The value parameter of an assertion",
+        "default" : null
+      }, {
+        "name" : "maxValue",
+        "type" : [ "null", "AssertionStdParameter" ],
+        "doc" : "The maxValue parameter of an assertion",
+        "default" : null
+      }, {
+        "name" : "minValue",
+        "type" : [ "null", "AssertionStdParameter" ],
+        "doc" : "The minValue parameter of an assertion",
+        "default" : null
+      } ]
+    } ],
+    "doc" : "Standard parameters required for the assertion. e.g. min_value, max_value, value, columns",
+    "default" : null
+  }, {
+    "name" : "failThreshold",
+    "type" : {
+      "type" : "record",
+      "name" : "FieldValuesFailThreshold",
+      "fields" : [ {
+        "name" : "type",
+        "type" : {
+          "type" : "enum",
+          "name" : "FieldValuesFailThresholdType",
+          "symbols" : [ "COUNT", "PERCENTAGE" ]
+        },
+        "doc" : "The type of failure threshold. Either based on the number\nof column values (rows) that fail the expectations, or the percentage\nof the total rows under consideration.",
+        "default" : "COUNT"
+      }, {
+        "name" : "value",
+        "type" : "long",
+        "doc" : "By default this is 0, meaning that ALL column values (i.e. rows) must\nmeet the defined expectations.",
+        "default" : 0
+      } ]
+    },
+    "doc" : "Additional customization about when the assertion\nshould be officially considered failing."
+  }, {
+    "name" : "excludeNulls",
+    "type" : "boolean",
+    "doc" : "Whether to ignore or allow nulls when running the values assertion. (i.e.\nconsider only non-null values) using operators OTHER than the IS_NULL operator.\n\nDefaults to true, allowing null values.",
+    "default" : true
+  } ]
+}

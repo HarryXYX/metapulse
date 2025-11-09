@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "BusinessAttributeKey",
+  "namespace" : "com.linkedin.businessattribute",
+  "doc" : "Key for a Query",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the Business Attribute."
+  } ],
+  "Aspect" : {
+    "name" : "businessAttributeKey"
+  }
+}

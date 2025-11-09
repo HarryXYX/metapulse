@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "ApplicationKey" : {
+      "description" : "Key for a Query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the Application.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/ApplicationKey"
+}

@@ -1,0 +1,51 @@
+{
+  "type" : "record",
+  "name" : "ExecutionRequestInput",
+  "namespace" : "com.linkedin.execution",
+  "doc" : "An request to execution some remote logic or action.\nTODO: Determine who is responsible for emitting execution request success or failure. Executor?",
+  "fields" : [ {
+    "name" : "task",
+    "type" : "string",
+    "doc" : "The name of the task to execute, for example RUN_INGEST"
+  }, {
+    "name" : "args",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Arguments provided to the task"
+  }, {
+    "name" : "executorId",
+    "type" : "string",
+    "doc" : "Advanced: specify a specific executor to route the request to. If none is provided, a \"default\" executor is used.",
+    "Searchable" : {
+      "fieldName" : "executorId",
+      "fieldType" : "KEYWORD",
+      "queryByDefault" : false
+    }
+  }, {
+    "name" : "source",
+    "type" : "ExecutionRequestSource",
+    "doc" : "Source which created the execution request"
+  }, {
+    "name" : "requestedAt",
+    "type" : "long",
+    "doc" : "Time at which the execution request input was created",
+    "Searchable" : {
+      "fieldName" : "requestTimeMs",
+      "fieldType" : "COUNT",
+      "queryByDefault" : false
+    }
+  }, {
+    "name" : "actorUrn",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "Urn of the actor who created this execution request.",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "URN"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataHubExecutionRequestInput"
+  }
+}

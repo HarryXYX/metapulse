@@ -1,0 +1,82 @@
+{
+  "type" : "record",
+  "name" : "Operation",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Operational info for an entity.",
+  "include" : [ "com.linkedin.timeseries.TimeseriesAspectBase" ],
+  "fields" : [ {
+    "name" : "actor",
+    "type" : "Urn",
+    "doc" : "Actor who issued this operation.",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "operationType",
+    "type" : "OperationType",
+    "doc" : "Operation type of change.",
+    "TimeseriesField" : { }
+  }, {
+    "name" : "customOperationType",
+    "type" : "string",
+    "doc" : "A custom type of operation. Required if operationType is CUSTOM.",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "numAffectedRows",
+    "type" : "long",
+    "doc" : "How many rows were affected by this operation.",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "affectedDatasets",
+    "type" : {
+      "type" : "array",
+      "items" : "Urn"
+    },
+    "doc" : "Which other datasets were affected by this operation.",
+    "optional" : true,
+    "TimeseriesFieldCollection" : {
+      "key" : "datasetName"
+    }
+  }, {
+    "name" : "sourceType",
+    "type" : "OperationSourceType",
+    "doc" : "Source Type",
+    "optional" : true,
+    "TimeseriesField" : { }
+  }, {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Custom properties",
+    "optional" : true
+  }, {
+    "name" : "lastUpdatedTimestamp",
+    "type" : "long",
+    "doc" : "The time at which the operation occurred. Would be better named 'operationTime'",
+    "Searchable" : {
+      "fieldName" : "lastOperationTime",
+      "fieldType" : "DATETIME"
+    },
+    "TimeseriesField" : {
+      "fieldType" : "DATETIME"
+    }
+  }, {
+    "name" : "queries",
+    "type" : {
+      "type" : "array",
+      "items" : "Urn"
+    },
+    "doc" : "Which queries were used in this operation.",
+    "optional" : true,
+    "TimeseriesFieldCollection" : {
+      "key" : "query"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "operation",
+    "type" : "timeseries"
+  }
+}

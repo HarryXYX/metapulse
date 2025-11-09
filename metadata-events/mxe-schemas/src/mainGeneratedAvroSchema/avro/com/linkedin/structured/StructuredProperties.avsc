@@ -1,0 +1,130 @@
+{
+  "type" : "record",
+  "name" : "StructuredProperties",
+  "namespace" : "com.linkedin.structured",
+  "doc" : "Properties about an entity governed by StructuredPropertyDefinition",
+  "fields" : [ {
+    "name" : "properties",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "StructuredPropertyValueAssignment",
+        "fields" : [ {
+          "name" : "propertyUrn",
+          "type" : "string",
+          "doc" : "The property that is being assigned a value.",
+          "java" : {
+            "class" : "com.linkedin.common.urn.Urn"
+          }
+        }, {
+          "name" : "values",
+          "type" : {
+            "type" : "array",
+            "items" : [ "string", "double" ]
+          },
+          "doc" : "The value assigned to the property."
+        }, {
+          "name" : "created",
+          "type" : [ "null", {
+            "type" : "record",
+            "name" : "AuditStamp",
+            "namespace" : "com.linkedin.common",
+            "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+            "fields" : [ {
+              "name" : "time",
+              "type" : "long",
+              "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+            }, {
+              "name" : "actor",
+              "type" : "string",
+              "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "impersonator",
+              "type" : [ "null", "string" ],
+              "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+              "default" : null,
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "message",
+              "type" : [ "null", "string" ],
+              "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+              "default" : null
+            } ]
+          } ],
+          "doc" : "Audit stamp containing who created this relationship edge and when",
+          "default" : null
+        }, {
+          "name" : "lastModified",
+          "type" : [ "null", "com.linkedin.common.AuditStamp" ],
+          "doc" : "Audit stamp containing who last modified this relationship edge and when",
+          "default" : null
+        }, {
+          "name" : "attribution",
+          "type" : [ "null", {
+            "type" : "record",
+            "name" : "MetadataAttribution",
+            "namespace" : "com.linkedin.common",
+            "doc" : "Information about who, why, and how this metadata was applied",
+            "fields" : [ {
+              "name" : "time",
+              "type" : "long",
+              "doc" : "When this metadata was updated."
+            }, {
+              "name" : "actor",
+              "type" : "string",
+              "doc" : "The entity (e.g. a member URN) responsible for applying the assocated metadata. This can\neither be a user (in case of UI edits) or the datahub system for automation.",
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "source",
+              "type" : [ "null", "string" ],
+              "doc" : "The DataHub source responsible for applying the associated metadata. This will only be filled out\nwhen a DataHub source is responsible. This includes the specific metadata test urn, the automation urn.",
+              "default" : null,
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            }, {
+              "name" : "sourceDetail",
+              "type" : {
+                "type" : "map",
+                "values" : "string"
+              },
+              "doc" : "The details associated with why this metadata was applied. For example, this could include\nthe actual regex rule, sql statement, ingestion pipeline ID, etc.",
+              "default" : { }
+            } ]
+          } ],
+          "doc" : "Information about who, why, and how this metadata was applied",
+          "default" : null,
+          "Searchable" : {
+            "/actor" : {
+              "fieldName" : "structuredPropertyAttributionActors",
+              "fieldType" : "URN",
+              "queryByDefault" : false
+            },
+            "/source" : {
+              "fieldName" : "structuredPropertyAttributionSources",
+              "fieldType" : "URN",
+              "queryByDefault" : false
+            },
+            "/time" : {
+              "fieldName" : "structuredPropertyAttributionDates",
+              "fieldType" : "DATETIME",
+              "queryByDefault" : false
+            }
+          }
+        } ]
+      }
+    },
+    "doc" : "Custom property bag."
+  } ],
+  "Aspect" : {
+    "name" : "structuredProperties"
+  }
+}

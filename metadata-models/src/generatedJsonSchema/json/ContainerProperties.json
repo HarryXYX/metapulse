@@ -1,0 +1,79 @@
+{
+  "definitions" : {
+    "ContainerProperties" : {
+      "description" : "Information about a Asset Container as received from a 3rd party source system",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Display name of the Asset Container",
+          "type" : "string"
+        },
+        "qualifiedName" : {
+          "default" : null,
+          "description" : "Fully-qualified name of the Container",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description of the Asset Container as it exists inside a source system",
+          "type" : "string"
+        },
+        "env" : {
+          "default" : null,
+          "description" : "Environment for this flow",
+          "$ref" : "#/definitions/FabricType"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        }
+      },
+      "required" : [ "customProperties", "name" ]
+    },
+    "FabricType" : {
+      "description" : "Fabric group type",
+      "enum" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ]
+    },
+    "TimeStamp" : {
+      "description" : "A standard event timestamp",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the event occur",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "Optional: The actor urn involved in the event.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time" ]
+    }
+  },
+  "$ref" : "#/definitions/ContainerProperties"
+}

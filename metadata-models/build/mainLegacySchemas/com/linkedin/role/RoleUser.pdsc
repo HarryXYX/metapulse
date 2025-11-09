@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "RoleUser",
+  "namespace" : "com.linkedin.role",
+  "doc" : "Provisioned users of a role",
+  "fields" : [ {
+    "name" : "user",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "Link provisioned corp user for a role",
+    "Relationship" : {
+      "entityTypes" : [ "corpuser" ],
+      "name" : "Has"
+    }
+  } ]
+}

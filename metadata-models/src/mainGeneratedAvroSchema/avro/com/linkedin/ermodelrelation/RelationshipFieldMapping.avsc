@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "RelationshipFieldMapping",
+  "namespace" : "com.linkedin.ermodelrelation",
+  "doc" : "Individual Field Mapping of a relationship- one of several",
+  "fields" : [ {
+    "name" : "sourceField",
+    "type" : "string",
+    "doc" : "All fields from dataset A that are required for the join, maps to bFields 1:1"
+  }, {
+    "name" : "destinationField",
+    "type" : "string",
+    "doc" : "All fields from dataset B that are required for the join, maps to aFields 1:1"
+  } ]
+}

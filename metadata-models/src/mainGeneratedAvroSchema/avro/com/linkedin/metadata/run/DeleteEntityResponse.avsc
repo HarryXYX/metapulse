@@ -1,0 +1,16 @@
+{
+  "type" : "record",
+  "name" : "DeleteEntityResponse",
+  "namespace" : "com.linkedin.metadata.run",
+  "fields" : [ {
+    "name" : "urn",
+    "type" : "string"
+  }, {
+    "name" : "rows",
+    "type" : "long"
+  }, {
+    "name" : "timeseriesRows",
+    "type" : [ "null", "long" ],
+    "default" : null
+  } ]
+}

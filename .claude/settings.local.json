@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git clone:*)",
+      "Bash(find claude-code-templates/cli-tool/components/agents -name \"*.md\" -exec sh -c 'target=\"\"agents/$(basename \"\"{}\"\")\"\"; cp \"\"{}\"\" \"\"$target\"\"' ;)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

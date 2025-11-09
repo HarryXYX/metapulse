@@ -1,0 +1,57 @@
+{
+  "definitions" : {
+    "PlatformEvent" : {
+      "description" : "A DataHub Platform Event.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "header" : {
+          "description" : "Header information stored with the event.",
+          "$ref" : "#/definitions/PlatformEventHeader"
+        },
+        "name" : {
+          "description" : "The name of the event, e.g. the type of event. For example, 'notificationRequestEvent', 'entityChangeEvent'",
+          "type" : "string"
+        },
+        "payload" : {
+          "description" : "The event payload.",
+          "$ref" : "#/definitions/GenericPayload"
+        }
+      },
+      "required" : [ "header", "name", "payload" ]
+    },
+    "PlatformEventHeader" : {
+      "description" : "A header included with each DataHub platform event.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "timestampMillis" : {
+          "description" : "The event timestamp field as epoch at UTC in milli seconds.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "timestampMillis" ]
+    },
+    "GenericPayload" : {
+      "description" : "Generic payload record structure for serializing a Platform Event.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The value of the event, serialized as bytes.",
+          "type" : "string",
+          "pattern" : "^[\u0000-ÿ]*$"
+        },
+        "contentType" : {
+          "description" : "The content type, which represents the fashion in which the event was serialized.\nThe only type currently supported is application/json.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "value", "contentType" ]
+    }
+  },
+  "$ref" : "#/definitions/PlatformEvent"
+}

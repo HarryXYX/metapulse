@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "PropertyValue",
+  "namespace" : "com.linkedin.structured",
+  "fields" : [ {
+    "name" : "value",
+    "type" : [ "string", "double" ]
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional description of the property value",
+    "default" : null
+  } ]
+}

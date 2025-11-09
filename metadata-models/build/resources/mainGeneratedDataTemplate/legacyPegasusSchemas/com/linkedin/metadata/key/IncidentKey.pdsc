@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "IncidentKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for an asset Incident",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the incident. Generated on the server side at incident creation time."
+  } ],
+  "Aspect" : {
+    "name" : "incidentKey"
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "type" : "record",
+  "name" : "ExecutionRequestResult",
+  "namespace" : "com.linkedin.execution",
+  "doc" : "The result of an execution request",
+  "fields" : [ {
+    "name" : "status",
+    "type" : "string",
+    "doc" : "The status of the execution request",
+    "Searchable" : {
+      "fieldName" : "executionResultStatus",
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "report",
+    "type" : "string",
+    "doc" : "The pretty-printed execution report.",
+    "optional" : true
+  }, {
+    "name" : "structuredReport",
+    "type" : "StructuredExecutionReport",
+    "doc" : "A structured report if available.",
+    "optional" : true
+  }, {
+    "name" : "startTimeMs",
+    "type" : "long",
+    "doc" : "Time at which the request was created",
+    "optional" : true,
+    "Searchable" : {
+      "fieldName" : "startTimeMs",
+      "fieldType" : "COUNT",
+      "queryByDefault" : false
+    }
+  }, {
+    "name" : "durationMs",
+    "type" : "long",
+    "doc" : "Duration in milliseconds",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "dataHubExecutionRequestResult"
+  }
+}

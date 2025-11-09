@@ -1,0 +1,59 @@
+{
+  "type" : "record",
+  "name" : "DataPlatformInstanceProperties",
+  "namespace" : "com.linkedin.dataplatforminstance",
+  "doc" : "Properties associated with a Data Platform Instance",
+  "fields" : [ {
+    "name" : "customProperties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Custom property bag.",
+    "default" : { },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "TEXT",
+        "queryByDefault" : true
+      }
+    }
+  }, {
+    "name" : "externalUrl",
+    "type" : [ "null", "string" ],
+    "doc" : "URL where the reference exist",
+    "default" : null,
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.url.Url",
+      "coercerClass" : "com.linkedin.common.url.UrlCoercer"
+    }
+  }, {
+    "name" : "name",
+    "type" : [ "null", "string" ],
+    "doc" : "Display name of the Data Platform Instance",
+    "default" : null,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "description",
+    "type" : [ "null", "string" ],
+    "doc" : "Documentation of the Data Platform Instance",
+    "default" : null,
+    "Searchable" : {
+      "fieldType" : "TEXT",
+      "hasValuesFieldName" : "hasDescription",
+      "searchTier" : 2
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataPlatformInstanceProperties"
+  }
+}

@@ -1,0 +1,180 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageTemplateProperties",
+  "namespace" : "com.linkedin.template",
+  "doc" : "The main properties of a DataHub page template",
+  "fields" : [ {
+    "name" : "rows",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "DataHubPageTemplateRow",
+        "doc" : "A row of modules contained in a template",
+        "fields" : [ {
+          "name" : "modules",
+          "type" : {
+            "type" : "array",
+            "items" : "string"
+          },
+          "doc" : "The modules that exist in this template row"
+        } ]
+      }
+    },
+    "doc" : "The rows of modules contained in this template",
+    "Relationship" : {
+      "/*/modules/*" : {
+        "entityTypes" : [ "dataHubPageModule" ],
+        "name" : "ContainedIn"
+      }
+    }
+  }, {
+    "name" : "assetSummary",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "DataHubPageTemplateAssetSummary",
+      "doc" : "The page template info for asset summaries",
+      "fields" : [ {
+        "name" : "summaryElements",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : {
+            "type" : "record",
+            "name" : "SummaryElement",
+            "doc" : "Info for a given asset summary element",
+            "fields" : [ {
+              "name" : "elementType",
+              "type" : {
+                "type" : "enum",
+                "name" : "SummaryElementType",
+                "symbols" : [ "CREATED", "TAGS", "GLOSSARY_TERMS", "OWNERS", "DOMAIN", "STRUCTURED_PROPERTY" ]
+              },
+              "doc" : "The type of element/property"
+            }, {
+              "name" : "structuredPropertyUrn",
+              "type" : [ "null", "string" ],
+              "doc" : "The urn of the structured property shown. Required if propertyType is STRUCTURED_PROPERTY",
+              "default" : null,
+              "Relationship" : {
+                "entityTypes" : [ "structuredProperty" ],
+                "name" : "ContainsStructuredProperty"
+              },
+              "java" : {
+                "class" : "com.linkedin.common.urn.Urn"
+              }
+            } ]
+          }
+        } ],
+        "doc" : "The optional list of properties shown on an asset summary page header.",
+        "default" : null
+      } ]
+    } ],
+    "doc" : "The optional info for asset summaries. Should be populated if surfaceType is ASSET_SUMMARY",
+    "default" : null
+  }, {
+    "name" : "surface",
+    "type" : {
+      "type" : "record",
+      "name" : "DataHubPageTemplateSurface",
+      "doc" : "Info about the surface area of the product that this template is deployed in",
+      "fields" : [ {
+        "name" : "surfaceType",
+        "type" : {
+          "type" : "enum",
+          "name" : "PageTemplateSurfaceType",
+          "symbols" : [ "HOME_PAGE", "ASSET_SUMMARY" ],
+          "symbolDocs" : {
+            "ASSET_SUMMARY" : "This template applies to what to display on asset summary pages",
+            "HOME_PAGE" : "This template applies to what to display on the home page for users."
+          }
+        },
+        "doc" : "Where exactly is this template being used",
+        "Searchable" : {
+          "fieldType" : "KEYWORD"
+        }
+      } ]
+    },
+    "doc" : "Info about the surface area of the product that this template is deployed in"
+  }, {
+    "name" : "visibility",
+    "type" : {
+      "type" : "record",
+      "name" : "DataHubPageTemplateVisibility",
+      "doc" : "Info about the visibility of this template",
+      "fields" : [ {
+        "name" : "scope",
+        "type" : {
+          "type" : "enum",
+          "name" : "PageTemplateScope",
+          "symbols" : [ "PERSONAL", "GLOBAL" ],
+          "symbolDocs" : {
+            "GLOBAL" : "This template is used across users",
+            "PERSONAL" : "This template is used for individual use only"
+          }
+        },
+        "doc" : "The scope of this template and who can use/see it",
+        "Searchable" : {
+          "fieldType" : "KEYWORD"
+        }
+      } ]
+    },
+    "doc" : "Info about the visibility of this template"
+  }, {
+    "name" : "created",
+    "type" : {
+      "type" : "record",
+      "name" : "AuditStamp",
+      "namespace" : "com.linkedin.common",
+      "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "fields" : [ {
+        "name" : "time",
+        "type" : "long",
+        "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+      }, {
+        "name" : "actor",
+        "type" : "string",
+        "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "impersonator",
+        "type" : [ "null", "string" ],
+        "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+        "default" : null,
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "message",
+        "type" : [ "null", "string" ],
+        "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+        "default" : null
+      } ]
+    },
+    "doc" : "Audit stamp for when and by whom this template was created",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "createdBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Audit stamp for when and by whom this template was last updated",
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataHubPageTemplateProperties"
+  }
+}

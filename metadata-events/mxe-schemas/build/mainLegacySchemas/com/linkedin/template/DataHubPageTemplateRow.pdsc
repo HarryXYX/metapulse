@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageTemplateRow",
+  "namespace" : "com.linkedin.template",
+  "doc" : "A row of modules contained in a template",
+  "fields" : [ {
+    "name" : "modules",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "The modules that exist in this template row"
+  } ]
+}

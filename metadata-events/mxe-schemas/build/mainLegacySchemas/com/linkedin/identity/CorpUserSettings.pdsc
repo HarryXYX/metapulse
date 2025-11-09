@@ -1,0 +1,29 @@
+{
+  "type" : "record",
+  "name" : "CorpUserSettings",
+  "namespace" : "com.linkedin.identity",
+  "doc" : "Settings that a user can customize through the datahub ui",
+  "fields" : [ {
+    "name" : "appearance",
+    "type" : "CorpUserAppearanceSettings",
+    "doc" : "Settings for a user around the appearance of their DataHub U"
+  }, {
+    "name" : "views",
+    "type" : "CorpUserViewsSettings",
+    "doc" : "User preferences for the Views feature.",
+    "optional" : true
+  }, {
+    "name" : "notificationSettings",
+    "type" : "com.linkedin.event.notification.settings.NotificationSettings",
+    "doc" : "Notification settings for a user",
+    "optional" : true
+  }, {
+    "name" : "homePage",
+    "type" : "CorpUserHomePageSettings",
+    "doc" : "Settings related to the home page for a user",
+    "optional" : true
+  } ],
+  "Aspect" : {
+    "name" : "corpUserSettings"
+  }
+}

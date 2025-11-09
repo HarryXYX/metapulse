@@ -1,0 +1,31 @@
+{
+  "type" : "record",
+  "name" : "BrowseResultV2",
+  "namespace" : "com.linkedin.metadata.browse",
+  "doc" : "The model for the result of a browseV2 query",
+  "fields" : [ {
+    "name" : "groups",
+    "type" : {
+      "type" : "array",
+      "items" : "BrowseResultGroupV2"
+    },
+    "doc" : "A list of groups and total number of entities inside those groups under the queried path",
+    "default" : [ ]
+  }, {
+    "name" : "metadata",
+    "type" : "BrowseResultMetadata",
+    "doc" : "Metadata specific to the browse result of the queried path"
+  }, {
+    "name" : "from",
+    "type" : "int",
+    "doc" : "Offset of the first entity in the result"
+  }, {
+    "name" : "pageSize",
+    "type" : "int",
+    "doc" : "Size of each page in the result"
+  }, {
+    "name" : "numGroups",
+    "type" : "int",
+    "doc" : "The total number of groups directly under queried path"
+  } ]
+}

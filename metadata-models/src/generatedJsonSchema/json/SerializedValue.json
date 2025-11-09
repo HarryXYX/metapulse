@@ -1,0 +1,39 @@
+{
+  "definitions" : {
+    "SerializedValue" : {
+      "description" : "Captures the serialized value of a (usually) schema-d blob.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "blob" : {
+          "description" : "The serialized blob value.",
+          "type" : "string",
+          "pattern" : "^[\u0000-ÿ]*$"
+        },
+        "contentType" : {
+          "default" : "JSON",
+          "description" : "The content-type of the serialized blob value.",
+          "$ref" : "#/definitions/SerializedValueContentType"
+        },
+        "schemaType" : {
+          "default" : null,
+          "description" : "The schema type for the schema that models the object that was serialized\n       into the blob.\nAbsence of this field indicates that the schema is not known.\nIf the schema is known, the value should be set to the appropriate schema\ntype.\nUse the NONE value if the existing schema categories do not apply.",
+          "$ref" : "#/definitions/SerializedValueSchemaType"
+        },
+        "schemaRef" : {
+          "default" : null,
+          "description" : "An optional reference to the schema that models the object.\ne.g., 'com.linkedin.platformresource.slack.SlackConversation'",
+          "type" : "string"
+        }
+      },
+      "required" : [ "blob", "contentType" ]
+    },
+    "SerializedValueContentType" : {
+      "enum" : [ "JSON", "BINARY" ]
+    },
+    "SerializedValueSchemaType" : {
+      "enum" : [ "AVRO", "PROTOBUF", "PEGASUS", "THRIFT", "JSON", "NONE" ]
+    }
+  },
+  "$ref" : "#/definitions/SerializedValue"
+}

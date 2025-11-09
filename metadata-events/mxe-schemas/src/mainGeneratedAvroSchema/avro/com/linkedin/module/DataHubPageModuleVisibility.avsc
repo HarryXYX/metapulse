@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageModuleVisibility",
+  "namespace" : "com.linkedin.module",
+  "doc" : "Info about the visibility of this module",
+  "fields" : [ {
+    "name" : "scope",
+    "type" : {
+      "type" : "enum",
+      "name" : "PageModuleScope",
+      "symbols" : [ "PERSONAL", "GLOBAL" ],
+      "symbolDocs" : {
+        "GLOBAL" : "This module is discoverable and can be used by any user on the platform",
+        "PERSONAL" : "This module is used for individual use only"
+      }
+    },
+    "doc" : "Audit stamp for when and by whom this module was created",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  } ]
+}

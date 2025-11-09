@@ -1,0 +1,85 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageModuleParams",
+  "namespace" : "com.linkedin.module",
+  "doc" : "The specific parameters stored for a module",
+  "fields" : [ {
+    "name" : "linkParams",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "LinkModuleParams",
+      "fields" : [ {
+        "name" : "linkUrl",
+        "type" : "string"
+      }, {
+        "name" : "imageUrl",
+        "type" : [ "null", "string" ],
+        "default" : null
+      }, {
+        "name" : "description",
+        "type" : [ "null", "string" ],
+        "default" : null
+      } ]
+    } ],
+    "doc" : "The params required if the module is type LINK",
+    "default" : null
+  }, {
+    "name" : "richTextParams",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "RichTextModuleParams",
+      "fields" : [ {
+        "name" : "content",
+        "type" : "string"
+      } ]
+    } ],
+    "doc" : "The params required if the module is type RICH_TEXT",
+    "default" : null
+  }, {
+    "name" : "assetCollectionParams",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "AssetCollectionModuleParams",
+      "doc" : "The params required if the module is type ASSET_COLLECTION",
+      "fields" : [ {
+        "name" : "assetUrns",
+        "type" : {
+          "type" : "array",
+          "items" : "string"
+        }
+      }, {
+        "name" : "dynamicFilterJson",
+        "type" : [ "null", "string" ],
+        "doc" : "Optional dynamic filters\n\nThe stringified json representing the logical predicate built in the UI to select assets.\nThis predicate is turned into orFilters to send through graphql since graphql doesn't support\narbitrary nesting. This string is used to restore the UI for this logical predicate.",
+        "default" : null
+      } ]
+    } ],
+    "doc" : "The params required if the module is type ASSET_COLLECTION",
+    "default" : null
+  }, {
+    "name" : "hierarchyViewParams",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "HierarchyModuleParams",
+      "doc" : "The params required if the module is type HIERARCHY_VIEW",
+      "fields" : [ {
+        "name" : "assetUrns",
+        "type" : [ "null", {
+          "type" : "array",
+          "items" : "string"
+        } ],
+        "default" : null
+      }, {
+        "name" : "showRelatedEntities",
+        "type" : "boolean"
+      }, {
+        "name" : "relatedEntitiesFilterJson",
+        "type" : [ "null", "string" ],
+        "doc" : "Optional filters to filter relatedEntities (assetUrns) out\n\nThe stringified json representing the logical predicate built in the UI to select assets.\nThis predicate is turned into orFilters to send through graphql since graphql doesn't support\narbitrary nesting. This string is used to restore the UI for this logical predicate.",
+        "default" : null
+      } ]
+    } ],
+    "doc" : "The params required if the module is type HIERARCHY_VIEW",
+    "default" : null
+  } ]
+}

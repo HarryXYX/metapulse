@@ -1,0 +1,81 @@
+{
+  "type" : "record",
+  "name" : "DataHubActorFilter",
+  "namespace" : "com.linkedin.policy",
+  "doc" : "Information used to filter DataHub actors.",
+  "fields" : [ {
+    "name" : "users",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "A specific set of users to apply the policy to (disjunctive)",
+    "default" : null,
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "groups",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "A specific set of groups to apply the policy to (disjunctive)",
+    "default" : null,
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "resourceOwners",
+    "type" : "boolean",
+    "doc" : "Whether the filter should return true for owners of a particular resource.\nOnly applies to policies of type 'Metadata', which have a resource associated with them.",
+    "default" : false
+  }, {
+    "name" : "resourceOwnersTypes",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "Define type of ownership for the policy",
+    "default" : null
+  }, {
+    "name" : "allUsers",
+    "type" : "boolean",
+    "doc" : "Whether the filter should apply to all users.",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "allGroups",
+    "type" : "boolean",
+    "doc" : "Whether the filter should apply to all groups.",
+    "default" : false,
+    "Searchable" : {
+      "fieldType" : "BOOLEAN"
+    }
+  }, {
+    "name" : "roles",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "A specific set of roles to apply the policy to (disjunctive).",
+    "default" : null,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "dataHubRole" ],
+        "name" : "IsAssociatedWithRole"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "URN"
+      }
+    }
+  } ]
+}

@@ -1,0 +1,10 @@
+{
+  "type" : "record",
+  "name" : "DataHubPersonaInfo",
+  "namespace" : "com.linkedin.persona",
+  "doc" : "Placeholder aspect for persona type info",
+  "fields" : [ ],
+  "Aspect" : {
+    "name" : "dataHubPersonaInfo"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "definitions" : {
+    "RecommendationParams" : {
+      "description" : "Parameters required to render a recommendation of a given type",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "searchParams" : {
+          "default" : null,
+          "description" : "Context to define the search recommendations",
+          "$ref" : "#/definitions/SearchParams"
+        },
+        "entityProfileParams" : {
+          "default" : null,
+          "description" : "Context to define the entity profile page",
+          "$ref" : "#/definitions/EntityProfileParams"
+        },
+        "contentParams" : {
+          "default" : null,
+          "description" : "Context about the recommendation",
+          "$ref" : "#/definitions/ContentParams"
+        }
+      }
+    },
+    "SearchParams" : {
+      "description" : "Context to define the search recommendations",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "types" : {
+          "default" : [ ],
+          "description" : "Entity types to be searched. If this is not provided, all entities will be searched.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "query" : {
+          "description" : "Search query",
+          "type" : "string"
+        },
+        "filters" : {
+          "default" : [ ],
+          "description" : "Filters",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Criterion"
+          }
+        }
+      },
+      "required" : [ "types", "query", "filters" ]
+    },
+    "Criterion" : {
+      "description" : "A criterion for matching a field with given value",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "field" : {
+          "description" : "The name of the field that the criterion refers to",
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "The value of the intended field",
+          "type" : "string"
+        },
+        "values" : {
+          "default" : [ ],
+          "description" : "Values. one of which the intended field should match\nNote, if values is set, the above \"value\" field will be ignored",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "condition" : {
+          "default" : "EQUAL",
+          "description" : "The condition for the criterion, e.g. EQUAL, START_WITH",
+          "$ref" : "#/definitions/Condition"
+        },
+        "negated" : {
+          "default" : false,
+          "description" : "Whether the condition should be negated",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "field", "value", "values", "condition", "negated" ]
+    },
+    "Condition" : {
+      "description" : "The matching condition in a filter criterion",
+      "enum" : [ "CONTAIN", "END_WITH", "EQUAL", "IEQUAL", "IS_NULL", "EXISTS", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "IN", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "START_WITH", "DESCENDANTS_INCL", "ANCESTORS_INCL", "RELATED_INCL" ]
+    },
+    "EntityProfileParams" : {
+      "description" : "Context to define the entity profile page",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "Urn of the entity being shown",
+          "type" : "string"
+        }
+      },
+      "required" : [ "urn" ]
+    },
+    "ContentParams" : {
+      "description" : "Params about the recommended content",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "count" : {
+          "description" : "Number of entities corresponding to the recommended content",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "count" ]
+    }
+  },
+  "$ref" : "#/definitions/RecommendationParams"
+}

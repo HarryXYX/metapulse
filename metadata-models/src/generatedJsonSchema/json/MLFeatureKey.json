@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "MLFeatureKey" : {
+      "description" : "Key for an MLFeature",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "featureNamespace" : {
+          "description" : "Namespace for the feature",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Name of the feature",
+          "type" : "string"
+        }
+      },
+      "required" : [ "featureNamespace", "name" ]
+    }
+  },
+  "$ref" : "#/definitions/MLFeatureKey"
+}

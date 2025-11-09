@@ -1,0 +1,103 @@
+{
+  "type" : "record",
+  "name" : "IncidentsSummary",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Summary related incidents on an entity.",
+  "fields" : [ {
+    "name" : "resolvedIncidents",
+    "type" : {
+      "type" : "array",
+      "items" : "Urn"
+    },
+    "doc" : "Resolved incidents for an asset\nDeprecated! Use the richer resolvedIncidentsDetails instead.",
+    "default" : [ ],
+    "deprecated" : true
+  }, {
+    "name" : "activeIncidents",
+    "type" : {
+      "type" : "array",
+      "items" : "Urn"
+    },
+    "doc" : "Active incidents for an asset\nDeprecated! Use the richer activeIncidentsDetails instead.",
+    "default" : [ ],
+    "deprecated" : true
+  }, {
+    "name" : "resolvedIncidentDetails",
+    "type" : {
+      "type" : "array",
+      "items" : "IncidentSummaryDetails"
+    },
+    "doc" : "Summary details about the set of resolved incidents",
+    "default" : [ ],
+    "Relationship" : {
+      "/*/urn" : {
+        "entityTypes" : [ "incident" ],
+        "name" : "ResolvedIncidents"
+      }
+    },
+    "Searchable" : {
+      "/*/createdAt" : {
+        "fieldName" : "resolvedIncidentCreatedTimes",
+        "fieldType" : "DATETIME"
+      },
+      "/*/priority" : {
+        "fieldName" : "resolvedIncidentPriorities",
+        "fieldType" : "COUNT"
+      },
+      "/*/resolvedAt" : {
+        "fieldName" : "resolvedIncidentResolvedTimes",
+        "fieldType" : "DATETIME"
+      },
+      "/*/type" : {
+        "fieldName" : "resolvedIncidentTypes",
+        "fieldType" : "KEYWORD"
+      },
+      "/*/urn" : {
+        "fieldName" : "resolvedIncidents",
+        "fieldType" : "URN",
+        "hasValuesFieldName" : "hasResolvedIncidents",
+        "numValuesFieldName" : "numResolvedIncidents",
+        "queryByDefault" : false
+      }
+    }
+  }, {
+    "name" : "activeIncidentDetails",
+    "type" : {
+      "type" : "array",
+      "items" : "IncidentSummaryDetails"
+    },
+    "doc" : "Summary details about the set of active incidents",
+    "default" : [ ],
+    "Relationship" : {
+      "/*/urn" : {
+        "entityTypes" : [ "incident" ],
+        "name" : "ActiveIncidents"
+      }
+    },
+    "Searchable" : {
+      "/*/createdAt" : {
+        "fieldName" : "activeIncidentCreatedTimes",
+        "fieldType" : "DATETIME"
+      },
+      "/*/priority" : {
+        "fieldName" : "activeIncidentPriorities",
+        "fieldType" : "COUNT"
+      },
+      "/*/type" : {
+        "fieldName" : "activeIncidentTypes",
+        "fieldType" : "KEYWORD"
+      },
+      "/*/urn" : {
+        "addHasValuesToFilters" : true,
+        "fieldName" : "activeIncidents",
+        "fieldType" : "URN",
+        "hasValuesFieldName" : "hasActiveIncidents",
+        "numValuesFieldName" : "numActiveIncidents",
+        "queryByDefault" : false
+      }
+    }
+  } ],
+  "Aspect" : {
+    "name" : "incidentsSummary"
+  }
+}

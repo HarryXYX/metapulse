@@ -1,0 +1,32 @@
+{
+  "type" : "record",
+  "name" : "FreshnessFieldSpec",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Lightweight spec used for referencing a particular schema field that is used to compute\na freshness signal or operation.\nTODO: Since this is now leveraged across assertions & metrics / operations, we should consider moving this to a common package.",
+  "fields" : [ {
+    "name" : "path",
+    "type" : "string",
+    "doc" : "The field path"
+  }, {
+    "name" : "type",
+    "type" : "string",
+    "doc" : "The DataHub standard schema field type."
+  }, {
+    "name" : "nativeType",
+    "type" : "string",
+    "doc" : "The native field type"
+  }, {
+    "name" : "kind",
+    "type" : [ "null", {
+      "type" : "enum",
+      "name" : "FreshnessFieldKind",
+      "symbols" : [ "LAST_MODIFIED", "HIGH_WATERMARK" ],
+      "symbolDocs" : {
+        "HIGH_WATERMARK" : "Determine that a change has occurred by inspecting a field which should be tracked as the\n\"high watermark\" for the table. This should be an ascending number or date field.\n\nIf rows with this column have not been added since the previous check\nthen the Freshness Assertion will fail.",
+        "LAST_MODIFIED" : "Determine that a change has occurred by inspecting an last modified field which\nrepresents the last time at which a row was changed."
+      }
+    } ],
+    "doc" : "The type of the field being used to verify the Freshness of the asset.",
+    "default" : null
+  } ]
+}

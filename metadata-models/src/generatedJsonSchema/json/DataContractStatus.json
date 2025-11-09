@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "DataContractStatus" : {
+      "description" : "Information about the status of a data contract",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "state" : {
+          "description" : "The latest state of the data contract",
+          "$ref" : "#/definitions/DataContractState"
+        }
+      },
+      "required" : [ "customProperties", "state" ]
+    },
+    "DataContractState" : {
+      "enum" : [ "ACTIVE", "PENDING" ]
+    }
+  },
+  "$ref" : "#/definitions/DataContractStatus"
+}

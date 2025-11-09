@@ -1,0 +1,34 @@
+{
+  "type" : "record",
+  "name" : "Edge",
+  "namespace" : "com.linkedin.common",
+  "doc" : "A common structure to represent all edges to entities when used inside aspects as collections\nThis ensures that all edges have common structure around audit-stamps and will support PATCH, time-travel automatically.\n",
+  "fields" : [ {
+    "name" : "sourceUrn",
+    "type" : "Urn",
+    "doc" : "Urn of the source of this relationship edge.\nIf not specified, assumed to be the entity that this aspect belongs to.",
+    "optional" : true
+  }, {
+    "name" : "destinationUrn",
+    "type" : "Urn",
+    "doc" : "Urn of the destination of this relationship edge."
+  }, {
+    "name" : "created",
+    "type" : "AuditStamp",
+    "doc" : "Audit stamp containing who created this relationship edge and when",
+    "optional" : true
+  }, {
+    "name" : "lastModified",
+    "type" : "AuditStamp",
+    "doc" : "Audit stamp containing who last modified this relationship edge and when",
+    "optional" : true
+  }, {
+    "name" : "properties",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "A generic properties bag that allows us to store specific information on this graph edge.",
+    "optional" : true
+  } ]
+}

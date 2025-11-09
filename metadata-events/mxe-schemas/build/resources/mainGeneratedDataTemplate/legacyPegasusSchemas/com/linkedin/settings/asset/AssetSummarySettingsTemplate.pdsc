@@ -1,0 +1,11 @@
+{
+  "type" : "record",
+  "name" : "AssetSummarySettingsTemplate",
+  "namespace" : "com.linkedin.settings.asset",
+  "doc" : "Object containing the template and any additional info for asset summary settings",
+  "fields" : [ {
+    "name" : "template",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The urn of the template"
+  } ]
+}

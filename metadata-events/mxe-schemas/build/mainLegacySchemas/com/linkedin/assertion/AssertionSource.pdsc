@@ -1,0 +1,28 @@
+{
+  "type" : "record",
+  "name" : "AssertionSource",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "The source of an assertion",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "AssertionSourceType",
+      "symbols" : [ "NATIVE", "EXTERNAL", "INFERRED" ],
+      "symbolDocs" : {
+        "EXTERNAL" : "The assertion was defined and managed externally of DataHub.",
+        "INFERRED" : "The assertion was inferred, e.g. from offline AI / ML models.\nDataHub Cloud only",
+        "NATIVE" : "The assertion was defined natively on DataHub by a user.\nDataHub Cloud only"
+      }
+    },
+    "doc" : "The type of the Assertion Source",
+    "Searchable" : {
+      "fieldName" : "sourceType"
+    }
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "The time at which the assertion was initially created and the author who created it.\nThis field is only present for Native assertions created after this field was introduced.",
+    "optional" : true
+  } ]
+}

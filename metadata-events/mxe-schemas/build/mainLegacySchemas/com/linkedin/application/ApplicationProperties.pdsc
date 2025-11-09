@@ -1,0 +1,34 @@
+{
+  "type" : "record",
+  "name" : "ApplicationProperties",
+  "namespace" : "com.linkedin.application",
+  "doc" : "The main properties of an Application",
+  "include" : [ "com.linkedin.common.CustomProperties", "com.linkedin.common.ExternalReference" ],
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Display name of the Application",
+    "optional" : true,
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldNameAliases" : [ "_entityName" ],
+      "fieldType" : "WORD_GRAM",
+      "searchLabel" : "entityName",
+      "searchTier" : 1
+    }
+  }, {
+    "name" : "description",
+    "type" : "string",
+    "doc" : "Documentation of the application",
+    "optional" : true,
+    "Searchable" : {
+      "fieldType" : "TEXT",
+      "hasValuesFieldName" : "hasDescription",
+      "searchTier" : 2
+    }
+  } ],
+  "Aspect" : {
+    "name" : "applicationProperties"
+  }
+}

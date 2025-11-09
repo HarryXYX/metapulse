@@ -1,0 +1,46 @@
+{
+  "type" : "record",
+  "name" : "FieldAssertionInfo",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes defining a Field Assertion.\n",
+  "fields" : [ {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "FieldAssertionType",
+      "symbols" : [ "FIELD_VALUES", "FIELD_METRIC" ],
+      "symbolDocs" : {
+        "FIELD_METRIC" : "An assertion used to validate the value of a common field / column metric (e.g. aggregation) such as null count + percentage,\nmin, max, median, and more.",
+        "FIELD_VALUES" : "An assertion used to validate the values contained with a field / column given a set of rows."
+      }
+    },
+    "doc" : "The type of the field assertion being monitored.",
+    "Searchable" : { }
+  }, {
+    "name" : "entity",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The entity targeted by this Field check.",
+    "Relationship" : {
+      "entityTypes" : [ "dataset" ],
+      "name" : "Asserts"
+    },
+    "Searchable" : {
+      "fieldType" : "URN"
+    }
+  }, {
+    "name" : "fieldValuesAssertion",
+    "type" : "FieldValuesAssertion",
+    "doc" : "The definition of an assertion that validates individual values of a field / column for a set of rows.\nThis type of assertion verifies that each column value meets a particular requirement.",
+    "optional" : true
+  }, {
+    "name" : "fieldMetricAssertion",
+    "type" : "FieldMetricAssertion",
+    "doc" : "The definition of an assertion that validates a common metric obtained about a field / column for a set of rows.\nThis type of assertion verifies that the value of a high-level metric obtained by aggregating over a column meets\nexpectations",
+    "optional" : true
+  }, {
+    "name" : "filter",
+    "type" : "com.linkedin.dataset.DatasetFilter",
+    "doc" : "A definition of the specific filters that should be applied, when performing monitoring.\nIf not provided, there is no filter, and the full table is under consideration.\nIf using DataHub Dataset Profiles as the assertion source type, the value of this field will be ignored.",
+    "optional" : true
+  } ]
+}

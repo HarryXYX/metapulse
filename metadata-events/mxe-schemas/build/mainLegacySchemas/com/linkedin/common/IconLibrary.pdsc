@@ -1,0 +1,10 @@
+{
+  "type" : "enum",
+  "name" : "IconLibrary",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Enum of possible icon sources",
+  "symbols" : [ "MATERIAL" ],
+  "symbolDocs" : {
+    "MATERIAL" : "Material UI"
+  }
+}

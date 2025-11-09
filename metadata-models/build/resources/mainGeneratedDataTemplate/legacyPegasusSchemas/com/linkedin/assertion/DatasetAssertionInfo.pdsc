@@ -1,0 +1,82 @@
+{
+  "type" : "record",
+  "name" : "DatasetAssertionInfo",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes that are applicable to single-Dataset Assertions\n",
+  "fields" : [ {
+    "name" : "dataset",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The dataset targeted by this assertion.",
+    "Relationship" : {
+      "entityTypes" : [ "dataset" ],
+      "name" : "Asserts"
+    }
+  }, {
+    "name" : "scope",
+    "type" : {
+      "type" : "enum",
+      "name" : "DatasetAssertionScope",
+      "symbols" : [ "DATASET_COLUMN", "DATASET_ROWS", "DATASET_STORAGE_SIZE", "DATASET_SCHEMA", "UNKNOWN" ],
+      "symbolDocs" : {
+        "DATASET_COLUMN" : "This assertion applies to dataset column(s)",
+        "DATASET_ROWS" : "This assertion applies to entire rows of the dataset",
+        "DATASET_SCHEMA" : "This assertion applies to the schema of the dataset",
+        "DATASET_STORAGE_SIZE" : "This assertion applies to the storage size of the dataset",
+        "UNKNOWN" : "The scope of the assertion is unknown"
+      }
+    },
+    "doc" : "Scope of the Assertion. What part of the dataset does this assertion apply to?\n",
+    "Searchable" : { }
+  }, {
+    "name" : "fields",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.common.Urn"
+    },
+    "doc" : "One or more dataset schema fields that are targeted by this assertion.\n\nThis field is expected to be provided if the assertion scope is DATASET_COLUMN.",
+    "optional" : true,
+    "Relationship" : {
+      "/*" : {
+        "entityTypes" : [ "schemaField" ],
+        "name" : "Asserts"
+      }
+    },
+    "Searchable" : {
+      "/*" : {
+        "fieldType" : "URN"
+      }
+    }
+  }, {
+    "name" : "aggregation",
+    "type" : "AssertionStdAggregation",
+    "doc" : "Standardized assertion operator\nThis field is left blank if there is no selected aggregation or metric for a particular column.",
+    "optional" : true,
+    "Searchable" : { }
+  }, {
+    "name" : "operator",
+    "type" : "AssertionStdOperator",
+    "doc" : "Standardized assertion operator"
+  }, {
+    "name" : "parameters",
+    "type" : "AssertionStdParameters",
+    "doc" : "Standard parameters required for the assertion. e.g. min_value, max_value, value, columns",
+    "optional" : true
+  }, {
+    "name" : "nativeType",
+    "type" : "string",
+    "doc" : "Native assertion type",
+    "optional" : true
+  }, {
+    "name" : "nativeParameters",
+    "type" : {
+      "type" : "map",
+      "values" : "string"
+    },
+    "doc" : "Native parameters required for the assertion.",
+    "optional" : true
+  }, {
+    "name" : "logic",
+    "type" : "string",
+    "optional" : true
+  } ]
+}

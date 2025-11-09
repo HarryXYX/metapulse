@@ -1,0 +1,23 @@
+{
+  "type" : "record",
+  "name" : "FormPromptFieldAssociations",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about the field-level prompt associations on a top-level prompt association.",
+  "fields" : [ {
+    "name" : "completedFieldPrompts",
+    "type" : {
+      "type" : "array",
+      "items" : "FieldFormPromptAssociation"
+    },
+    "doc" : "A list of field-level prompt associations that are not yet complete for this form.",
+    "optional" : true
+  }, {
+    "name" : "incompleteFieldPrompts",
+    "type" : {
+      "type" : "array",
+      "items" : "FieldFormPromptAssociation"
+    },
+    "doc" : "A list of field-level prompt associations that are complete for this form.",
+    "optional" : true
+  } ]
+}

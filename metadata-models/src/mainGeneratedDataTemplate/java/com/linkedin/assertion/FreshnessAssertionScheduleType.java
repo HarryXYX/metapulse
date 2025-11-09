@@ -1,0 +1,86 @@
+
+package com.linkedin.assertion;
+
+import javax.annotation.Generated;
+import com.linkedin.data.schema.EnumDataSchema;
+import com.linkedin.data.schema.SchemaFormatType;
+import com.linkedin.data.template.DataTemplateUtil;
+
+
+/**
+ * 
+ * 
+ */
+@Generated(value = "com.linkedin.pegasus.generator.JavaCodeUtil", comments = "Rest.li Data Template. Generated from metadata-models/src/main/pegasus/com/linkedin/assertion/FreshnessAssertionSchedule.pdl.")
+public enum FreshnessAssertionScheduleType {
+
+
+    /**
+     * A highly configurable recurring schedule which describes the times of events described
+     * by a CRON schedule, with the evaluation schedule assuming to be matching the cron schedule.
+     * 
+     * In a CRON schedule type, we compute the look-back window to be the time between the last scheduled event
+     * and the current event (evaluation time). This means that the evaluation schedule must match exactly
+     * the schedule defined inside the cron schedule.
+     * 
+     * For example, a CRON schedule defined as "0 8 * * *" would represent a schedule of "every day by 8am". Assuming
+     * that the assertion evaluation schedule is defined to match this, the freshness assertion would be evaluated in the following way:
+     * 
+     *     1. Compute the "last scheduled occurrence" of the event using the CRON schedule. For example, yesterday at 8am.
+     *     2. Compute the bounds of a time window between the "last scheduled occurrence" (yesterday at 8am) until the "current occurrence" (today at 8am)
+     *     3. Verify that the target event has occurred within the CRON-interval window.
+     *     4. If the target event has occurred within the time window, then assertion passes.
+     *     5. If the target event has not occurred within the time window, then the assertion fails.
+     * 
+     * 
+     */
+    CRON,
+
+    /**
+     * A fixed interval which is used to compute a look-back window for use when evaluating the assertion relative
+     * to the Evaluation Time of the Assertion.
+     * 
+     * To compute the valid look-back window, we subtract the fixed interval from the evaluation time. Then, we verify
+     * that the target event has occurred within that window.
+     * 
+     * For example, a fixed interval of "24h" would represent a schedule of "in the last 24 hours".
+     * The 24 hour interval is relative to the evaluation time of the assertion. For example if we schedule the assertion
+     * to be evaluated each hour, we'd compute the result as follows:
+     * 
+     *     1. Subtract the fixed interval from the current time (Evaluation time) to compute the bounds of a fixed look-back window.
+     *     2. Verify that the target event has occurred within the look-back window.
+     *     3. If the target event has occurred within the time window, then assertion passes.
+     *     4. If the target event has not occurred within the time window, then the assertion fails.
+     * 
+     * 
+     */
+    FIXED_INTERVAL,
+
+    /**
+     * A stateful check that takes the last time this check ran to determine the look-back window.
+     * 
+     * To compute the valid look-back- window, we start at the time the monitor last evaluated this assertion,
+     * and we end at the point in time the check is currently running.
+     * 
+     * For example, let's say a Freshness assertion is of type SINCE_THE_LAST_CHECK, and the monitor is configured to
+     * run every day at 12:00am. Let's assume this assertion was last evaluated yesterday at 12:04am. We'd compute
+     * the result as follows:
+     * 
+     *     1. Get the timestamp for the last run of the monitor on this assertion.
+     *     2. look_back_window_start_time = latest_monitor_run.timestampMillis [ie. 12:04a yesterday]
+     *     3. look_back_window_end_time = nowMillis [ie. 12:02a today]
+     *     4. If the target event has occurred within the window [ie. 12:04a yday to 12:02a today],
+     *        then the assertion passes.
+     *     5. If the target event has not occurred within the window, then the assertion fails.
+     * 
+     * 
+     */
+    SINCE_THE_LAST_CHECK,
+    $UNKNOWN;
+    private final static EnumDataSchema SCHEMA = ((EnumDataSchema) DataTemplateUtil.parseSchema("namespace com.linkedin.assertion,enum FreshnessAssertionScheduleType{/**A highly configurable recurring schedule which describes the times of events described\nby a CRON schedule, with the evaluation schedule assuming to be matching the cron schedule.\n\nIn a CRON schedule type, we compute the look-back window to be the time between the last scheduled event\nand the current event (evaluation time). This means that the evaluation schedule must match exactly\nthe schedule defined inside the cron schedule.\n\nFor example, a CRON schedule defined as \"0 8 * * *\" would represent a schedule of \"every day by 8am\". Assuming\nthat the assertion evaluation schedule is defined to match this, the freshness assertion would be evaluated in the following way:\n\n    1. Compute the \"last scheduled occurrence\" of the event using the CRON schedule. For example, yesterday at 8am.\n    2. Compute the bounds of a time window between the \"last scheduled occurrence\" (yesterday at 8am) until the \"current occurrence\" (today at 8am)\n    3. Verify that the target event has occurred within the CRON-interval window.\n    4. If the target event has occurred within the time window, then assertion passes.\n    5. If the target event has not occurred within the time window, then the assertion fails.\n*/CRON/**A fixed interval which is used to compute a look-back window for use when evaluating the assertion relative\nto the Evaluation Time of the Assertion.\n\nTo compute the valid look-back window, we subtract the fixed interval from the evaluation time. Then, we verify\nthat the target event has occurred within that window.\n\nFor example, a fixed interval of \"24h\" would represent a schedule of \"in the last 24 hours\".\nThe 24 hour interval is relative to the evaluation time of the assertion. For example if we schedule the assertion\nto be evaluated each hour, we'd compute the result as follows:\n\n    1. Subtract the fixed interval from the current time (Evaluation time) to compute the bounds of a fixed look-back window.\n    2. Verify that the target event has occurred within the look-back window.\n    3. If the target event has occurred within the time window, then assertion passes.\n    4. If the target event has not occurred within the time window, then the assertion fails.\n*/FIXED_INTERVAL/**A stateful check that takes the last time this check ran to determine the look-back window.\n\nTo compute the valid look-back- window, we start at the time the monitor last evaluated this assertion,\nand we end at the point in time the check is currently running.\n\nFor example, let's say a Freshness assertion is of type SINCE_THE_LAST_CHECK, and the monitor is configured to\nrun every day at 12:00am. Let's assume this assertion was last evaluated yesterday at 12:04am. We'd compute\nthe result as follows:\n\n    1. Get the timestamp for the last run of the monitor on this assertion.\n    2. look_back_window_start_time = latest_monitor_run.timestampMillis [ie. 12:04a yesterday]\n    3. look_back_window_end_time = nowMillis [ie. 12:02a today]\n    4. If the target event has occurred within the window [ie. 12:04a yday to 12:02a today],\n       then the assertion passes.\n    5. If the target event has not occurred within the window, then the assertion fails.\n*/SINCE_THE_LAST_CHECK}", SchemaFormatType.PDL));
+
+    public static EnumDataSchema dataSchema() {
+        return SCHEMA;
+    }
+
+}

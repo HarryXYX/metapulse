@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "QueryStatement" : {
+      "description" : "A query statement against one or more data assets.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The query text",
+          "type" : "string"
+        },
+        "language" : {
+          "default" : "SQL",
+          "description" : "The language of the Query, e.g. SQL.",
+          "$ref" : "#/definitions/QueryLanguage"
+        }
+      },
+      "required" : [ "value", "language" ]
+    },
+    "QueryLanguage" : {
+      "enum" : [ "SQL", "UNKNOWN" ]
+    }
+  },
+  "$ref" : "#/definitions/QueryStatement"
+}

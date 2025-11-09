@@ -1,0 +1,124 @@
+{
+  "definitions" : {
+    "FormInfo" : {
+      "description" : "Information about a form to help with filling out metadata on entities.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Display name of the form",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description of the form",
+          "type" : "string"
+        },
+        "type" : {
+          "default" : "COMPLETION",
+          "description" : "The type of this form",
+          "$ref" : "#/definitions/FormType"
+        },
+        "prompts" : {
+          "default" : [ ],
+          "description" : "List of prompts to present to the user to encourage filling out metadata",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FormPrompt"
+          }
+        },
+        "actors" : {
+          "default" : {
+            "groups" : null,
+            "owners" : true,
+            "users" : null
+          },
+          "description" : "Who the form is assigned to, e.g. who should see the form when visiting the entity page or governance center",
+          "$ref" : "#/definitions/FormActorAssignment"
+        }
+      },
+      "required" : [ "name", "type", "prompts", "actors" ]
+    },
+    "FormType" : {
+      "enum" : [ "COMPLETION", "VERIFICATION" ]
+    },
+    "FormPrompt" : {
+      "description" : "A prompt to present to the user to encourage filling out metadata",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The unique id for this prompt. This must be GLOBALLY unique.",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "The title of this prompt",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "The description of this prompt",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of prompt",
+          "$ref" : "#/definitions/FormPromptType"
+        },
+        "structuredPropertyParams" : {
+          "default" : null,
+          "description" : "An optional set of information specific to structured properties prompts.\nThis should be filled out if the prompt is type STRUCTURED_PROPERTY or FIELDS_STRUCTURED_PROPERTY.",
+          "$ref" : "#/definitions/StructuredPropertyParams"
+        },
+        "required" : {
+          "default" : false,
+          "description" : "Whether the prompt is required to be completed, in order for the form to be marked as complete.",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "id", "title", "type", "required" ]
+    },
+    "FormPromptType" : {
+      "enum" : [ "STRUCTURED_PROPERTY", "FIELDS_STRUCTURED_PROPERTY" ]
+    },
+    "StructuredPropertyParams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "The structured property that is required on this entity",
+          "type" : "string"
+        }
+      },
+      "required" : [ "urn" ]
+    },
+    "FormActorAssignment" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "owners" : {
+          "default" : true,
+          "description" : "Whether the form should be assigned to the owners of assets that it is applied to.\nThis is the default.",
+          "type" : "boolean"
+        },
+        "groups" : {
+          "default" : null,
+          "description" : "Optional: Specific set of groups that are targeted by this form assignment.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "users" : {
+          "default" : null,
+          "description" : "Optional: Specific set of users that are targeted by this form assignment.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "owners" ]
+    }
+  },
+  "$ref" : "#/definitions/FormInfo"
+}

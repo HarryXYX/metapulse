@@ -1,0 +1,10 @@
+{
+  "type" : "enum",
+  "name" : "FreshnessFieldKind",
+  "namespace" : "com.linkedin.assertion",
+  "symbols" : [ "LAST_MODIFIED", "HIGH_WATERMARK" ],
+  "symbolDocs" : {
+    "HIGH_WATERMARK" : "Determine that a change has occurred by inspecting a field which should be tracked as the\n\"high watermark\" for the table. This should be an ascending number or date field.\n\nIf rows with this column have not been added since the previous check\nthen the Freshness Assertion will fail.",
+    "LAST_MODIFIED" : "Determine that a change has occurred by inspecting an last modified field which\nrepresents the last time at which a row was changed."
+  }
+}

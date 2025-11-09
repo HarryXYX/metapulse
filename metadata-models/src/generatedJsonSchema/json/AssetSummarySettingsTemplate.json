@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "AssetSummarySettingsTemplate" : {
+      "description" : "Object containing the template and any additional info for asset summary settings",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "template" : {
+          "description" : "The urn of the template",
+          "type" : "string"
+        }
+      },
+      "required" : [ "template" ]
+    }
+  },
+  "$ref" : "#/definitions/AssetSummarySettingsTemplate"
+}

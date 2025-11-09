@@ -1,0 +1,42 @@
+{
+  "definitions" : {
+    "MLFeatureTableProperties" : {
+      "description" : "Properties associated with a MLFeatureTable",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLFeatureTable",
+          "type" : "string"
+        },
+        "mlFeatures" : {
+          "default" : null,
+          "description" : "List of features contained in the feature table",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "mlPrimaryKeys" : {
+          "default" : null,
+          "description" : "List of primary keys in the feature table (if multiple, assumed to act as a composite key)",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties" ]
+    }
+  },
+  "$ref" : "#/definitions/MLFeatureTableProperties"
+}

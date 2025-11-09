@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "SchemaContract",
+  "namespace" : "com.linkedin.datacontract",
+  "doc" : "Expectations for a logical schema",
+  "fields" : [ {
+    "name" : "assertion",
+    "type" : "string",
+    "doc" : "The assertion representing the schema contract.",
+    "Relationship" : {
+      "entityTypes" : [ "assertion" ],
+      "name" : "IncludesSchemaAssertion"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  } ]
+}

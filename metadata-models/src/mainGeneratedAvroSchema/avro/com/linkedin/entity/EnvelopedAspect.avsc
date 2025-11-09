@@ -1,0 +1,144 @@
+{
+  "type" : "record",
+  "name" : "EnvelopedAspect",
+  "namespace" : "com.linkedin.entity",
+  "doc" : "An aspect, along with the metadata about it.\nCurrently, an aspect can be either of type 'timestamp' or 'versioned'.",
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "The name of the aspect"
+  }, {
+    "name" : "type",
+    "type" : {
+      "type" : "enum",
+      "name" : "AspectType",
+      "doc" : "The type of a DataHub aspect",
+      "symbols" : [ "VERSIONED", "TIMESERIES" ],
+      "symbolDocs" : {
+        "TIMESERIES" : "Designates an aspect that represents a point-in-time data point",
+        "VERSIONED" : "Designates an aspect that has a monotonically increasing version number"
+      }
+    },
+    "doc" : "The type of the aspect, either timeseries or versioned"
+  }, {
+    "name" : "version",
+    "type" : [ "null", "long" ],
+    "doc" : "The version of the aspect, only populated if type is 'VERSIONED'",
+    "default" : null
+  }, {
+    "name" : "timestamp",
+    "type" : [ "null", "long" ],
+    "doc" : "The timestamp of the aspect, only populated if type is 'TIMESTAMP'",
+    "default" : null
+  }, {
+    "name" : "value",
+    "type" : {
+      "type" : "record",
+      "name" : "Aspect",
+      "doc" : "Placeholder PDL record to store the aspect in the response. By using this place-holder, metadata-service can return\nany type of aspect without having to define a single union class",
+      "fields" : [ ]
+    },
+    "doc" : "The raw value of the aspect"
+  }, {
+    "name" : "created",
+    "type" : {
+      "type" : "record",
+      "name" : "AuditStamp",
+      "namespace" : "com.linkedin.common",
+      "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "fields" : [ {
+        "name" : "time",
+        "type" : "long",
+        "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+      }, {
+        "name" : "actor",
+        "type" : "string",
+        "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "impersonator",
+        "type" : [ "null", "string" ],
+        "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+        "default" : null,
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "message",
+        "type" : [ "null", "string" ],
+        "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+        "default" : null
+      } ]
+    },
+    "doc" : "The audit stamp detailing who the aspect was created by and when"
+  }, {
+    "name" : "systemMetadata",
+    "type" : [ "null", {
+      "type" : "record",
+      "name" : "SystemMetadata",
+      "namespace" : "com.linkedin.mxe",
+      "doc" : "Metadata associated with each metadata change that is processed by the system",
+      "fields" : [ {
+        "name" : "lastObserved",
+        "type" : [ "long", "null" ],
+        "doc" : "The timestamp the metadata was observed at",
+        "default" : 0
+      }, {
+        "name" : "runId",
+        "type" : [ "string", "null" ],
+        "doc" : "The original run id that produced the metadata. Populated in case of batch-ingestion.",
+        "default" : "no-run-id-provided"
+      }, {
+        "name" : "lastRunId",
+        "type" : [ "string", "null" ],
+        "doc" : "The last run id that produced the metadata. Populated in case of batch-ingestion.",
+        "default" : "no-run-id-provided"
+      }, {
+        "name" : "pipelineName",
+        "type" : [ "null", "string" ],
+        "doc" : "The ingestion pipeline id that produced the metadata. Populated in case of batch ingestion.",
+        "default" : null
+      }, {
+        "name" : "registryName",
+        "type" : [ "null", "string" ],
+        "doc" : "The model registry name that was used to process this event",
+        "default" : null
+      }, {
+        "name" : "registryVersion",
+        "type" : [ "null", "string" ],
+        "doc" : "The model registry version that was used to process this event",
+        "default" : null
+      }, {
+        "name" : "properties",
+        "type" : [ "null", {
+          "type" : "map",
+          "values" : "string"
+        } ],
+        "doc" : "Additional properties",
+        "default" : null
+      }, {
+        "name" : "version",
+        "type" : [ "null", "string" ],
+        "doc" : "Aspect version\n   Initial implementation will use the aspect version's number, however stored as\n   a string in the case where a different aspect versioning scheme is later adopted.",
+        "default" : null
+      }, {
+        "name" : "aspectCreated",
+        "type" : [ "null", "com.linkedin.common.AuditStamp" ],
+        "doc" : "When the aspect was initially created and who created it, detected by version 0 -> 1 change",
+        "default" : null
+      }, {
+        "name" : "aspectModified",
+        "type" : [ "null", "com.linkedin.common.AuditStamp" ],
+        "doc" : "When the aspect was last modified and the actor that performed the modification",
+        "default" : null
+      } ],
+      "Aspect" : {
+        "name" : "systemMetadata"
+      }
+    } ],
+    "doc" : "The system metadata for this aspect",
+    "default" : null
+  } ]
+}

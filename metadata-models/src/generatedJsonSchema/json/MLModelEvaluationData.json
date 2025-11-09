@@ -1,0 +1,45 @@
+{
+  "definitions" : {
+    "MLModelEvaluationData" : {
+      "description" : "All referenced datasets would ideally point to any set of documents that provide visibility into the source and composition of the dataset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "evaluationData" : {
+          "description" : "Details on the dataset(s) used for the quantitative analyses in the MLModel",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BaseData"
+          }
+        }
+      },
+      "required" : [ "evaluationData" ]
+    },
+    "BaseData" : {
+      "description" : "BaseData record",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dataset" : {
+          "description" : "What dataset were used in the MLModel?",
+          "type" : "string"
+        },
+        "motivation" : {
+          "default" : null,
+          "description" : "Why was this dataset chosen?",
+          "type" : "string"
+        },
+        "preProcessing" : {
+          "default" : null,
+          "description" : "How was the data preprocessed (e.g., tokenization of sentences, cropping of images, any filtering such as dropping images without faces)?",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "dataset" ]
+    }
+  },
+  "$ref" : "#/definitions/MLModelEvaluationData"
+}

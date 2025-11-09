@@ -1,0 +1,11 @@
+{
+  "type" : "record",
+  "name" : "AutoCompleteEntity",
+  "namespace" : "com.linkedin.metadata.query",
+  "doc" : "Data model for an entity returned as an autocomplete suggestion",
+  "fields" : [ {
+    "name" : "urn",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "Urn of the entity"
+  } ]
+}

@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "MLModelLineageInfo" : {
+      "description" : "A set of re-usable fields used to capture lineage information for ML Models and ML Model Groups",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "trainingJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) used to train the model or group. Visible in Lineage. Note that ML Models can also be specified as the output of a specific Data Process Instances (runs) via the DataProcessInstanceOutputs aspect.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "downstreamJobs" : {
+          "default" : null,
+          "description" : "List of jobs or process instances (if any) that use the model or group.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/MLModelLineageInfo"
+}

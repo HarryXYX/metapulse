@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "PostKey" : {
+      "description" : "Key for a Post.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the DataHub Post record. Generated on the server side at Post creation time.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/PostKey"
+}

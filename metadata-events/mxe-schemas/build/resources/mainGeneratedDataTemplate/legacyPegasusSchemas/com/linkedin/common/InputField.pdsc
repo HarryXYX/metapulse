@@ -1,0 +1,20 @@
+{
+  "type" : "record",
+  "name" : "InputField",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Information about a field a chart or dashboard references",
+  "fields" : [ {
+    "name" : "schemaFieldUrn",
+    "type" : "Urn",
+    "doc" : "Urn of the schema being referenced for lineage purposes",
+    "Relationship" : {
+      "entityTypes" : [ "schemaField" ],
+      "name" : "consumesField"
+    }
+  }, {
+    "name" : "schemaField",
+    "type" : "com.linkedin.schema.SchemaField",
+    "doc" : "Copied version of the referenced schema field object for indexing purposes",
+    "optional" : true
+  } ]
+}

@@ -1,0 +1,61 @@
+{
+  "type" : "record",
+  "name" : "SearchEntity",
+  "namespace" : "com.linkedin.metadata.search",
+  "doc" : "The model for each entity returned by the search query",
+  "fields" : [ {
+    "name" : "entity",
+    "type" : "string",
+    "doc" : "Urn of the entity being returned",
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "matchedFields",
+    "type" : {
+      "type" : "array",
+      "items" : {
+        "type" : "record",
+        "name" : "MatchedField",
+        "fields" : [ {
+          "name" : "name",
+          "type" : "string",
+          "doc" : "Matched field name"
+        }, {
+          "name" : "value",
+          "type" : "string",
+          "doc" : "Matched field value"
+        } ]
+      }
+    },
+    "doc" : "Matched field name and values",
+    "default" : [ ]
+  }, {
+    "name" : "features",
+    "type" : [ "null", {
+      "type" : "map",
+      "values" : "double"
+    } ],
+    "default" : null
+  }, {
+    "name" : "score",
+    "type" : [ "null", "double" ],
+    "default" : null
+  }, {
+    "name" : "restrictedAspects",
+    "type" : [ "null", {
+      "type" : "array",
+      "items" : "string"
+    } ],
+    "doc" : "A list of the the restricted aspects on the entity.\nIf the key aspect is present, assume ALL aspects should be restricted including the entity's Urn.",
+    "default" : null
+  }, {
+    "name" : "extraFields",
+    "type" : [ "null", {
+      "type" : "map",
+      "values" : "string"
+    } ],
+    "doc" : "Extra fields from the search document based on what is requested in the search request",
+    "default" : null
+  } ]
+}

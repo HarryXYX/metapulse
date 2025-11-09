@@ -1,0 +1,38 @@
+{
+  "type" : "record",
+  "name" : "OAuthProvider",
+  "namespace" : "com.linkedin.settings.global",
+  "doc" : "An OAuth Provider. This provides information required to validate inbound\nrequests with OAuth 2.0 bearer tokens.",
+  "fields" : [ {
+    "name" : "enabled",
+    "type" : "boolean",
+    "doc" : "Whether this OAuth provider is enabled."
+  }, {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "The name of this OAuth provider. This is used for display purposes only."
+  }, {
+    "name" : "jwksUri",
+    "type" : "string",
+    "doc" : "The URI of the JSON Web Key Set (JWKS) endpoint for this OAuth provider.",
+    "optional" : true
+  }, {
+    "name" : "issuer",
+    "type" : "string",
+    "doc" : "The expected issuer (iss) claim in the JWTs issued by this OAuth provider."
+  }, {
+    "name" : "audience",
+    "type" : "string",
+    "doc" : "The expected audience (aud) claim in the JWTs issued by this OAuth provider."
+  }, {
+    "name" : "algorithm",
+    "type" : "string",
+    "doc" : "The JWT signing algorithm required for this provider.\nPrevents algorithm confusion attacks. Common values: RS256, RS384, RS512, PS256, ES256",
+    "default" : "RS256"
+  }, {
+    "name" : "userIdClaim",
+    "type" : "string",
+    "doc" : "The JWT claim to use as the user identifier for this provider.\nDifferent providers use different claims (sub, email, preferred_username, etc.)",
+    "default" : "sub"
+  } ]
+}

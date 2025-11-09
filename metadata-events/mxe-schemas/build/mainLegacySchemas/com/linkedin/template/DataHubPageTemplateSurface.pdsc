@@ -1,0 +1,22 @@
+{
+  "type" : "record",
+  "name" : "DataHubPageTemplateSurface",
+  "namespace" : "com.linkedin.template",
+  "doc" : "Info about the surface area of the product that this template is deployed in",
+  "fields" : [ {
+    "name" : "surfaceType",
+    "type" : {
+      "type" : "enum",
+      "name" : "PageTemplateSurfaceType",
+      "symbols" : [ "HOME_PAGE", "ASSET_SUMMARY" ],
+      "symbolDocs" : {
+        "ASSET_SUMMARY" : "This template applies to what to display on asset summary pages",
+        "HOME_PAGE" : "This template applies to what to display on the home page for users."
+      }
+    },
+    "doc" : "Where exactly is this template being used",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  } ]
+}

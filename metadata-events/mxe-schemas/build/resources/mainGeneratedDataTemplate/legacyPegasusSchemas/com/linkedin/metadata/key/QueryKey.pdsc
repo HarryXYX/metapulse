@@ -1,0 +1,14 @@
+{
+  "type" : "record",
+  "name" : "QueryKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a Query",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string",
+    "doc" : "A unique id for the Query."
+  } ],
+  "Aspect" : {
+    "name" : "queryKey"
+  }
+}

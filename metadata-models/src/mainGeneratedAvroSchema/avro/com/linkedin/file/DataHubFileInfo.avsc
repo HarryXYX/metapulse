@@ -1,0 +1,147 @@
+{
+  "type" : "record",
+  "name" : "DataHubFileInfo",
+  "namespace" : "com.linkedin.file",
+  "doc" : "Information about a DataHub file - a file stored in S3 for use within DataHub platform features like documentation, home pages, and announcements.",
+  "fields" : [ {
+    "name" : "bucketStorageLocation",
+    "type" : {
+      "type" : "record",
+      "name" : "BucketStorageLocation",
+      "doc" : "Information where a file is stored",
+      "fields" : [ {
+        "name" : "storageBucket",
+        "type" : "string",
+        "doc" : "The storage bucket this file is stored in",
+        "Searchable" : {
+          "fieldType" : "KEYWORD"
+        }
+      }, {
+        "name" : "storageKey",
+        "type" : "string",
+        "doc" : "The key for where this file is stored inside of the given bucket",
+        "Searchable" : {
+          "fieldType" : "KEYWORD"
+        }
+      } ]
+    },
+    "doc" : "Info about where a file is stored"
+  }, {
+    "name" : "originalFileName",
+    "type" : "string",
+    "doc" : "The original filename as uploaded by the user",
+    "Searchable" : {
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "mimeType",
+    "type" : "string",
+    "doc" : "MIME type of the file (e.g., image/png, application/pdf)",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "sizeInBytes",
+    "type" : "long",
+    "doc" : "Size of the file in bytes"
+  }, {
+    "name" : "scenario",
+    "type" : {
+      "type" : "enum",
+      "name" : "FileUploadScenario",
+      "symbols" : [ "ASSET_DOCUMENTATION" ],
+      "symbolDocs" : {
+        "ASSET_DOCUMENTATION" : "File uploaded for entity documentation"
+      }
+    },
+    "doc" : "The scenario/context in which this file was uploaded",
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  }, {
+    "name" : "referencedByAsset",
+    "type" : [ "null", "string" ],
+    "doc" : "Optional URN of the entity this file is associated with (e.g., the dataset whose docs contain this file)",
+    "default" : null,
+    "Relationship" : {
+      "entityTypes" : [ "dataset", "chart", "container", "dashboard", "dataFlow", "dataJob", "glossaryTerm", "glossaryNode", "mlModel", "mlFeature", "notebook", "mlFeatureTable", "mlPrimaryKey", "mlModelGroup", "domain", "dataProduct", "businessAttribute" ],
+      "name" : "ReferencedBy"
+    },
+    "Searchable" : {
+      "fieldType" : "URN"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "schemaField",
+    "type" : [ "null", "string" ],
+    "doc" : "The dataset schema field urn this file is referenced by",
+    "default" : null,
+    "Relationship" : {
+      "entityTypes" : [ "schemaField" ],
+      "name" : "ReferencedBy"
+    },
+    "Searchable" : {
+      "fieldType" : "URN"
+    },
+    "java" : {
+      "class" : "com.linkedin.common.urn.Urn"
+    }
+  }, {
+    "name" : "created",
+    "type" : {
+      "type" : "record",
+      "name" : "AuditStamp",
+      "namespace" : "com.linkedin.common",
+      "doc" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "fields" : [ {
+        "name" : "time",
+        "type" : "long",
+        "doc" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent."
+      }, {
+        "name" : "actor",
+        "type" : "string",
+        "doc" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "impersonator",
+        "type" : [ "null", "string" ],
+        "doc" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+        "default" : null,
+        "java" : {
+          "class" : "com.linkedin.common.urn.Urn"
+        }
+      }, {
+        "name" : "message",
+        "type" : [ "null", "string" ],
+        "doc" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+        "default" : null
+      } ]
+    },
+    "doc" : "Timestamp when this file was created and by whom",
+    "Searchable" : {
+      "/actor" : {
+        "fieldName" : "createdBy",
+        "fieldType" : "URN"
+      },
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "contentHash",
+    "type" : [ "null", "string" ],
+    "doc" : "SHA-256 hash of file contents",
+    "default" : null,
+    "Searchable" : {
+      "fieldType" : "KEYWORD"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "dataHubFileInfo"
+  }
+}

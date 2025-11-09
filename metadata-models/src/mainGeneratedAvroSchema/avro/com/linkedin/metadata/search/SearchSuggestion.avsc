@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "SearchSuggestion",
+  "namespace" : "com.linkedin.metadata.search",
+  "doc" : "The model for the search result",
+  "fields" : [ {
+    "name" : "text",
+    "type" : "string",
+    "doc" : "The suggestion text for this search query"
+  }, {
+    "name" : "score",
+    "type" : "float",
+    "doc" : "The score for how close this suggestion is to the original search query.\nThe closer to 1 means it is closer to the original query and 0 is further away."
+  }, {
+    "name" : "frequency",
+    "type" : "long",
+    "doc" : "How many matches there are with the suggested text for the given field"
+  } ]
+}

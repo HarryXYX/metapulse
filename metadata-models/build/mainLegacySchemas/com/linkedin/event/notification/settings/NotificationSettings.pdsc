@@ -1,0 +1,24 @@
+{
+  "type" : "record",
+  "name" : "NotificationSettings",
+  "namespace" : "com.linkedin.event.notification.settings",
+  "doc" : "Notification settings for an actor or subscription.",
+  "fields" : [ {
+    "name" : "sinkTypes",
+    "type" : {
+      "type" : "array",
+      "items" : "com.linkedin.event.notification.NotificationSinkType"
+    },
+    "doc" : "Sink types that notifications are sent to."
+  }, {
+    "name" : "slackSettings",
+    "type" : "SlackNotificationSettings",
+    "doc" : "Slack Notification Settings",
+    "optional" : true
+  }, {
+    "name" : "emailSettings",
+    "type" : "EmailNotificationSettings",
+    "doc" : "Email Notification Settings",
+    "optional" : true
+  } ]
+}

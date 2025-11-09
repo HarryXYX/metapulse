@@ -1,0 +1,84 @@
+{
+  "type" : "record",
+  "name" : "ERModelRelationshipProperties",
+  "namespace" : "com.linkedin.ermodelrelation",
+  "doc" : "Properties associated with a ERModelRelationship",
+  "include" : [ "com.linkedin.common.CustomProperties" ],
+  "fields" : [ {
+    "name" : "name",
+    "type" : "string",
+    "doc" : "Name of the ERModelRelation",
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "source",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "First dataset in the erModelRelationship (no directionality)",
+    "Relationship" : {
+      "entityTypes" : [ "dataset" ],
+      "name" : "ermodelrelationA"
+    },
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "destination",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "Second dataset in the erModelRelationship (no directionality)",
+    "Relationship" : {
+      "entityTypes" : [ "dataset" ],
+      "name" : "ermodelrelationB"
+    },
+    "Searchable" : {
+      "boostScore" : 10.0,
+      "enableAutocomplete" : true,
+      "fieldType" : "TEXT_PARTIAL"
+    }
+  }, {
+    "name" : "relationshipFieldMappings",
+    "type" : {
+      "type" : "array",
+      "items" : "RelationshipFieldMapping"
+    },
+    "doc" : "ERModelRelationFieldMapping (in future we can make it an array)"
+  }, {
+    "name" : "created",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "createdAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "lastModified",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+    "optional" : true,
+    "Searchable" : {
+      "/time" : {
+        "fieldName" : "lastModifiedAt",
+        "fieldType" : "DATETIME"
+      }
+    }
+  }, {
+    "name" : "cardinality",
+    "type" : {
+      "type" : "enum",
+      "name" : "ERModelRelationshipCardinality",
+      "symbols" : [ "ONE_ONE", "ONE_N", "N_ONE", "N_N" ]
+    },
+    "doc" : "Cardinality of the relationship",
+    "default" : "N_N"
+  } ],
+  "Aspect" : {
+    "name" : "erModelRelationshipProperties"
+  }
+}

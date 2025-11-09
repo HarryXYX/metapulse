@@ -1,0 +1,25 @@
+{
+  "type" : "record",
+  "name" : "Container",
+  "namespace" : "com.linkedin.container",
+  "doc" : "Link from an asset to its parent container",
+  "fields" : [ {
+    "name" : "container",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The parent container of an asset",
+    "Relationship" : {
+      "entityTypes" : [ "container" ],
+      "name" : "IsPartOf"
+    },
+    "Searchable" : {
+      "addToFilters" : true,
+      "fieldName" : "container",
+      "fieldType" : "URN",
+      "filterNameOverride" : "Container",
+      "hasValuesFieldName" : "hasContainer"
+    }
+  } ],
+  "Aspect" : {
+    "name" : "container"
+  }
+}

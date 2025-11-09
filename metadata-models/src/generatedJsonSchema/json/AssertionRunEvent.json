@@ -1,0 +1,259 @@
+{
+  "definitions" : {
+    "AssertionRunEvent" : {
+      "description" : "An event representing the current status of evaluating an assertion on a batch.\nAssertionRunEvent should be used for reporting the status of a run as an assertion evaluation progresses.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "timestampMillis" : {
+          "description" : "The event timestamp field as epoch at UTC in milli seconds.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "runId" : {
+          "description" : " Native (platform-specific) identifier for this run",
+          "type" : "string"
+        },
+        "asserteeUrn" : {
+          "type" : "string"
+        },
+        "status" : {
+          "description" : "The status of the assertion run as per this timeseries event.",
+          "$ref" : "#/definitions/AssertionRunStatus"
+        },
+        "result" : {
+          "default" : null,
+          "description" : "Results of assertion, present if the status is COMPLETE",
+          "$ref" : "#/definitions/AssertionResult"
+        },
+        "runtimeContext" : {
+          "default" : null,
+          "description" : "Runtime parameters of evaluation",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "batchSpec" : {
+          "default" : null,
+          "description" : "Specification of the batch which this run is evaluating",
+          "$ref" : "#/definitions/BatchSpec"
+        },
+        "assertionUrn" : {
+          "type" : "string"
+        },
+        "eventGranularity" : {
+          "default" : null,
+          "description" : "Granularity of the event if applicable",
+          "$ref" : "#/definitions/TimeWindowSize"
+        },
+        "partitionSpec" : {
+          "default" : {
+            "partition" : "FULL_TABLE_SNAPSHOT",
+            "type" : "FULL_TABLE",
+            "timePartition" : null
+          },
+          "description" : "The optional partition specification.",
+          "$ref" : "#/definitions/PartitionSpec"
+        },
+        "messageId" : {
+          "default" : null,
+          "description" : "The optional messageId, if provided serves as a custom user-defined unique identifier for an aspect value.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "timestampMillis", "runId", "asserteeUrn", "status", "assertionUrn", "partitionSpec" ]
+    },
+    "AssertionRunStatus" : {
+      "description" : "The lifecycle status of an assertion run.",
+      "enum" : [ "COMPLETE" ]
+    },
+    "AssertionResult" : {
+      "description" : "The result of running an assertion",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : " The final result, e.g. either SUCCESS, FAILURE, or ERROR.",
+          "$ref" : "#/definitions/AssertionResultType"
+        },
+        "rowCount" : {
+          "default" : null,
+          "description" : "Number of rows for evaluated batch",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "missingCount" : {
+          "default" : null,
+          "description" : "Number of rows with missing value for evaluated batch",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "unexpectedCount" : {
+          "default" : null,
+          "description" : "Number of rows with unexpected value for evaluated batch",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actualAggValue" : {
+          "default" : null,
+          "description" : "Observed aggregate value for evaluated batch",
+          "type" : "number"
+        },
+        "nativeResults" : {
+          "default" : null,
+          "description" : "Other results of evaluation",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "External URL where full results are available. Only present when assertion source is not native.",
+          "type" : "string"
+        },
+        "error" : {
+          "default" : null,
+          "description" : " The error object if AssertionResultType is an Error",
+          "$ref" : "#/definitions/AssertionResultError"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "AssertionResultType" : {
+      "description" : " The final result of evaluating an assertion, e.g. SUCCESS, FAILURE, or ERROR.",
+      "enum" : [ "INIT", "SUCCESS", "FAILURE", "ERROR" ]
+    },
+    "AssertionResultError" : {
+      "description" : " An error encountered when evaluating an AssertionResult",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : " The type of error encountered",
+          "$ref" : "#/definitions/AssertionResultErrorType"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : " Additional metadata depending on the type of error",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "AssertionResultErrorType" : {
+      "enum" : [ "SOURCE_CONNECTION_ERROR", "SOURCE_QUERY_FAILED", "INSUFFICIENT_DATA", "INVALID_PARAMETERS", "INVALID_SOURCE_TYPE", "UNSUPPORTED_PLATFORM", "CUSTOM_SQL_ERROR", "FIELD_ASSERTION_ERROR", "UNKNOWN_ERROR" ]
+    },
+    "BatchSpec" : {
+      "description" : "A batch on which certain operations, e.g. data quality evaluation, is done.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "nativeBatchId" : {
+          "default" : null,
+          "description" : "The native identifier as specified by the system operating on the batch.",
+          "type" : "string"
+        },
+        "query" : {
+          "default" : null,
+          "description" : "A query that identifies a batch of data",
+          "type" : "string"
+        },
+        "limit" : {
+          "default" : null,
+          "description" : "Any limit to the number of rows in the batch, if applied",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "customProperties" ]
+    },
+    "TimeWindowSize" : {
+      "description" : "Defines the size of a time window.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "unit" : {
+          "description" : "Interval unit such as minute/hour/day etc.",
+          "$ref" : "#/definitions/CalendarInterval"
+        },
+        "multiple" : {
+          "default" : 1,
+          "description" : "How many units. Defaults to 1.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "unit", "multiple" ]
+    },
+    "CalendarInterval" : {
+      "enum" : [ "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR" ]
+    },
+    "PartitionSpec" : {
+      "description" : "A reference to a specific partition in a dataset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "partition" : {
+          "description" : "A unique id / value for the partition for which statistics were collected,\ngenerated by applying the key definition to a given row.",
+          "type" : "string"
+        },
+        "timePartition" : {
+          "default" : null,
+          "description" : "Time window of the partition, if we are able to extract it from the partition key.",
+          "$ref" : "#/definitions/TimeWindow"
+        },
+        "type" : {
+          "default" : "PARTITION",
+          "description" : "Unused!",
+          "$ref" : "#/definitions/PartitionType"
+        }
+      },
+      "required" : [ "partition", "type" ]
+    },
+    "TimeWindow" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "startTimeMillis" : {
+          "description" : "Start time as epoch at UTC.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "length" : {
+          "description" : "The length of the window.",
+          "$ref" : "#/definitions/TimeWindowSize"
+        }
+      },
+      "required" : [ "startTimeMillis", "length" ]
+    },
+    "PartitionType" : {
+      "enum" : [ "FULL_TABLE", "QUERY", "PARTITION" ]
+    }
+  },
+  "$ref" : "#/definitions/AssertionRunEvent"
+}

@@ -1,0 +1,37 @@
+{
+  "type" : "record",
+  "name" : "SchemaAssertionInfo",
+  "namespace" : "com.linkedin.assertion",
+  "doc" : "Attributes that are applicable to schema assertions\n",
+  "fields" : [ {
+    "name" : "entity",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "The entity targeted by the assertion",
+    "Relationship" : {
+      "entityTypes" : [ "dataset", "dataJob" ],
+      "name" : "Asserts"
+    },
+    "Searchable" : {
+      "fieldType" : "URN"
+    }
+  }, {
+    "name" : "schema",
+    "type" : "com.linkedin.schema.SchemaMetadata",
+    "doc" : "A definition of the expected structure for the asset\n\nNote that many of the fields of this model, especially those related to metadata (tags, terms)\nwill go unused in this context."
+  }, {
+    "name" : "compatibility",
+    "type" : {
+      "type" : "enum",
+      "name" : "SchemaAssertionCompatibility",
+      "symbols" : [ "EXACT_MATCH", "SUPERSET", "SUBSET" ],
+      "symbolDocs" : {
+        "EXACT_MATCH" : "The actual schema must be exactly the same as the expected schema",
+        "SUBSET" : "The actual schema must be a subset of the expected schema",
+        "SUPERSET" : "The actual schema must be a superset of the expected schema"
+      }
+    },
+    "doc" : "The required compatibility level for the schema assertion to pass.",
+    "default" : "EXACT_MATCH",
+    "optional" : true
+  } ]
+}

@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "SchemaContract" : {
+      "description" : "Expectations for a logical schema",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "assertion" : {
+          "description" : "The assertion representing the schema contract.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "assertion" ]
+    }
+  },
+  "$ref" : "#/definitions/SchemaContract"
+}

@@ -1,0 +1,7 @@
+{
+  "type" : "record",
+  "name" : "Parameters",
+  "namespace" : "com.linkedin.platform.event.v1",
+  "doc" : "Arbitrary key-value parameters for an Entity Change Event. (any record).",
+  "fields" : [ ]
+}

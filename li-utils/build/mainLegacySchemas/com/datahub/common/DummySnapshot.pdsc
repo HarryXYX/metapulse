@@ -1,0 +1,18 @@
+{
+  "type" : "record",
+  "name" : "DummySnapshot",
+  "namespace" : "com.datahub.common",
+  "doc" : "For DummyMetadataEventProducer. Should not use the model directly.",
+  "fields" : [ {
+    "name" : "urn",
+    "type" : "com.linkedin.common.Urn",
+    "doc" : "Not to be used"
+  }, {
+    "name" : "aspects",
+    "type" : {
+      "type" : "array",
+      "items" : "DummyAspect"
+    },
+    "doc" : "Not to be used"
+  } ]
+}

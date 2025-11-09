@@ -1,0 +1,11 @@
+{
+  "type" : "enum",
+  "name" : "LineageSearchPath",
+  "namespace" : "com.linkedin.metadata.search",
+  "doc" : "The path taken when doing search across lineage",
+  "symbols" : [ "TORTOISE", "LIGHTNING" ],
+  "symbolDocs" : {
+    "LIGHTNING" : "Designates the lightning lineage code path",
+    "TORTOISE" : "Designates the tortoise lineage code path"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "type" : "record",
+  "name" : "CronSchedule",
+  "namespace" : "com.linkedin.common",
+  "doc" : "Attributes defining a CRON-formatted schedule.",
+  "fields" : [ {
+    "name" : "cron",
+    "type" : "string",
+    "doc" : "A cron-formatted execution interval, as a cron string, e.g. 1 * * * *"
+  }, {
+    "name" : "timezone",
+    "type" : "string",
+    "doc" : "Timezone in which the cron interval applies, e.g. America/Los Angeles"
+  } ]
+}

@@ -1,0 +1,78 @@
+{
+  "definitions" : {
+    "OperationsAggregationsResult" : {
+      "description" : "Aggregation results for operations query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "totalOperations" : {
+          "default" : null,
+          "description" : " Total number of operations in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalInserts" : {
+          "default" : null,
+          "description" : " Total number of inserts in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalUpdates" : {
+          "default" : null,
+          "description" : " Total number of updates in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalDeletes" : {
+          "default" : null,
+          "description" : " Total number of deletes in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalCreates" : {
+          "default" : null,
+          "description" : " Total number of creates in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalAlters" : {
+          "default" : null,
+          "description" : " Total number of alters in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalDrops" : {
+          "default" : null,
+          "description" : " Total number of drops in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalCustoms" : {
+          "default" : null,
+          "description" : " Total number of custom types in the bucket ",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "customOperationsMap" : {
+          "default" : null,
+          "description" : " A map from each custom operation type to the total count for that type",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "minimum" : -2147483648,
+            "maximum" : 2147483647
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/OperationsAggregationsResult"
+}

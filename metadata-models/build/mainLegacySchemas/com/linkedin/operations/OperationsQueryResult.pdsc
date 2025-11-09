@@ -1,0 +1,19 @@
+{
+  "type" : "record",
+  "name" : "OperationsQueryResult",
+  "namespace" : "com.linkedin.operations",
+  "doc" : "Results of a query for operations data.",
+  "fields" : [ {
+    "name" : "buckets",
+    "type" : {
+      "type" : "array",
+      "items" : "OperationsAggregation"
+    },
+    "doc" : " Raw buckets ",
+    "optional" : true
+  }, {
+    "name" : "aggregations",
+    "type" : "OperationsAggregationsResult",
+    "doc" : "Aggregated metrics. All fields are optional here, since they will be populated\nonly if the underlying buckets contain the data required to generate that aggregation."
+  } ]
+}

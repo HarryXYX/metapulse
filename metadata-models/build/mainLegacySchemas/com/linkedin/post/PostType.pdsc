@@ -1,0 +1,11 @@
+{
+  "type" : "enum",
+  "name" : "PostType",
+  "namespace" : "com.linkedin.post",
+  "doc" : "Enum defining types of Posts.",
+  "symbols" : [ "HOME_PAGE_ANNOUNCEMENT", "ENTITY_ANNOUNCEMENT" ],
+  "symbolDocs" : {
+    "ENTITY_ANNOUNCEMENT" : "The Post is an Entity level announcement.",
+    "HOME_PAGE_ANNOUNCEMENT" : "The Post is an Home Page announcement."
+  }
+}

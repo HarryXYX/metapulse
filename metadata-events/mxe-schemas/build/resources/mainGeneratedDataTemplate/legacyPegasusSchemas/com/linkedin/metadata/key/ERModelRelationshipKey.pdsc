@@ -1,0 +1,13 @@
+{
+  "type" : "record",
+  "name" : "ERModelRelationshipKey",
+  "namespace" : "com.linkedin.metadata.key",
+  "doc" : "Key for a ERModelRelationship",
+  "fields" : [ {
+    "name" : "id",
+    "type" : "string"
+  } ],
+  "Aspect" : {
+    "name" : "erModelRelationshipKey"
+  }
+}

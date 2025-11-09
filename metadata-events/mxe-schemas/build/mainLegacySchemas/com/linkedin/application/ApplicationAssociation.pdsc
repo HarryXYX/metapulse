@@ -1,0 +1,8 @@
+{
+  "type" : "record",
+  "name" : "ApplicationAssociation",
+  "namespace" : "com.linkedin.application",
+  "doc" : "Represents an association of assets to a Application.\n",
+  "include" : [ "com.linkedin.common.Edge" ],
+  "fields" : [ ]
+}

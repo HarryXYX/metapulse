@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "CustomProperties" : {
+      "description" : "Misc. properties about an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties" ]
+    }
+  },
+  "$ref" : "#/definitions/CustomProperties"
+}

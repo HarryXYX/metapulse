@@ -1,0 +1,23 @@
+{
+  "definitions" : {
+    "MapMetadata" : {
+      "description" : "The model for map metadata",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "longMap" : {
+          "description" : "Map for string keys to long values",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64",
+            "minimum" : -9223372036854775808,
+            "maximum" : 9223372036854775807
+          }
+        }
+      },
+      "required" : [ "longMap" ]
+    }
+  },
+  "$ref" : "#/definitions/MapMetadata"
+}

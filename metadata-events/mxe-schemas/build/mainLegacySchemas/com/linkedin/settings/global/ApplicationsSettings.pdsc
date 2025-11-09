@@ -1,0 +1,7 @@
+{
+  "type" : "record",
+  "name" : "ApplicationsSettings",
+  "namespace" : "com.linkedin.settings.global",
+  "include" : [ "FeatureSettings" ],
+  "fields" : [ ]
+}

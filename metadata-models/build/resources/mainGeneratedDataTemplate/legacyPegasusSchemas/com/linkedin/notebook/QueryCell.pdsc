@@ -1,0 +1,17 @@
+{
+  "type" : "record",
+  "name" : "QueryCell",
+  "namespace" : "com.linkedin.notebook",
+  "doc" : "Query cell in a Notebook, which will present content in query format",
+  "include" : [ "CommonCellAttributes" ],
+  "fields" : [ {
+    "name" : "rawQuery",
+    "type" : "string",
+    "doc" : "Raw query to explain some specific logic in a Notebook"
+  }, {
+    "name" : "lastExecuted",
+    "type" : "com.linkedin.common.AuditStamp",
+    "doc" : "Captures information about who last executed this query cell and when",
+    "optional" : true
+  } ]
+}
