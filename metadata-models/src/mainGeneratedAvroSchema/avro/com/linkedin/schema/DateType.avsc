@@ -1,7 +1,0 @@
-{
-  "type" : "record",
-  "name" : "DateType",
-  "namespace" : "com.linkedin.schema",
-  "doc" : "Date field type.",
-  "fields" : [ ]
-}

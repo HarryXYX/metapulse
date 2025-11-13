@@ -1,36 +1,36 @@
 version: '3.8'
 
-# SwotData All-in-One部署配置
+# MetaPulse All-in-One部署配置
 # 包含所有必要的基础设施和单体应用
 
 services:
   # PostgreSQL数据库
   postgres:
     image: postgres:14-alpine
-    container_name: swotdata-postgres
+    container_name: metapulse-postgres
     restart: unless-stopped
     ports:
       - "${POSTGRES_PORT:-5432}:5432"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-swotdata}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-swotdata}
-      POSTGRES_DB: ${POSTGRES_DB:-swotdata}
+      POSTGRES_USER: ${POSTGRES_USER:-metapulse}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-metapulse}
+      POSTGRES_DB: ${POSTGRES_DB:-metapulse}
       POSTGRES_INITDB_ARGS: "-E UTF8"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "swotdata"]
+      test: ["CMD", "pg_isready", "-U", "metapulse"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 10s
     networks:
-      - swotdata-network
+      - metapulse-network
 
   # Elasticsearch搜索引擎
   elasticsearch:
     image: elasticsearch:8.11.0
-    container_name: swotdata-elasticsearch
+    container_name: metapulse-elasticsearch
     restart: unless-stopped
     ports:
       - "${ELASTICSEARCH_PORT:-9200}:9200"
@@ -39,7 +39,7 @@ services:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - ES_JAVA_OPTS=-Xms${ES_HEAP:-512m} -Xmx${ES_HEAP:-1024m}
-      - cluster.name=swotdata-cluster
+      - cluster.name=metapulse-cluster
       - bootstrap.memory_lock=true
     ulimits:
       memlock:
@@ -57,12 +57,12 @@ services:
       retries: 10
       start_period: 30s
     networks:
-      - swotdata-network
+      - metapulse-network
 
   # Zookeeper（Kafka依赖）
   zookeeper:
     image: confluentinc/cp-zookeeper:7.6.0
-    container_name: swotdata-zookeeper
+    container_name: metapulse-zookeeper
     restart: unless-stopped
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
@@ -72,12 +72,12 @@ services:
       - zookeeper-data:/var/lib/zookeeper/data
       - zookeeper-logs:/var/lib/zookeeper/log
     networks:
-      - swotdata-network
+      - metapulse-network
 
   # Kafka消息队列
   kafka:
     image: confluentinc/cp-kafka:7.6.0
-    container_name: swotdata-kafka
+    container_name: metapulse-kafka
     restart: unless-stopped
     depends_on:
       - zookeeper
@@ -106,14 +106,14 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - swotdata-network
+      - metapulse-network
 
-  # SwotData All-in-One应用（Web + Consumers）
-  swotdata:
+  # MetaPulse All-in-One应用（Web + Consumers）
+  metapulse:
     build:
       context: .
       dockerfile: docker/datahub-gms/Dockerfile
-    container_name: swotdata-app
+    container_name: metapulse-app
     restart: unless-stopped
     depends_on:
       postgres:
@@ -123,7 +123,7 @@ services:
       kafka:
         condition: service_healthy
     ports:
-      - "${SWOTDATA_PORT:-8080}:8080"
+      - "${METAPULSE_PORT:-8080}:8080"
     environment:
       # ===== All-in-One关键配置 =====
       - MAE_CONSUMER_ENABLED=true
@@ -138,15 +138,15 @@ services:
       - DB_TYPE=postgresql
       - DB_HOST=postgres
       - DB_PORT=5432
-      - DB_DATABASE=${POSTGRES_DB:-swotdata}
-      - DB_USERNAME=${POSTGRES_USER:-swotdata}
-      - DB_PASSWORD=${POSTGRES_PASSWORD:-swotdata}
+      - DB_DATABASE=${POSTGRES_DB:-metapulse}
+      - DB_USERNAME=${POSTGRES_USER:-metapulse}
+      - DB_PASSWORD=${POSTGRES_PASSWORD:-metapulse}
       - DB_POOL_MAX=50
       - DB_POOL_MIN=10
 
       # ===== Kafka配置 =====
       - KAFKA_BOOTSTRAP_SERVERS=kafka:29092
-      - KAFKA_SCHEMA_REGISTRY_URL=http://swotdata:8080/schema-registry/api
+      - KAFKA_SCHEMA_REGISTRY_URL=http://metapulse:8080/schema-registry/api
       - KAFKA_SCHEMA_REGISTRY_TYPE=INTERNAL
       - KAFKA_LISTENER_CONCURRENCY=4
       - KAFKA_MAX_POLL_RECORDS=100
@@ -170,7 +170,7 @@ services:
       # 挂载构建的war包（开发模式）
       - ./metadata-service/war/build/libs:/datahub/datahub-gms/bin
       # 持久化数据
-      - swotdata-data:/data
+      - metapulse-data:/data
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 30s
@@ -178,7 +178,7 @@ services:
       retries: 5
       start_period: 120s
     networks:
-      - swotdata-network
+      - metapulse-network
 
 # 持久化存储卷
 volumes:
@@ -192,10 +192,10 @@ volumes:
     driver: local
   zookeeper-logs:
     driver: local
-  swotdata-data:
+  metapulse-data:
     driver: local
 
 # 网络配置
 networks:
-  swotdata-network:
+  metapulse-network:
     driver: bridge

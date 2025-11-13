@@ -48,3 +48,49 @@ venv/
 .pytest_cache/
 .coverage
 htmlcov/
+
+# ===== 前端相关 =====
+# 前端依赖
+frontend/node_modules/
+frontend/.pnp
+frontend/.pnp.js
+
+# 前端构建产物
+frontend/dist/
+frontend/build/
+frontend/.next/
+frontend/out/
+
+# 前端环境变量（本地）
+frontend/.env.local
+frontend/.env.*.local
+
+# 前端缓存和临时文件
+frontend/.cache/
+frontend/.parcel-cache/
+frontend/.eslintcache
+frontend/.stylelintcache
+
+# Yarn
+frontend/.yarn/cache
+frontend/.yarn/unplugged
+frontend/.yarn/build-state.yml
+frontend/.yarn/install-state.gz
+.pnp.*
+
+# 前端测试覆盖率
+frontend/coverage/
+
+# Storybook
+frontend/storybook-static/
+
+# ===== 后端静态资源（前端构建产物复制到这里）=====
+backend/metadata-service/war/src/main/resources/static/
+
+# ===== 环境变量 =====
+.env
+.env.local
+.env.*.local
+
+# ===== Docker =====
+docker-compose.override.yml

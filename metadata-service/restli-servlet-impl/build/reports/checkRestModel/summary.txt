@@ -1,3 +1,0 @@
-[RS-COMPAT]: true
-[MD-COMPAT]: true
-

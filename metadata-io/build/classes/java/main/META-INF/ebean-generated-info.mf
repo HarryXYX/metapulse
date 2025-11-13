@@ -1,5 +1,0 @@
-generated-by: Ebean query bean generator
-entity-packages: com.linkedin.metadata.entity.ebean
-  com.linkedin.metadata.entity.ebean.EbeanAspectV1
-  com.linkedin.metadata.entity.ebean.EbeanAspectV2
-

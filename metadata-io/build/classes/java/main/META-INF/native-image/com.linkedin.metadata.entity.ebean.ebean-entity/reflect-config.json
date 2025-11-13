@@ -1,7 +1,0 @@
-[
-  {"name": "com.linkedin.metadata.entity.ebean.EbeanAspectV1", "allDeclaredConstructors": true, "allDeclaredFields": true},
-  {"name": "com.linkedin.metadata.entity.ebean.EbeanAspectV1.PrimaryKey", "allDeclaredConstructors": true, "allDeclaredFields": true},
-  {"name": "com.linkedin.metadata.entity.ebean.EbeanAspectV2", "allDeclaredConstructors": true, "allDeclaredFields": true},
-  {"name": "com.linkedin.metadata.entity.ebean.EbeanAspectV2.PrimaryKey", "allDeclaredConstructors": true, "allDeclaredFields": true}
-]
-

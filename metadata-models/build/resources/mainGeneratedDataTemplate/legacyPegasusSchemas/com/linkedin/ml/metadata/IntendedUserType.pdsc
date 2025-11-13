@@ -1,6 +1,0 @@
-{
-  "type" : "enum",
-  "name" : "IntendedUserType",
-  "namespace" : "com.linkedin.ml.metadata",
-  "symbols" : [ "ENTERPRISE", "HOBBY", "ENTERTAINMENT" ]
-}

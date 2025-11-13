@@ -1,7 +1,0 @@
-{
-  "type" : "typeref",
-  "name" : "ChartDataSourceType",
-  "namespace" : "com.linkedin.chart",
-  "doc" : "Input source type for a chart such as dataset or metric",
-  "ref" : [ "com.linkedin.common.DatasetUrn" ]
-}
