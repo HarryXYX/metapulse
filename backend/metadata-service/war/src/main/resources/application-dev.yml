@@ -1,0 +1,129 @@
+# 开发环境专用配置
+# 使用方式：--spring.profiles.active=dev
+# 此配置会覆盖 application.yml 中的占位符，无需设置环境变量
+
+server:
+  port: 8080
+
+# ===== 数据库配置 =====
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/metapulse
+    username: metapulse
+    password: metapulse
+    driver-class-name: org.postgresql.Driver
+
+    hikari:
+      maximum-pool-size: 20  # 开发环境减少连接池
+      minimum-idle: 5
+      connection-timeout: 30000
+
+  jpa:
+    show-sql: true  # 开发环境显示 SQL
+    properties:
+      hibernate:
+        format_sql: true  # 格式化 SQL 输出
+
+  # 开发环境禁用静态资源缓存
+  web:
+    resources:
+      cache:
+        period: 0
+        cachecontrol:
+          no-cache: true
+          no-store: true
+      chain:
+        enabled: false
+
+# ===== Kafka配置 =====
+kafka:
+  bootstrap:
+    servers: localhost:9092
+
+  schema:
+    registry:
+      url: http://localhost:8080/schema-registry/api
+      type: INTERNAL
+
+  consumer:
+    group-id: metapulse-dev-consumers
+    auto-offset-reset: earliest
+
+  listeners:
+    concurrency: 2  # 开发环境减少并发
+
+# ===== Elasticsearch配置 =====
+elasticsearch:
+  host: localhost
+  port: 9200
+  scheme: http
+  username:
+  password:
+  threadCount: 2  # 开发环境减少线程
+
+# ===== Consumer开关（开发环境全部启用） =====
+environment:
+  MAE_CONSUMER_ENABLED: true
+  MCE_CONSUMER_ENABLED: true
+  MCP_CONSUMER_ENABLED: true
+  PE_CONSUMER_ENABLED: true
+
+# ===== Entity Client配置 =====
+entityClient:
+  impl: java  # 本地方法调用
+
+# ===== 认证配置（开发环境可选择关闭） =====
+authentication:
+  enabled: false  # 开发环境建议关闭认证，方便测试
+  systemClientId: __datahub_system
+  systemClientSecret: JohnSnowKnowsNothing
+  tokenService:
+    signingKey: WnVBrnu2tBFoY5rLnQmVlQ==
+
+# ===== 日志配置（开发环境更详细） =====
+logging:
+  level:
+    root: INFO
+    com.linkedin: DEBUG  # DataHub 相关代码开启 DEBUG
+    com.linkedin.gms: DEBUG
+    com.linkedin.metadata: DEBUG
+    org.springframework: INFO
+    org.springframework.web: DEBUG  # Web 请求日志
+    org.apache.kafka: WARN
+    org.hibernate.SQL: DEBUG  # 显示 SQL
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE  # 显示 SQL 参数
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+
+# ===== 管理端点（开发环境全部开放） =====
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # 开发环境暴露所有端点
+  endpoint:
+    health:
+      show-details: always  # 显示详细健康信息
+
+# ===== DataHub GMS配置 =====
+datahub:
+  gms:
+    host: 0.0.0.0
+    port: 8080
+    useSSL: false
+
+# ===== 缓存配置 =====
+cache:
+  client:
+    entityClient:
+      useCaffeineCache: true
+      statsEnabled: true
+
+# ===== 其他配置 =====
+metadataChangeProposal:
+  throttle:
+    updateIntervalMs: 60000
+
+telemetry:
+  enabledCli: false  # 开发环境禁用遥测
+  enabledServer: false
