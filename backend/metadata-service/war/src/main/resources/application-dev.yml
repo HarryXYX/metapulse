@@ -8,7 +8,7 @@ server:
 # ===== 数据库配置 =====
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/metapulse
+    url: jdbc:postgresql://47.80.65.112:5432/metapulse
     username: metapulse
     password: metapulse
     driver-class-name: org.postgresql.Driver
@@ -38,7 +38,7 @@ spring:
 # ===== Kafka配置 =====
 kafka:
   bootstrap:
-    servers: localhost:9092
+    servers: 47.80.65.112:9092
 
   schema:
     registry:
@@ -54,7 +54,7 @@ kafka:
 
 # ===== Elasticsearch配置 =====
 elasticsearch:
-  host: localhost
+  host: 47.80.65.112
   port: 9200
   scheme: http
   username:
