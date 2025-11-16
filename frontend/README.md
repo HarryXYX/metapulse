@@ -1,183 +1,783 @@
+# MetaPulse Frontend - 前端开发指南
+
+> React + TypeScript + Vite 构建的现代化元数据管理平台前端
+
 ---
-title: 'datahub-web-react'
+
+## 📋 目录
+
+- [技术栈](#-技术栈)
+- [快速开始](#-快速开始)
+- [项目结构](#-项目结构)
+- [开发指南](#-开发指南)
+- [GraphQL 集成](#-graphql-集成)
+- [样式与主题](#-样式与主题)
+- [测试](#-测试)
+- [构建部署](#-构建部署)
+- [常见问题](#-常见问题)
+
 ---
 
-# DataHub React App
+## 🔧 技术栈
 
-## About
+| 技术 | 版本 | 说明 |
+|------|------|------|
+| **React** | 17 | UI 框架 |
+| **TypeScript** | Latest | 类型系统 |
+| **Vite** | Latest | 构建工具与开发服务器 |
+| **Apollo Client** | 3.3.19 | GraphQL 客户端 |
+| **Ant Design** | 4.24.7 | UI 组件库 |
+| **styled-components** | - | CSS-in-JS 样式方案 |
+| **Visx** | 3.x | 数据可视化库 |
+| **React Router** | 6 | 路由管理 |
 
-This module contains a React application that serves as the DataHub UI.
+---
 
-Feel free to take a look around, deploy, and contribute.
+## 🚀 快速开始
 
-## Functional Goals
+### 前置要求
 
-The initial milestone for the app was to achieve functional parity with the previous Ember app. This meant supporting
+- **Node.js 18+** - [下载链接](https://nodejs.org/)
+- **Yarn** - `npm install -g yarn`
+- **后端服务** - 确保后端运行在 `http://localhost:8080`
 
-- Dataset Profiles, Search, Browse Experience
-- User Profiles, Search
-- LDAP Authentication Flow
+### 安装依赖
 
-This has since been achieved. The new set of functional goals are reflected in the latest version of the [DataHub Roadmap](../docs/roadmap.md).
+```bash
+cd frontend
+yarn install
+```
 
-## Design Goals
+### 启动开发服务器
 
-In building out the client experience, we intend to leverage learnings from the previous Ember-based app and incorporate feedback gathered
-from organizations operating DataHub. Two themes have emerged to serve as guideposts:
+```bash
+# 启动开发服务器（端口 3000）
+yarn dev
 
-1. **Configurability**: The client experience should be configurable, such that deploying organizations can tailor certain
-   aspects to their needs. This includes theme / styling configurability, showing and hiding specific functionality,
-   customizing copy & logos, etc.
-2. **Extensibility**: Extending the _functionality_ of DataHub should be as simple as possible. Making changes like
-   extending an existing entity & adding a new entity should require minimal effort and should be well covered in detailed
-   documentation.
+# 浏览器访问
+# http://localhost:3000
+```
 
-## Starting the Application
+### 常用命令
 
-### Quick Start
+```bash
+# 开发
+yarn dev                  # 启动开发服务器（热更新）
+yarn dev --host          # 暴露到网络（允许局域网访问）
 
-Follow the instructions [here](https://docs.datahub.com/docs/developers#building-the-project) to build and deploy your project locally. The initial build might take a while. You will be able to navigate to the application at `http://localhost:9002`.
+# 构建
+yarn build               # 生产构建
+yarn build:analyze       # 构建并分析打包体积
 
-If you want to make changes to the UI see them live without having to rebuild the `datahub-frontend-react` docker image, you
-can run the following in this directory:
+# 代码质量
+yarn lint                # 运行 ESLint
+yarn lint --fix          # 自动修复 Lint 问题
+yarn format              # 运行 Prettier 格式化
+yarn type-check          # TypeScript 类型检查
 
-`yarn install && yarn run start`
+# GraphQL
+yarn generate            # 从 schema 生成 TypeScript 类型
 
-which will start a forwarding server at `localhost:3000`. Note that to fetch real data, `datahub-frontend` server will also
-need to be deployed, still at `http://localhost:9002`, to service GraphQL API requests.
+# 测试
+yarn test                # 运行所有测试
+yarn test:watch          # 监视模式运行测试
+yarn test path/to/file.test.tsx --run  # 运行特定测试
+```
 
-Optionally you could also start the app with the mock server without running the docker containers by executing `yarn start:mock`. See [here](src/graphql-mock/fixtures/searchResult/userSearchResult.ts#L6) for available login users.
+---
 
-### Testing your customizations
+## 📁 项目结构
 
-There is two options to test your customizations:
+```
+frontend/
+├── src/
+│   ├── app/                    # 应用主目录（按页面组织）
+│   │   ├── analytics/          # 数据分析页面
+│   │   ├── browse/             # 数据浏览页面
+│   │   ├── entity/             # 实体详情页面
+│   │   │   ├── dataset/        # 数据集实体
+│   │   │   ├── dashboard/      # 仪表盘实体
+│   │   │   ├── user/           # 用户实体
+│   │   │   └── shared/         # 共享组件
+│   │   ├── lineage/            # 数据血缘页面
+│   │   ├── search/             # 搜索页面
+│   │   ├── settings/           # 设置页面
+│   │   └── shared/             # 全局共享组件
+│   │
+│   ├── graphql/                # GraphQL 相关
+│   │   ├── *.graphql           # GraphQL 查询定义
+│   │   ├── search.graphql      # 搜索查询
+│   │   ├── browse.graphql      # 浏览查询
+│   │   └── generated.ts        # 自动生成的类型
+│   │
+│   ├── conf/                   # 全局配置
+│   │   ├── theme/              # 主题配置
+│   │   │   ├── types.ts        # 主题类型定义
+│   │   │   ├── themes.ts       # 主题配置
+│   │   │   └── *.config.json   # Ant Design 主题
+│   │   └── Global.tsx          # 全局配置组件
+│   │
+│   ├── types/                  # TypeScript 类型定义
+│   ├── utils/                  # 工具函数
+│   ├── images/                 # 图片资源
+│   ├── App.tsx                 # 应用入口
+│   ├── main.tsx                # React 渲染入口
+│   └── index.css               # 全局样式
+│
+├── public/                     # 静态资源
+│   └── assets/                 # 公共资源
+│
+├── .env.development            # 开发环境变量
+├── .env.production             # 生产环境变量
+├── vite.config.ts              # Vite 配置
+├── tsconfig.json               # TypeScript 配置
+├── package.json                # NPM 依赖
+├── codegen.yml                 # GraphQL Code Generator 配置
+├── .eslintrc.js                # ESLint 配置
+└── .prettierrc                 # Prettier 配置
+```
 
-- **Option 1**: Initialize the docker containers with the `quickstart.sh` script (or if any custom docker-compose file) and then run `yarn start` in this directory. This will start a forwarding server at `localhost:3000` that will use the `datahub-frontend` server at `http://localhost:9002` to fetch real data.
-- **Option 2**: Change the environment variable `REACT_APP_PROXY_TARGET` in the `.env` file to point to your `datahub-frontend` server (ex: https://my_datahub_host.com) and then run `yarn start` in this directory. This will start a forwarding server at `localhost:3000` that will use the `datahub-frontend` server at some domain to fetch real data.
+### 组件组织原则
 
-The option 2 is useful if you want to test your React customizations without having to run the hole DataHub stack locally. However, if you changed other components of the DataHub stack, you will need to run the hole stack locally (building the docker images) and use the option 1.
+#### 按页面组织（Page-based Organization）
 
-### Functional testing
+```
+src/app/
+├── analytics/           # 数据分析功能
+│   ├── AnalyticsPage.tsx
+│   ├── components/      # 页面专用组件
+│   └── README.md
+│
+├── search/              # 搜索功能
+│   ├── SearchPage.tsx
+│   ├── SearchResults.tsx
+│   ├── SearchFilters.tsx
+│   └── components/
+│
+└── shared/              # 跨页面共享组件
+    ├── components/      # 通用 UI 组件
+    ├── hooks/           # 自定义 Hooks
+    └── utils/           # 工具函数
+```
 
-In order to start a server and run frontend unit tests using react-testing-framework, run:
+#### 实体组织（Entity-based）
 
-`yarn test :e2e`
+```
+src/app/entity/
+├── dataset/             # 数据集实体
+│   ├── DatasetProfile.tsx
+│   ├── DatasetPreview.tsx
+│   ├── DatasetSchema.tsx
+│   └── components/
+│
+├── dashboard/           # 仪表盘实体
+│   ├── DashboardProfile.tsx
+│   ├── DashboardPreview.tsx
+│   └── components/
+│
+└── shared/              # 实体间共享组件
+    ├── EntityHeader.tsx
+    ├── EntityTabs.tsx
+    └── EntitySidebar.tsx
+```
 
-There are also more automated tests using Cypress in the `smoke-test` folder of the repository root.
+---
 
-#### Troubleshooting
+## 💻 开发指南
 
-`Error: error:0308010C:digital envelope routines::unsupported`: This error message shows up when using Node 17, due to an OpenSSL update related to md5.  
-The best workaround is to revert to the Active LTS version of Node, 16.13.0 with the command `nvm install 16.13.0` and if necessary reinstall yarn `npm install --global yarn`.
+### 环境配置
 
-### Theming
+#### .env.development（开发环境）
 
-#### Customizing your App without rebuilding assets
+```env
+# 后端 API 地址
+VITE_BACKEND_URL=http://localhost:8080
 
-To see the results of any change to a theme, you will need to rebuild your datahub-frontend-react container. While this may work for some users, if you don't want to rebuild your container
-you can change two things without rebuilding.
+# GraphQL 端点
+VITE_GRAPHQL_ENDPOINT=/api/graphql
 
-1. You customize the logo on the homepage & the search bar header by setting the `REACT_APP_LOGO_URL` env variable when deploying GMS.
-2. You can customize the favicon (the icon on your browser tab) by setting the `REACT_APP_FAVICON_URL` env var when deploying GMS.
+# 应用环境
+VITE_APP_ENV=development
 
-#### Selecting a theme
+# 日志级别
+VITE_LOG_LEVEL=debug
+```
 
-Theme configurations are defined in `./src/conf/theme/themes.ts`. By default, the theme is chosen based on the `REACT_APP_CUSTOM_THEME_ID` env variable in GMS. If no theme is specified, the default themes `themeV2` or `themeV1` are used based on whether the V2 UI is enabled, which is controlled by environment variables `THEME_V2_ENABLED`, `THEME_V2_DEFAULT`, and `THEME_V2_TOGGLEABLE` in GMS. See `metadata-service/configuration/src/main/resources/application.yaml` for more details.
+**开发服务器代理配置**：
 
-For quick local development, you can set env variable `REACT_APP_THEME` in `.env` to any of the themes defined in `themes.ts`.
+`vite.config.ts` 中配置了自动代理：
 
-We are transitioning away from Ant theming, but still depend on it for some styling. The Ant theme is stored in json files, in `./src/conf/theme`. To select the Ant theme, choose a json file and set env variable `ANT_THEME_CONFIG` in `.env` to the theme's filename, including `.json`, then re-run `yarn start` from `datahub/datahub-web-react`.
+```typescript
+export default defineConfig({
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+      },
+    },
+  },
+});
+```
 
-#### Editing a theme
+**API 请求流程**：
+```
+浏览器请求: http://localhost:3000/api/graphql
+    ↓ Vite 代理
+后端处理: http://localhost:8080/api/graphql
+```
 
-To edit an existing theme, the recommendation is to clone one of the existing themes into a new file with the name `<your_themes_name>.ts`, then update `themes.ts` by importing your theme and adding it to the `themes` object. You can also create a json theme by creating a new file in `./src/conf/theme` with the name `<your_themes_name>.config.json`. The theme interface is defined in `./src/conf/theme/types.ts` and has four sections:
+#### .env.production（生产环境）
 
-`colors` configures semantic color tokens.
-These are not yet widely used but will be the primary way to configure colors in the app going forward.
+```env
+# 生产环境使用相对路径（同域部署）
+VITE_BACKEND_URL=
 
-`styles` configures overrides for the app's deprecated theming variables and for Ant components.
+# GraphQL 端点
+VITE_GRAPHQL_ENDPOINT=/api/graphql
 
-`assets` configures the logo url.
+# 应用环境
+VITE_APP_ENV=production
 
-`content` specifies customizable text fields.
+# 日志级别
+VITE_LOG_LEVEL=error
+```
 
-While developing on your theme, all changes to assets and content are seen immediately in your local app. However, changes to styles require
-you to terminate and re-run `yarn start` to see updated styles.
+### 开发工作流程
 
-## Design Details
+```bash
+# 1. 启动后端服务
+cd backend
+./gradlew bootRun --args='--spring.profiles.active=dev'
 
-### Package Organization
+# 2. 启动前端开发服务器
+cd frontend
+yarn dev
 
-The `src` dir of the app is broken down into the following modules
+# 3. 访问应用
+# http://localhost:3000
 
-**conf** - Stores global configuration flags that can be referenced across the app. For example, the number of
-search results shown per page, or the placeholder text in the search bar box. It serves as a location where levels
-for functional configurability should reside.
+# 4. 热更新开发
+# 修改代码后，Vite 会自动刷新页面
+```
 
-**app** - Contains all important components of the app. It has a few sub-modules:
+### 添加新页面
 
-- `auth`: Components used to render the user authentication experience.
-- `browse`: Shared components used to render the 'browse-by-path' experience. The experience is akin to navigating a filesystem hierarchy.
-- `preview`: Shared components used to render Entity 'preview' views. These can appear in search results, browse results,
-  and within entity profile pages.
-- `search`: Shared components used to render the full-text search experience.
-- `shared`: Misc. shared components
-- `entity`: Contains Entity definitions, where entity-specific functionality resides.
-  Configuration is provided by implementing the 'Entity' interface. (See DatasetEntity.tsx for example)
-  There are 2 visual components each entity should supply:
+1. **创建页面组件**：
 
-    - `profiles`: display relevant details about an individual entity. This serves as the entity's 'profile'.
-    - `previews`: provide a 'preview', or a smaller details card, containing the most important information about an entity instance.
+```bash
+mkdir -p src/app/myfeature
+touch src/app/myfeature/MyFeaturePage.tsx
+```
 
-        When rendering a preview, the entity's data and the type of preview (SEARCH, BROWSE, PREVIEW) are provided. This
-        allows you to optionally customize the way an entities preview is rendered in different views.
+2. **定义组件**：
 
-    - `entity registry`: There's another very important piece of code living within this module: the **EntityRegistry**. This is a layer
-      of abstraction over the intimate details of rendering a particular entity. It is used
-      to render a view associated with a particular entity type (user, dataset, etc.).
+```typescript
+// src/app/myfeature/MyFeaturePage.tsx
+import React from 'react';
+import styled from 'styled-components';
+
+const PageContainer = styled.div`
+  padding: 24px;
+`;
+
+export const MyFeaturePage: React.FC = () => {
+  return (
+    <PageContainer>
+      <h1>My Feature</h1>
+    </PageContainer>
+  );
+};
+```
+
+3. **添加路由**（在 `App.tsx` 中）：
+
+```typescript
+import { MyFeaturePage } from './app/myfeature/MyFeaturePage';
+
+// ...
+<Routes>
+  <Route path="/my-feature" element={<MyFeaturePage />} />
+</Routes>
+```
+
+### 添加共享组件
+
+```bash
+# 创建组件目录
+mkdir -p src/app/shared/components/MyComponent
+
+# 创建组件文件
+touch src/app/shared/components/MyComponent/MyComponent.tsx
+touch src/app/shared/components/MyComponent/index.ts
+```
+
+**组件示例**：
+
+```typescript
+// MyComponent.tsx
+import React from 'react';
+import styled from 'styled-components';
+
+interface MyComponentProps {
+  title: string;
+  onClick?: () => void;
+}
+
+const Container = styled.div`
+  padding: 16px;
+  background: ${(props) => props.theme.colors.background};
+`;
+
+export const MyComponent: React.FC<MyComponentProps> = ({ title, onClick }) => {
+  return (
+    <Container onClick={onClick}>
+      <h3>{title}</h3>
+    </Container>
+  );
+};
+
+// index.ts
+export { MyComponent } from './MyComponent';
+```
+
+---
+
+## 🔌 GraphQL 集成
+
+### GraphQL 查询定义
+
+在 `src/graphql/` 目录下创建 `.graphql` 文件：
+
+```graphql
+# src/graphql/dataset.graphql
+
+query getDataset($urn: String!) {
+  dataset(urn: $urn) {
+    urn
+    name
+    description
+    platform {
+      name
+    }
+    ownership {
+      owners {
+        owner {
+          urn
+          name
+        }
+      }
+    }
+    schema {
+      fields {
+        fieldPath
+        type
+        description
+      }
+    }
+  }
+}
+```
+
+### 生成 TypeScript 类型
+
+```bash
+# 运行 Code Generator
+yarn generate
+
+# 生成的文件：src/graphql/generated.ts
+```
+
+### 使用生成的类型
+
+```typescript
+import { useGetDatasetQuery } from '../graphql/generated';
+
+export const DatasetProfile: React.FC<{ urn: string }> = ({ urn }) => {
+  const { data, loading, error } = useGetDatasetQuery({
+    variables: { urn },
+  });
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h1>{data?.dataset?.name}</h1>
+      <p>{data?.dataset?.description}</p>
+    </div>
+  );
+};
+```
+
+### GraphQL Code Generator 配置
+
+`codegen.yml`：
+
+```yaml
+overwrite: true
+schema: http://localhost:8080/api/graphql
+documents: 'src/graphql/**/*.graphql'
+generates:
+  src/graphql/generated.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
+      withComponent: false
+```
+
+---
+
+## 🎨 样式与主题
+
+### 主题系统
+
+#### 主题配置（themes.ts）
+
+```typescript
+export const themeV2 = {
+  colors: {
+    primary: '#1890ff',
+    success: '#52c41a',
+    warning: '#faad14',
+    error: '#ff4d4f',
+    background: '#ffffff',
+    backgroundDark: '#f0f2f5',
+    text: '#000000',
+    textSecondary: '#8c8c8c',
+  },
+  styles: {
+    borderRadius: '4px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+  },
+  assets: {
+    logoUrl: '/assets/logo.png',
+  },
+};
+```
+
+#### 使用主题
+
+```typescript
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background: ${(props) => props.theme.colors.primary};
+  color: white;
+  border-radius: ${(props) => props.theme.styles.borderRadius};
+  padding: 8px 16px;
+
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+```
+
+### Styled Components 规范
+
+#### ✅ 推荐写法
+
+```typescript
+// 使用 styled-components
+const Container = styled.div`
+  padding: 24px;
+  background: ${(props) => props.theme.colors.background};
+`;
+
+// 支持 props
+interface CardProps {
+  highlighted?: boolean;
+}
+
+const Card = styled.div<CardProps>`
+  border: 1px solid #d9d9d9;
+  background: ${(props) => (props.highlighted ? '#e6f7ff' : 'white')};
+`;
+```
+
+#### ❌ 避免写法
+
+```typescript
+// 不要使用内联样式
+<div style={{ padding: '24px', background: 'white' }}>
+
+// 不要使用传统 CSS 类
+<div className="my-custom-class">
+```
+
+### Ant Design 组件
+
+```typescript
+import { Button, Table, Modal } from 'antd';
+
+export const MyComponent = () => {
+  return (
+    <>
+      <Button type="primary">Primary Button</Button>
+      <Table dataSource={data} columns={columns} />
+    </>
+  );
+};
+```
+
+---
+
+## 🧪 测试
+
+### 运行测试
+
+```bash
+# 运行所有测试
+yarn test
+
+# 监视模式
+yarn test:watch
+
+# 运行特定文件
+yarn test src/app/search/SearchPage.test.tsx --run
+
+# 覆盖率报告
+yarn test --coverage
+```
+
+### 测试示例
+
+```typescript
+// MyComponent.test.tsx
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MyComponent } from './MyComponent';
+
+describe('MyComponent', () => {
+  it('renders title correctly', () => {
+    render(<MyComponent title="Test Title" />);
+    expect(screen.getByText('Test Title')).toBeInTheDocument();
+  });
+
+  it('calls onClick when clicked', () => {
+    const handleClick = jest.fn();
+    render(<MyComponent title="Test" onClick={handleClick} />);
+
+    fireEvent.click(screen.getByText('Test'));
+    expect(handleClick).toHaveBeenCalledTimes(1);
+  });
+});
+```
+
+---
+
+## 🏗️ 构建部署
+
+### 本地构建
+
+```bash
+# 生产构建
+yarn build
+
+# 输出目录: dist/
+ls -lh dist/
+```
+
+### 预览生产构建
+
+```bash
+# 构建并预览
+yarn build
+yarn preview
+
+# 访问: http://localhost:4173
+```
+
+### 分析打包体积
+
+```bash
+# 构建并生成分析报告
+yarn build:analyze
+
+# 会自动打开浏览器显示打包分析图
+```
+
+### 集成到后端
+
+```bash
+# 1. 前端构建
+yarn build
+
+# 2. 复制到后端（自动）
+cd ../backend
+./gradlew :metadata-service:war:integrateFrontend
+
+# 3. 验证
+ls -la backend/metadata-service/war/src/main/resources/static/
+```
+
+### 性能优化
+
+#### Vite 配置优化
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'antd-vendor': ['antd'],
+          'graphql-vendor': ['@apollo/client', 'graphql'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
+  },
+});
+```
+
+---
+
+## ❓ 常见问题
+
+### 1. 开发服务器无法启动
+
+**症状**：`yarn dev` 失败
+
+**解决方法**：
+
+```bash
+# 删除缓存和依赖
+rm -rf node_modules yarn.lock .vite
+
+# 重新安装
+yarn install
+
+# 重新启动
+yarn dev
+```
+
+### 2. GraphQL 请求失败
+
+**症状**：`ERR_CONNECTION_REFUSED` 或 404
+
+**排查步骤**：
+
+```bash
+# 1. 确认后端运行
+curl http://localhost:8080/actuator/health
+
+# 2. 测试 GraphQL 端点
+curl http://localhost:8080/api/graphql
+
+# 3. 检查环境变量
+cat .env.development
+
+# 4. 检查 Vite 代理配置
+cat vite.config.ts
+```
+
+### 3. 类型生成失败
+
+**症状**：`yarn generate` 报错
+
+**解决方法**：
+
+```bash
+# 1. 确认后端 GraphQL 可访问
+curl http://localhost:8080/api/graphql
+
+# 2. 重新生成
+yarn generate
+
+# 3. 如果仍然失败，检查 codegen.yml 配置
+cat codegen.yml
+```
+
+### 4. 样式不生效
+
+**症状**：styled-components 样式没有应用
+
+**解决方法**：
+
+```bash
+# 1. 确认 styled-components 安装
+yarn add styled-components
+
+# 2. 检查 ThemeProvider 是否包裹应用
+# App.tsx 中应有:
+# <ThemeProvider theme={theme}>...</ThemeProvider>
+
+# 3. 重启开发服务器
+yarn dev
+```
+
+### 5. 热更新不工作
+
+**症状**：修改代码后页面不自动刷新
+
+**解决方法**：
+
+```bash
+# 1. 清理缓存
+rm -rf .vite
+
+# 2. 重启开发服务器
+yarn dev
+
+# 3. 如果仍然不工作，尝试禁用浏览器缓存
+# 浏览器开发工具 → Network → Disable cache
+```
+
+### 6. 构建产物过大
+
+**症状**：`dist/` 目录体积过大
+
+**解决方法**：
+
+```bash
+# 1. 分析打包体积
+yarn build:analyze
+
+# 2. 启用代码分割（vite.config.ts）
+# manualChunks 配置
+
+# 3. 移除未使用的依赖
+yarn autoclean --init
+yarn autoclean --force
+```
+
+---
+
+## 🔗 相关资源
+
+### 内部文档
+
+- [项目主 README](../README.md) - 项目总览
+- [后端开发指南](../backend/README.md) - 后端开发
+- [CLAUDE.md](../CLAUDE.md) - Claude Code 项目指引
+
+### 代码规范
+
+详见 [CLAUDE.md](CLAUDE.md)：
+
+- 使用 `type` 而非 `interface` 定义 Props
+- 使用 styled-components 而非内联样式
+- 遵循 Airbnb JavaScript Style Guide
+- 使用 Prettier 格式化代码
+
+### 外部文档
+
+- [React 官方文档](https://reactjs.org/)
+- [TypeScript 官方文档](https://www.typescriptlang.org/)
+- [Vite 官方文档](https://vitejs.dev/)
+- [Ant Design 官方文档](https://ant.design/)
+- [styled-components 官方文档](https://styled-components.com/)
+- [Apollo Client 官方文档](https://www.apollographql.com/docs/react/)
+- [Visx 官方文档](https://airbnb.io/visx/)
+
+---
 
 <p align="center">
-  <img width="70%"  src="https://raw.githubusercontent.com/datahub-project/static-assets/main/imgs/entity-registry.png"/>
+  <b>Happy Coding! 🚀</b>
 </p>
-
-**graphql** - The React App talks to the `dathub-frontend` server using GraphQL. This module is where the _queries_ issued
-against the server are defined. Once defined, running `yarn run generate` will code-gen TypeScript objects to make invoking
-these queries extremely easy. An example can be found at the top of `SearchPage.tsx.`
-
-**images** - Images to be displayed within the app. This is where one would place a custom logo image.
-
-## Adding an Entity
-
-The following outlines a series of steps required to introduce a new entity into the React app:
-
-1. Declare the GraphQL Queries required to display the new entity
-
-    - If search functionality should be supported, extend the "search" query within `search.graphql` to fetch the new
-      entity data.
-    - If browse functionality should be supported, extend the "browse" query within `browse.graphql` to fetch the new
-      entity data.
-    - If display a 'profile' should be supported (most often), introduce a new `<entity-name>.graphql` file that contains a
-      `get` query to fetch the entity by primary key (urn).
-
-    Note that your new entity _must_ implement the `Entity` GraphQL type interface, and thus must have a corresponding
-    `EntityType`.
-
-2. Implement the `Entity` interface
-
-    - Create a new folder under `src/components/entity` corresponding to your entity
-    - Create a class that implements the `Entity` interface (example: `DatasetEntity.tsx`)
-    - Provide an implementation each method defined on the interface.
-        - This class specifies whether your new entity should be searchable & browsable, defines the names used to
-          identify your entity when instances are rendered in collection / when entity appears
-          in the URL path, and provides the ability to render your entity given data returned by the GQL API.
-
-3. Register the new entity in the `EntityRegistry`
-    - Update `App.tsx` to register an instance of your new entity. Now your entity will be accessible via the registry
-      and appear in the UI. To manually retrieve the info about your entity or others, simply use an instance
-      of the `EntityRegistry`, which is provided via `ReactContext` to _all_ components in the hierarchy.
-      For example
-        ```
-        entityRegistry.getCollectionName(EntityType.YOUR_NEW_ENTITY)
-        ```
-
-That's it! For any questions, do not hesitate to reach out on the DataHub Slack community in #datahub-react.
