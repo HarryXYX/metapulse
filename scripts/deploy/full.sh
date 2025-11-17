@@ -50,7 +50,7 @@ fi
 
 # 显示当前状态
 echo "📋 当前服务状态："
-docker-compose ps 2>/dev/null || echo "   (无运行中的服务)"
+docker compose ps 2>/dev/null || echo "   (无运行中的服务)"
 echo ""
 
 # 询问操作
@@ -66,14 +66,14 @@ echo ""
 case $REPLY in
     1)
         echo "🚀 启动所有服务..."
-        docker-compose up -d
+        docker compose up -d
         echo ""
         echo "⏳ 等待应用就绪（约 60 秒）..."
         echo "   (应用启动需要初始化 Consumers)"
         sleep 60
         echo ""
         echo "📊 服务状态："
-        docker-compose ps
+        docker compose ps
         echo ""
         echo "🧪 验证应用健康状态..."
         if curl -f http://localhost:8080/actuator/health &> /dev/null; then
@@ -84,26 +84,26 @@ case $REPLY in
         ;;
     2)
         echo "🔄 重启所有服务..."
-        docker-compose restart
+        docker compose restart
         echo ""
         echo "⏳ 等待应用就绪（约 60 秒）..."
         sleep 60
         echo ""
         echo "📊 服务状态："
-        docker-compose ps
+        docker compose ps
         echo ""
         echo "✅ 服务已重启！"
         ;;
     3)
         echo "🛑 停止所有服务..."
-        docker-compose stop
+        docker compose stop
         echo ""
         echo "✅ 所有服务已停止"
         ;;
     4)
         echo "📋 查看应用日志（Ctrl+C 退出）..."
         echo ""
-        docker-compose logs -f metapulse
+        docker compose logs -f metapulse
         ;;
     5)
         echo "🏗️  重新构建并部署..."
@@ -111,7 +111,7 @@ case $REPLY in
 
         # 停止当前服务
         echo "1️⃣  停止当前服务..."
-        docker-compose down
+        docker compose down
 
         # 执行构建
         echo ""
@@ -121,7 +121,7 @@ case $REPLY in
         # 启动服务
         echo ""
         echo "3️⃣  启动服务..."
-        docker-compose up -d
+        docker compose up -d
 
         echo ""
         echo "⏳ 等待应用就绪（约 60 秒）..."
@@ -129,7 +129,7 @@ case $REPLY in
 
         echo ""
         echo "📊 服务状态："
-        docker-compose ps
+        docker compose ps
 
         echo ""
         echo "✅ 重新部署完成！"
@@ -150,10 +150,10 @@ echo "  • 健康检查:      http://localhost:8080/actuator/health"
 echo ""
 echo "📚 常用命令："
 echo ""
-echo "  • 查看状态:      docker-compose ps"
-echo "  • 查看应用日志:  docker-compose logs -f metapulse"
-echo "  • 查看所有日志:  docker-compose logs -f"
-echo "  • 重启应用:      docker-compose restart metapulse"
-echo "  • 停止服务:      docker-compose stop"
-echo "  • 删除容器:      docker-compose down"
+echo "  • 查看状态:      docker compose ps"
+echo "  • 查看应用日志:  docker compose logs -f metapulse"
+echo "  • 查看所有日志:  docker compose logs -f"
+echo "  • 重启应用:      docker compose restart metapulse"
+echo "  • 停止服务:      docker compose stop"
+echo "  • 删除容器:      docker compose down"
 echo ""

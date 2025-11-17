@@ -223,8 +223,8 @@ curl http://localhost:8080/actuator/health
 
 # 方式二：手动步骤
 ./scripts/deploy/build.sh full skip-tests
-docker-compose down
-docker-compose up -d
+docker compose down
+docker compose up -d
 ```
 
 ---
@@ -235,7 +235,7 @@ docker-compose up -d
 
 ```bash
 # 查看详细日志
-docker-compose -f docker-compose.services.yml logs
+docker compose -f docker-compose.services.yml logs
 
 # 检查端口占用
 netstat -tuln | grep -E '5432|9092|9200'
@@ -262,13 +262,13 @@ cd backend
 
 ```bash
 # 查看应用日志
-docker-compose logs -f metapulse
+docker compose logs -f metapulse
 
 # 检查健康状态
 curl http://localhost:8080/actuator/health
 
 # 重启应用
-docker-compose restart metapulse
+docker compose restart metapulse
 ```
 
 ---
