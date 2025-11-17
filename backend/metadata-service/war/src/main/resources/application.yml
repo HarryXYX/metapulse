@@ -29,10 +29,10 @@ spring:
 
   # 数据库配置
   datasource:
-    url: jdbc:${DB_TYPE:postgresql}://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:metapulse}
+    url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_DATABASE:metapulse}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:metapulse}
     password: ${DB_PASSWORD:metapulse}
-    driver-class-name: ${DB_DRIVER:org.postgresql.Driver}
+    driver-class-name: ${DB_DRIVER:com.mysql.cj.jdbc.Driver}
 
     # HikariCP连接池配置（Web + Consumer共享）
     hikari:
@@ -49,7 +49,7 @@ spring:
     show-sql: false
     properties:
       hibernate:
-        dialect: ${HIBERNATE_DIALECT:org.hibernate.dialect.PostgreSQLDialect}
+        dialect: ${HIBERNATE_DIALECT:org.hibernate.dialect.MySQL8Dialect}
 
   # 静态资源配置（前端资源服务）
   web:

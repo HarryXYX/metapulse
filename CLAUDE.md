@@ -32,8 +32,8 @@ metapulse/
 # Initialize environment (checks dependencies, installs packages)
 ./scripts/setup.sh
 
-# Start dependency services (PostgreSQL, Elasticsearch, Kafka)
-docker-compose up -d postgres elasticsearch kafka
+# Start dependency services (MySQL, Elasticsearch, Kafka)
+docker-compose up -d mysql elasticsearch kafka
 ```
 
 ### Frontend Development (VSCode recommended)
@@ -195,7 +195,7 @@ All consumers are embedded in the WAR for All-in-One deployment.
 | Frontend | TypeScript | Latest |
 | Frontend | Vite | Latest |
 | Search | Elasticsearch | 8.17.4 |
-| Database | PostgreSQL | 14+ |
+| Database | MySQL | 8.0+ |
 | Messaging | Kafka | 8.0.0 |
 
 ## Common Development Workflows
@@ -242,7 +242,7 @@ docker-compose logs -f metapulse
 
 Key variables (see `.env.example` for complete list):
 - `SERVER_PORT` - Service port (default: 8080)
-- `DB_HOST`, `DB_PORT`, `DB_DATABASE` - PostgreSQL connection
+- `DB_HOST`, `DB_PORT`, `DB_DATABASE` - MySQL connection
 - `ELASTICSEARCH_HOST`, `ELASTICSEARCH_PORT` - Search engine
 - `KAFKA_BOOTSTRAP_SERVERS` - Message queue
 - `MAE_CONSUMER_ENABLED`, `MCE_CONSUMER_ENABLED`, `PE_CONSUMER_ENABLED` - Enable/disable consumers
@@ -290,7 +290,7 @@ yarn build
 ```
 
 ### Backend startup issues
-- Check PostgreSQL: `docker-compose ps postgres`
+- Check MySQL: `docker-compose ps mysql`
 - Check Elasticsearch: `curl http://localhost:9200`
 - Check Kafka: `docker-compose logs kafka`
 

@@ -5,26 +5,32 @@ version: '3.8'
 # 使用方式：docker-compose -f docker-compose.services.yml up -d
 
 services:
-  # PostgreSQL数据库
-  postgres:
-    image: postgres:14-alpine
-    container_name: metapulse-postgres
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0.40
+    container_name: metapulse-mysql
     restart: unless-stopped
     ports:
-      - "5432:5432"
+      - "3306:3306"
     environment:
-      POSTGRES_USER: metapulse
-      POSTGRES_PASSWORD: metapulse
-      POSTGRES_DB: metapulse
-      POSTGRES_INITDB_ARGS: "-E UTF8"
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: metapulse
+      MYSQL_USER: metapulse
+      MYSQL_PASSWORD: metapulse
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-storage-engine=InnoDB
+      - --max-connections=500
+      - --max-allowed-packet=64M
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "metapulse"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 30s
     networks:
       - metapulse-network
 
@@ -115,7 +121,7 @@ services:
 
 # 持久化存储卷
 volumes:
-  postgres-data:
+  mysql-data:
     driver: local
   elasticsearch-data:
     driver: local

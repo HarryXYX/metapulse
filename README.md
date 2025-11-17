@@ -63,7 +63,7 @@ MetaPulse 是一个企业级元数据管理平台，提供数据发现、血缘�
 | Spring Boot | 3.4.5 | Web 框架 |
 | Spring Kafka | 3.3.8 | 消息队列集成 |
 | Gradle | 8.14.3 | 构建工具 |
-| PostgreSQL | 14+ | 关系型数据库 |
+| MySQL | 8.0+ | 关系型数据库 |
 | Elasticsearch | 8.11.0 | 搜索引擎 |
 | Kafka | 7.6.0 | 消息队列 |
 
@@ -123,7 +123,7 @@ docker-compose up -d
 ```
 ┌─────────────────────────────────────────┐
 │  服务器 (47.80.65.112)                   │
-│  ├─ PostgreSQL      :5432               │
+│  ├─ MySQL           :3306               │
 │  ├─ Elasticsearch   :9200               │
 │  └─ Kafka          :9092                │
 └─────────────────────────────────────────┘
@@ -141,13 +141,13 @@ docker-compose up -d
 
 ```bash
 # CentOS/RHEL
-sudo firewall-cmd --permanent --add-port=5432/tcp
+sudo firewall-cmd --permanent --add-port=3306/tcp
 sudo firewall-cmd --permanent --add-port=9200/tcp
 sudo firewall-cmd --permanent --add-port=9092/tcp
 sudo firewall-cmd --reload
 
 # Ubuntu/Debian
-sudo ufw allow 5432/tcp
+sudo ufw allow 3306/tcp
 sudo ufw allow 9200/tcp
 sudo ufw allow 9092/tcp
 sudo ufw reload
@@ -158,7 +158,7 @@ sudo ufw reload
 ```bash
 cd /path/to/metapulse
 
-# 启动依赖服务（仅 PostgreSQL, Elasticsearch, Kafka）
+# 启动依赖服务（仅 MySQL, Elasticsearch, Kafka）
 docker-compose -f docker-compose.services.yml up -d
 
 # 查看服务状态
@@ -168,8 +168,8 @@ docker-compose -f docker-compose.services.yml ps
 #### 3. 验证服务
 
 ```bash
-# 测试 PostgreSQL
-psql -h 47.80.65.112 -U metapulse -d metapulse -p 5432
+# 测试 MySQL
+mysql -h 47.80.65.112 -u metapulse -p metapulse
 
 # 测试 Elasticsearch
 curl http://47.80.65.112:9200/_cluster/health
@@ -304,7 +304,7 @@ metapulse/
 ```yaml
 spring:
   datasource:
-    url: jdbc:${DB_TYPE:postgresql}://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_DATABASE:metapulse}
+    url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_DATABASE:metapulse}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:metapulse}
     password: ${DB_PASSWORD:metapulse}
 
@@ -324,7 +324,7 @@ elasticsearch:
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://47.80.65.112:5432/metapulse
+    url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: metapulse
     password: metapulse
 
@@ -459,14 +459,14 @@ docker-compose down -v               # 停止并删除数据卷（⚠️ 会删�
 ```bash
 # 1. 检查服务器防火墙
 ssh user@47.80.65.112
-sudo firewall-cmd --list-ports  # 应包含 5432, 9092, 9200
+sudo firewall-cmd --list-ports  # 应包含 3306, 9092, 9200
 
 # 2. 检查服务状态
 docker-compose -f docker-compose.services.yml ps
 
 # 3. 测试网络连通性
 ping 47.80.65.112
-telnet 47.80.65.112 5432
+telnet 47.80.65.112 3306
 telnet 47.80.65.112 9092
 telnet 47.80.65.112 9200
 ```

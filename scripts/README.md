@@ -49,7 +49,7 @@ scripts/
 ### deploy/deps-only.sh - 启动依赖服务
 
 **功能**：
-- 仅启动 PostgreSQL、Elasticsearch、Kafka
+- 仅启动 MySQL、Elasticsearch、Kafka
 - 供本地开发使用（服务器提供依赖服务）
 - 使用 `docker-compose.services.yml`
 
@@ -72,7 +72,7 @@ cd /path/to/metapulse
 - `4` - 查看服务日志
 
 **服务端口**：
-- PostgreSQL: 5432
+- MySQL: 3306
 - Elasticsearch: 9200
 - Kafka: 9092
 
@@ -238,7 +238,7 @@ docker compose up -d
 docker compose -f docker-compose.services.yml logs
 
 # 检查端口占用
-netstat -tuln | grep -E '5432|9092|9200'
+netstat -tuln | grep -E '3306|9092|9200'
 
 # 重启服务
 ./scripts/deploy/deps-only.sh
@@ -297,7 +297,7 @@ docker compose restart metapulse
    - 确保 Docker 服务运行：`docker ps`
 
 4. **端口开放**：
-   - 服务器防火墙需开放端口：5432, 9092, 9200, 8080
+   - 服务器防火墙需开放端口：3306, 9092, 9200, 8080
 
 ---
 

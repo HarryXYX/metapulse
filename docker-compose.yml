@@ -4,26 +4,32 @@ version: '3.8'
 # 包含所有必要的基础设施和单体应用
 
 services:
-  # PostgreSQL数据库
-  postgres:
-    image: postgres:14-alpine
-    container_name: metapulse-postgres
+  # MySQL数据库
+  mysql:
+    image: mysql:8.0.40
+    container_name: metapulse-mysql
     restart: unless-stopped
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${MYSQL_PORT:-3306}:3306"
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-metapulse}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-metapulse}
-      POSTGRES_DB: ${POSTGRES_DB:-metapulse}
-      POSTGRES_INITDB_ARGS: "-E UTF8"
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-metapulse}
+      MYSQL_USER: ${MYSQL_USER:-metapulse}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-metapulse}
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-storage-engine=InnoDB
+      - --max-connections=500
+      - --max-allowed-packet=64M
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - mysql-data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "metapulse"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$${MYSQL_ROOT_PASSWORD:-root}"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 10s
+      start_period: 30s
     networks:
       - metapulse-network
 
@@ -118,7 +124,7 @@ services:
     container_name: metapulse-app
     restart: unless-stopped
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
       elasticsearch:
         condition: service_healthy
@@ -137,12 +143,12 @@ services:
       - ENTITY_CLIENT_IMPL=java
 
       # ===== 数据库配置 =====
-      - DB_TYPE=postgresql
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_DATABASE=${POSTGRES_DB:-metapulse}
-      - DB_USERNAME=${POSTGRES_USER:-metapulse}
-      - DB_PASSWORD=${POSTGRES_PASSWORD:-metapulse}
+      - DB_TYPE=mysql
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_DATABASE=${MYSQL_DATABASE:-metapulse}
+      - DB_USERNAME=${MYSQL_USER:-metapulse}
+      - DB_PASSWORD=${MYSQL_PASSWORD:-metapulse}
       - DB_POOL_MAX=50
       - DB_POOL_MIN=10
 
@@ -184,7 +190,7 @@ services:
 
 # 持久化存储卷
 volumes:
-  postgres-data:
+  mysql-data:
     driver: local
   elasticsearch-data:
     driver: local

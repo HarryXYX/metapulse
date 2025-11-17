@@ -8,10 +8,10 @@ server:
 # ===== 数据库配置 =====
 spring:
   datasource:
-    url: jdbc:postgresql://47.80.65.112:5432/metapulse
+    url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: metapulse
     password: metapulse
-    driver-class-name: org.postgresql.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
     hikari:
       maximum-pool-size: 20  # 开发环境减少连接池
@@ -127,3 +127,11 @@ metadataChangeProposal:
 telemetry:
   enabledCli: false  # 开发环境禁用遥测
   enabledServer: false
+
+# ===== Ebean 配置（数据库表自动创建） =====
+ebean:
+  username: metapulse
+  password: metapulse
+  url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+  driver: com.mysql.cj.jdbc.Driver
+  autoCreateDdl: true  # ✨ 关键配置：启用自动建表
