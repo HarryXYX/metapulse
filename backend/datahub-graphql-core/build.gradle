@@ -62,6 +62,7 @@ tasks.withType(Checkstyle) {
 }
 
 compileJava.dependsOn 'graphqlCodegen'
-build.dependsOn ':datahub-web-react:graphqlPrettierCheck'
-spotlessApply.dependsOn ':datahub-web-react:graphqlPrettierWrite'
+// Removed frontend dependency (datahub-web-react is in frontend/ directory, not backend/)
+// build.dependsOn ':datahub-web-react:graphqlPrettierCheck'
+// spotlessApply.dependsOn ':datahub-web-react:graphqlPrettierWrite'
 sourceSets.main.java.srcDir "$projectDir/src/mainGeneratedGraphQL/java"
