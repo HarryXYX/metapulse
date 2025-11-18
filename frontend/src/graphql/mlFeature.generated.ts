@@ -1,0 +1,207 @@
+/* eslint-disable */
+import * as Types from "../types.generated";
+
+import {
+  NonRecursiveMlFeatureFragment,
+  StructuredPropertiesFieldsFragment,
+  EntityPrivilegesFragment,
+  AutoRenderAspectFieldsFragment,
+  FormsFieldsFragment,
+  OwnershipFieldsFragment,
+  Notes_AccessTokenMetadata_Fragment,
+  Notes_Application_Fragment,
+  Notes_Assertion_Fragment,
+  Notes_BusinessAttribute_Fragment,
+  Notes_Chart_Fragment,
+  Notes_Container_Fragment,
+  Notes_CorpGroup_Fragment,
+  Notes_CorpUser_Fragment,
+  Notes_Dashboard_Fragment,
+  Notes_DataContract_Fragment,
+  Notes_DataFlow_Fragment,
+  Notes_DataHubConnection_Fragment,
+  Notes_DataHubFile_Fragment,
+  Notes_DataHubPageModule_Fragment,
+  Notes_DataHubPageTemplate_Fragment,
+  Notes_DataHubPolicy_Fragment,
+  Notes_DataHubRole_Fragment,
+  Notes_DataHubView_Fragment,
+  Notes_DataJob_Fragment,
+  Notes_DataPlatform_Fragment,
+  Notes_DataPlatformInstance_Fragment,
+  Notes_DataProcessInstance_Fragment,
+  Notes_DataProduct_Fragment,
+  Notes_DataTypeEntity_Fragment,
+  Notes_Dataset_Fragment,
+  Notes_Domain_Fragment,
+  Notes_ErModelRelationship_Fragment,
+  Notes_EntityTypeEntity_Fragment,
+  Notes_ExecutionRequest_Fragment,
+  Notes_Form_Fragment,
+  Notes_GlossaryNode_Fragment,
+  Notes_GlossaryTerm_Fragment,
+  Notes_Incident_Fragment,
+  Notes_MlFeature_Fragment,
+  Notes_MlFeatureTable_Fragment,
+  Notes_MlModel_Fragment,
+  Notes_MlModelGroup_Fragment,
+  Notes_MlPrimaryKey_Fragment,
+  Notes_Notebook_Fragment,
+  Notes_OwnershipTypeEntity_Fragment,
+  Notes_Post_Fragment,
+  Notes_QueryEntity_Fragment,
+  Notes_Restricted_Fragment,
+  Notes_Role_Fragment,
+  Notes_SchemaFieldEntity_Fragment,
+  Notes_StructuredPropertyEntity_Fragment,
+  Notes_Tag_Fragment,
+  Notes_Test_Fragment,
+  Notes_VersionSet_Fragment,
+  Notes_VersionedDataset_Fragment,
+  EntityDomainFragment,
+  InstitutionalMemoryFieldsFragment,
+  GlobalTagsFieldsFragment,
+  GlossaryTermsFragment,
+} from "./fragments.generated";
+import { FullRelationshipResultsFragment } from "./relationships.generated";
+import { gql } from "@apollo/client";
+import {
+  NonRecursiveMlFeatureFragmentDoc,
+  StructuredPropertiesFieldsFragmentDoc,
+  EntityPrivilegesFragmentDoc,
+  AutoRenderAspectFieldsFragmentDoc,
+  FormsFieldsFragmentDoc,
+  OwnershipFieldsFragmentDoc,
+  NotesFragmentDoc,
+  EntityDomainFragmentDoc,
+  InstitutionalMemoryFieldsFragmentDoc,
+  GlobalTagsFieldsFragmentDoc,
+  GlossaryTermsFragmentDoc,
+} from "./fragments.generated";
+import { FullRelationshipResultsFragmentDoc } from "./relationships.generated";
+import * as Apollo from "@apollo/client";
+export type GetMlFeatureQueryVariables = Types.Exact<{
+  urn: Types.Scalars["String"];
+}>;
+
+export type GetMlFeatureQuery = { __typename?: "Query" } & {
+  mlFeature?: Types.Maybe<
+    { __typename?: "MLFeature" } & Pick<Types.MlFeature, "urn" | "type"> & {
+        privileges?: Types.Maybe<
+          { __typename?: "EntityPrivileges" } & EntityPrivilegesFragment
+        >;
+        featureTables?: Types.Maybe<
+          {
+            __typename?: "EntityRelationshipsResult";
+          } & FullRelationshipResultsFragment
+        >;
+        autoRenderAspects?: Types.Maybe<
+          Array<{ __typename?: "RawAspect" } & AutoRenderAspectFieldsFragment>
+        >;
+        structuredProperties?: Types.Maybe<
+          { __typename?: "StructuredProperties" } & {
+            properties?: Types.Maybe<
+              Array<
+                {
+                  __typename?: "StructuredPropertiesEntry";
+                } & StructuredPropertiesFieldsFragment
+              >
+            >;
+          }
+        >;
+        forms?: Types.Maybe<{ __typename?: "Forms" } & FormsFieldsFragment>;
+      } & NonRecursiveMlFeatureFragment &
+      Notes_MlFeature_Fragment
+  >;
+};
+
+export const GetMlFeatureDocument = gql`
+  query getMLFeature($urn: String!) {
+    mlFeature(urn: $urn) {
+      urn
+      type
+      ...nonRecursiveMLFeature
+      privileges {
+        ...entityPrivileges
+      }
+      featureTables: relationships(
+        input: {
+          types: ["Contains"]
+          direction: INCOMING
+          start: 0
+          count: 100
+        }
+      ) {
+        ...fullRelationshipResults
+      }
+      autoRenderAspects: aspects(input: { autoRenderOnly: true }) {
+        ...autoRenderAspectFields
+      }
+      structuredProperties {
+        properties {
+          ...structuredPropertiesFields
+        }
+      }
+      forms {
+        ...formsFields
+      }
+      ...notes
+    }
+  }
+  ${NonRecursiveMlFeatureFragmentDoc}
+  ${EntityPrivilegesFragmentDoc}
+  ${FullRelationshipResultsFragmentDoc}
+  ${AutoRenderAspectFieldsFragmentDoc}
+  ${StructuredPropertiesFieldsFragmentDoc}
+  ${FormsFieldsFragmentDoc}
+  ${NotesFragmentDoc}
+`;
+
+/**
+ * __useGetMlFeatureQuery__
+ *
+ * To run a query within a React component, call `useGetMlFeatureQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMlFeatureQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMlFeatureQuery({
+ *   variables: {
+ *      urn: // value for 'urn'
+ *   },
+ * });
+ */
+export function useGetMlFeatureQuery(
+  baseOptions: Apollo.QueryHookOptions<
+    GetMlFeatureQuery,
+    GetMlFeatureQueryVariables
+  >,
+) {
+  return Apollo.useQuery<GetMlFeatureQuery, GetMlFeatureQueryVariables>(
+    GetMlFeatureDocument,
+    baseOptions,
+  );
+}
+export function useGetMlFeatureLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<
+    GetMlFeatureQuery,
+    GetMlFeatureQueryVariables
+  >,
+) {
+  return Apollo.useLazyQuery<GetMlFeatureQuery, GetMlFeatureQueryVariables>(
+    GetMlFeatureDocument,
+    baseOptions,
+  );
+}
+export type GetMlFeatureQueryHookResult = ReturnType<
+  typeof useGetMlFeatureQuery
+>;
+export type GetMlFeatureLazyQueryHookResult = ReturnType<
+  typeof useGetMlFeatureLazyQuery
+>;
+export type GetMlFeatureQueryResult = Apollo.QueryResult<
+  GetMlFeatureQuery,
+  GetMlFeatureQueryVariables
+>;

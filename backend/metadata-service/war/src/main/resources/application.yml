@@ -72,33 +72,30 @@ spring:
 
 # ===== Kafka配置 =====
 kafka:
-  bootstrap:
-    servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+  bootstrapServers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
 
-  schema:
-    registry:
-      url: ${KAFKA_SCHEMA_REGISTRY_URL:http://localhost:8080/schema-registry/api}
-      type: ${KAFKA_SCHEMA_REGISTRY_TYPE:INTERNAL}
+  schemaRegistry:
+    url: ${KAFKA_SCHEMA_REGISTRY_URL:http://localhost:8080/schema-registry/api}
+    type: ${KAFKA_SCHEMA_REGISTRY_TYPE:INTERNAL}
 
   # Producer配置（Web服务使用）
   producer:
     acks: ${KAFKA_PRODUCER_ACKS:all}
     retries: ${KAFKA_PRODUCER_RETRIES:3}
-    compression:
-      type: ${KAFKA_PRODUCER_COMPRESSION:snappy}
-    max-request-size: 1048576
+    compressionType: ${KAFKA_PRODUCER_COMPRESSION:snappy}
+    maxRequestSize: 1048576
 
   # Consumer配置（Consumer模块使用）
   consumer:
-    group-id: ${KAFKA_CONSUMER_GROUP_ID:metapulse-consumers}
-    auto-offset-reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
-    max-poll-records: ${KAFKA_MAX_POLL_RECORDS:100}
-    enable-auto-commit: false
-    session-timeout-ms: 30000
-    max-poll-interval-ms: 300000
+    groupId: ${KAFKA_CONSUMER_GROUP_ID:metapulse-consumers}
+    autoOffsetReset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
+    maxPollRecords: ${KAFKA_MAX_POLL_RECORDS:100}
+    enableAutoCommit: false
+    sessionTimeoutMs: 30000
+    maxPollIntervalMs: 300000
 
   # Kafka Consumer并发配置
-  listeners:
+  listener:
     concurrency: ${KAFKA_LISTENER_CONCURRENCY:4}  # 每个Consumer的并发线程数
 
 # ===== Elasticsearch配置 =====
@@ -109,7 +106,7 @@ elasticsearch:
   username: ${ELASTICSEARCH_USERNAME:}
   password: ${ELASTICSEARCH_PASSWORD:}
   threadCount: ${ELASTICSEARCH_THREAD_COUNT:4}
-  connectionRequestTimeout: ${ELASTICSEARCH_CONN_TIMEOUT:30s}
+  connectionRequestTimeout: ${ELASTICSEARCH_CONN_TIMEOUT:30000}
   bulkProcessor:
     requestsLimit: ${ES_BULK_REQUESTS_LIMIT:1000}
     flushPeriod: ${ES_BULK_FLUSH_PERIOD:1}
@@ -180,3 +177,23 @@ visualConfig:
 telemetry:
   enabledCli: ${DATAHUB_TELEMETRY_ENABLED:true}
   enabledServer: ${DATAHUB_TELEMETRY_ENABLED:true}
+
+# ===== Ebean ORM 配置 =====
+ebean:
+  username: ${EBEAN_DATASOURCE_USERNAME:${DB_USERNAME:metapulse}}
+  password: ${EBEAN_DATASOURCE_PASSWORD:${DB_PASSWORD:metapulse}}
+  url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_DATABASE:metapulse}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+  driver: ${EBEAN_DATASOURCE_DRIVER:${DB_DRIVER:com.mysql.cj.jdbc.Driver}}
+  minConnections: ${EBEAN_MIN_CONNECTIONS:2}
+  maxConnections: ${EBEAN_MAX_CONNECTIONS:50}
+  maxInactiveTimeSeconds: ${EBEAN_MAX_INACTIVE_TIME_SECONDS:120}
+  maxAgeMinutes: ${EBEAN_MAX_AGE_MINUTES:120}
+  leakTimeMinutes: ${EBEAN_LEAK_TIME_MINUTES:15}
+  waitTimeoutMillis: ${EBEAN_WAIT_TIMEOUT_MILLIS:1000}
+  autoCreateDdl: ${EBEAN_AUTOCREATE:false}
+
+# ===== Entity Registry 配置 =====
+# 使用 classpath resource 方式加载（从 metadata-models.jar 中加载）
+configEntityRegistry:
+  path: ${ENTITY_REGISTRY_CONFIG_PATH:#{null}}  # 明确设置为 null，避免使用相对路径
+  resource: classpath:entity-registry.yml

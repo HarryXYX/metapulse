@@ -449,6 +449,19 @@ configure(subprojects.findAll {! it.name.startsWith('spark-lineage')}) {
       force "org.eclipse.jetty:jetty-ee10-servlet:${jettyVersion}"
       force "org.eclipse.jetty:jetty-ee10-webapp:${jettyVersion}"
       force "org.eclipse.jetty:jetty-xml:${jettyVersion}"
+
+      // Force OpenTelemetry version to avoid conflicts with micrometer-tracing-bridge-otel
+      force "io.opentelemetry:opentelemetry-api:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk-common:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk-trace:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk-metrics:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk-logs:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-sdk-extension-autoconfigure-spi:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-exporter-otlp:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-exporter-otlp-common:${openTelemetryVersion}"
+      force "io.opentelemetry:opentelemetry-exporter-logging:${openTelemetryVersion}"
     }
   }
 }

@@ -37,19 +37,17 @@ spring:
 
 # ===== Kafka配置 =====
 kafka:
-  bootstrap:
-    servers: 47.80.65.112:9092
+  bootstrapServers: 47.80.65.112:9092
 
-  schema:
-    registry:
-      url: http://localhost:8080/schema-registry/api
-      type: INTERNAL
+  schemaRegistry:
+    url: http://localhost:8080/schema-registry/api
+    type: INTERNAL
 
   consumer:
-    group-id: metapulse-dev-consumers
-    auto-offset-reset: earliest
+    groupId: metapulse-dev-consumers
+    autoOffsetReset: earliest
 
-  listeners:
+  listener:
     concurrency: 2  # 开发环境减少并发
 
 # ===== Elasticsearch配置 =====
@@ -125,7 +123,7 @@ metadataChangeProposal:
     updateIntervalMs: 60000
 
 telemetry:
-  enabledCli: false  # 开发环境禁用遥测
+  enabledCli: false  # 开发环境禁用xian zh遥测
   enabledServer: false
 
 # ===== Ebean 配置（数据库表自动创建） =====
@@ -135,3 +133,9 @@ ebean:
   url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
   driver: com.mysql.cj.jdbc.Driver
   autoCreateDdl: true  # ✨ 关键配置：启用自动建表
+
+# ===== Entity Registry 配置 =====
+# 使用 classpath 方式加载（文件在 metadata-models 模块中）
+configEntityRegistry:
+  path: ${ENTITY_REGISTRY_CONFIG_PATH:#{null}}  # 明确设置为 null，避免使用相对路径
+  resource: classpath:entity-registry.yml
