@@ -305,3 +305,4 @@ yarn build
 - **Frontend Integration**: Frontend assets are built separately then integrated into the WAR
 - **Development Isolation**: Frontend and backend can be developed independently
 - **Monorepo Benefits**: Unified version control, easier refactoring across stack
+- 我的根目录里的datahub项目就是datahub的源码，具体路径是/project/datahub，我所有问到的datahub的问题，都通过我本地的源码去解答

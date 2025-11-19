@@ -3,6 +3,12 @@ set -e
 
 echo "🏗️  MetaPulse 应用构建"
 echo "========================================"
+echo "内存配置: 保守优化为 8GB 内存环境"
+echo "  • 前端: 2GB Node.js 堆内存"
+echo "  • 后端: 2GB Gradle JVM 堆内存"
+echo "  • Workers: 单线程（降低并发开销）"
+echo "  • 系统保留: ~4GB（充足冗余）"
+echo "========================================"
 echo ""
 
 BUILD_MODE=${1:-full}
@@ -42,6 +48,12 @@ build_frontend() {
 
     BUILD_SIZE=$(du -sh dist | cut -f1)
     echo "   ✅ 前端构建完成: $BUILD_SIZE"
+
+    # 清理缓存释放内存
+    echo "   🧹 清理构建缓存..."
+    rm -rf node_modules/.cache 2>/dev/null || true
+    rm -rf .vite 2>/dev/null || true
+
     cd ..
 }
 
@@ -125,10 +137,22 @@ show_help() {
 # 执行构建
 case $BUILD_MODE in
     full)
-        echo "🔨 完整构建模式"
+        echo "🔨 完整构建模式（分步执行，避免内存峰值）"
         echo ""
         build_frontend
+
+        # 等待内存释放
+        echo ""
+        echo "⏸️  暂停 10 秒，等待内存释放..."
+        sleep 10
+
         integrate_frontend
+
+        # 再次等待内存释放
+        echo ""
+        echo "⏸️  暂停 10 秒，等待内存释放..."
+        sleep 10
+
         build_backend
         ;;
 
