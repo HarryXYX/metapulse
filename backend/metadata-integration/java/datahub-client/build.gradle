@@ -100,8 +100,13 @@ test {
   // Add Python environment configuration
   dependsOn validatePythonEnv
   // 注释掉Python相关依赖，因为不包含metadata-ingestion模块
-  // dependsOn tasks.getByPath(":metadata-ingestion:installDev")
-  // systemProperty 'python.venv.path', System.getProperty('python.venv.path', '../../../metadata-ingestion/venv')
+//   dependsOn tasks.getByPath(":metadata-ingestion:installDev")
+//   systemProperty 'python.venv.path', System.getProperty('python.venv.path', '../../../metadata-ingestion/venv')
+
+  // Set default AWS region for tests to avoid SdkClientException
+  systemProperty 'aws.region', System.getProperty('aws.region', 'us-east-1')
+  environment 'AWS_REGION', System.getenv('AWS_REGION') ?: 'us-east-1'
+
   finalizedBy jacocoTestReport
 }
 

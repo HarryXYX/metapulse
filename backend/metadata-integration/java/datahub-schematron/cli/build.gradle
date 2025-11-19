@@ -31,14 +31,18 @@ dependencies {
 
 test {
     useTestNG()
-    
+
     testLogging {
         events "passed", "skipped", "failed"
         exceptionFormat "full"
         showStandardStreams = true
     }
-    
+
     systemProperty 'python.venv.path', System.getProperty('python.venv.path', '../venv')
+
+    // Set default AWS region for tests to avoid SdkClientException
+    systemProperty 'aws.region', System.getProperty('aws.region', 'us-east-1')
+    environment 'AWS_REGION', System.getenv('AWS_REGION') ?: 'us-east-1'
 }
 
 task validatePythonEnv {
