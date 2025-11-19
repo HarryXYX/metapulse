@@ -94,3 +94,12 @@ backend/metadata-service/war/src/main/resources/static/
 
 # ===== Docker =====
 docker-compose.override.yml
+
+# ===== 自动生成的文件（构建产物）=====
+# 后端 Avro Schema（从 metadata-models 自动复制）
+backend/metadata-events/mxe-registration/src/main/resources/avro/
+
+# 前端 GraphQL 类型定义（从 GraphQL schema 自动生成）
+frontend/src/**/*.generated.ts
+frontend/src/types.generated.ts
+frontend/src/possibleTypes.generated.ts
