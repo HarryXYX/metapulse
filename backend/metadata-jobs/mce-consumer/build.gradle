@@ -38,7 +38,6 @@ dependencies {
 
     annotationProcessor externalDependency.lombok
 
-    implementation externalDependency.awsMskIamAuth
     implementation externalDependency.azureIdentityExtensions
     implementation externalDependency.azureIdentity
 

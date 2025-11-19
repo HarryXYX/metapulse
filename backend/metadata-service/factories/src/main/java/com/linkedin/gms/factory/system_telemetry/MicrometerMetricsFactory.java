@@ -19,8 +19,8 @@ import io.micrometer.tracing.handler.DefaultTracingObservationHandler;
 import io.micrometer.tracing.otel.bridge.OtelCurrentTraceContext;
 import io.micrometer.tracing.otel.bridge.OtelTracer;
 import io.opentelemetry.api.trace.Tracer;
+import javax.annotation.Nonnull;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -37,9 +37,9 @@ public class MicrometerMetricsFactory {
   @Deprecated
   private static final HierarchicalNameMapper LEGACY_HIERARCHICAL_MAPPER =
       new HierarchicalNameMapper() {
-        @NotNull
+        @Nonnull
         @Override
-        public String toHierarchicalName(Meter.Id id, @NotNull NamingConvention namingConvention) {
+        public String toHierarchicalName(Meter.Id id, @Nonnull NamingConvention namingConvention) {
           return id.getName();
         }
       };

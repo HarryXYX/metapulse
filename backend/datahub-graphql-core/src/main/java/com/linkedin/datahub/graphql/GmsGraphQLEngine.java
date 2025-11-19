@@ -83,8 +83,6 @@ import com.linkedin.datahub.graphql.resolvers.entity.EntityExistsResolver;
 import com.linkedin.datahub.graphql.resolvers.entity.EntityPrivilegesResolver;
 import com.linkedin.datahub.graphql.resolvers.entity.versioning.LinkAssetVersionResolver;
 import com.linkedin.datahub.graphql.resolvers.entity.versioning.UnlinkAssetVersionResolver;
-import com.linkedin.datahub.graphql.resolvers.file.CreateDataHubFileResolver;
-import com.linkedin.datahub.graphql.resolvers.files.GetPresignedUploadUrlResolver;
 import com.linkedin.datahub.graphql.resolvers.form.BatchAssignFormResolver;
 import com.linkedin.datahub.graphql.resolvers.form.BatchRemoveFormResolver;
 import com.linkedin.datahub.graphql.resolvers.form.CreateDynamicFormAssignmentResolver;
@@ -352,7 +350,6 @@ import com.linkedin.metadata.service.SettingsService;
 import com.linkedin.metadata.service.ViewService;
 import com.linkedin.metadata.timeline.TimelineService;
 import com.linkedin.metadata.timeseries.TimeseriesAspectService;
-import com.linkedin.metadata.utils.aws.S3Util;
 import com.linkedin.metadata.utils.metrics.MetricUtils;
 import com.linkedin.metadata.version.GitVersion;
 import graphql.execution.DataFetcherResult;
@@ -502,8 +499,6 @@ public class GmsGraphQLEngine {
   private final GraphQLConfiguration graphQLConfiguration;
   private final MetricUtils metricUtils;
 
-  private final S3Util s3Util;
-
   private final BusinessAttributeType businessAttributeType;
 
   /** A list of GraphQL Plugins that extend the core engine */
@@ -643,8 +638,6 @@ public class GmsGraphQLEngine {
     this.dataHubFileType = new DataHubFileType(entityClient);
     this.graphQLConfiguration = args.graphQLConfiguration;
     this.metricUtils = args.metricUtils;
-    this.s3Util = args.s3Util;
-
     this.businessAttributeType = new BusinessAttributeType(entityClient);
     // Init Lists
     this.entityTypes =
@@ -1007,7 +1000,7 @@ public class GmsGraphQLEngine {
                         this.featureFlags,
                         this.chromeExtensionConfiguration,
                         this.settingsService,
-                        this.s3Util != null))
+                        false)) // S3 support removed
                 .dataFetcher(
                     "latestProductUpdate",
                     new ProductUpdateResolver(
@@ -1141,11 +1134,7 @@ public class GmsGraphQLEngine {
                     new DocPropagationSettingsResolver(this.settingsService))
                 .dataFetcher(
                     "globalHomePageSettings",
-                    new GlobalHomePageSettingsResolver(this.settingsService))
-                .dataFetcher(
-                    "getPresignedUploadUrl",
-                    new GetPresignedUploadUrlResolver(
-                        this.s3Util, this.datahubConfiguration.getS3())));
+                    new GlobalHomePageSettingsResolver(this.settingsService)));
   }
 
   private DataFetcher getEntitiesResolver() {
@@ -1443,10 +1432,6 @@ public class GmsGraphQLEngine {
                   "deletePageTemplate", new DeletePageTemplateResolver(this.pageTemplateService))
               .dataFetcher("upsertPageModule", new UpsertPageModuleResolver(this.pageModuleService))
               .dataFetcher("deletePageModule", new DeletePageModuleResolver(this.pageModuleService))
-              .dataFetcher(
-                  "createDataHubFile",
-                  new CreateDataHubFileResolver(
-                      this.dataHubFileService, this.datahubConfiguration.getS3()))
               .dataFetcher("setLogicalParent", new SetLogicalParentResolver(this.entityClient))
               .dataFetcher(
                   "updateDocPropagationSettings",

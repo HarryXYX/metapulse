@@ -38,7 +38,6 @@ import com.linkedin.metadata.service.SettingsService;
 import com.linkedin.metadata.service.ViewService;
 import com.linkedin.metadata.timeline.TimelineService;
 import com.linkedin.metadata.timeseries.TimeseriesAspectService;
-import com.linkedin.metadata.utils.aws.S3Util;
 import com.linkedin.metadata.utils.metrics.MetricUtils;
 import com.linkedin.metadata.version.GitVersion;
 import io.datahubproject.metadata.services.RestrictedService;
@@ -101,6 +100,5 @@ public class GmsGraphQLEngineArgs {
   DataHubFileService dataHubFileService;
   boolean systemTelemetryEnabled;
   MetricUtils metricUtils;
-  S3Util s3Util;
   // any fork specific args should go below this line
 }

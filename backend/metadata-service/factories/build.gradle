@@ -18,9 +18,6 @@ dependencies {
   implementation project(':metadata-service:schema-registry-api')
   implementation project(':metadata-service:events-service')
 
-  implementation (externalDependency.awsGlueSchemaRegistrySerde) {
-    exclude group: 'org.json', module: 'json'
-  }
   implementation externalDependency.elasticSearchRest
   implementation externalDependency.elasticsearch8Client
   implementation externalDependency.httpClient
@@ -44,14 +41,7 @@ dependencies {
   api externalDependency.httpClient
   implementation externalDependency.springActuator
   implementation externalDependency.micrometerObserve
-  implementation externalDependency.awsPostgresIamAuth
-  implementation externalDependency.awsRds
 
-  // AWS SDK for S3 file serving
-  implementation platform(externalDependency.awsSdk2Bom)
-  implementation 'software.amazon.awssdk:regions'
-  implementation 'software.amazon.awssdk:sts'
-  implementation 'software.amazon.awssdk:s3'
   implementation(externalDependency.mixpanel) {
     exclude group: 'org.json', module: 'json'
   }

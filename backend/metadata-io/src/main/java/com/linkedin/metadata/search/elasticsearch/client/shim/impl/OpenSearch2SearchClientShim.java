@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
-import org.apache.http.HttpRequestInterceptor;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -102,8 +101,6 @@ import org.opensearch.index.reindex.BulkByScrollResponse;
 import org.opensearch.index.reindex.DeleteByQueryRequest;
 import org.opensearch.index.reindex.ReindexRequest;
 import org.opensearch.index.reindex.UpdateByQueryRequest;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
-import software.amazon.awssdk.auth.signer.Aws4Signer;
 
 /**
  * Implementation of SearchClientShim using the OpenSearch 2.x REST High Level Client. This
@@ -242,23 +239,7 @@ public class OpenSearch2SearchClientShim extends AbstractBulkProcessorShim<BulkP
               shimConfiguration.getUsername(), shimConfiguration.getPassword()));
       httpAsyncClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
     }
-    if (shimConfiguration.isUseAwsIamAuth()) {
-      HttpRequestInterceptor interceptor =
-          getAwsRequestSigningInterceptor(shimConfiguration.getRegion());
-      httpAsyncClientBuilder.addInterceptorLast(interceptor);
-    }
-  }
-
-  private HttpRequestInterceptor getAwsRequestSigningInterceptor(String region) {
-
-    if (region == null) {
-      throw new IllegalArgumentException(
-          "Region must not be null when opensearchUseAwsIamAuth is enabled");
-    }
-    Aws4Signer signer = Aws4Signer.create();
-    // Uses default AWS credentials
-    return new AwsRequestSigningApacheInterceptor(
-        "es", signer, DefaultCredentialsProvider.create(), region);
+    // AWS IAM Auth removed - not supported
   }
 
   // Core search operations

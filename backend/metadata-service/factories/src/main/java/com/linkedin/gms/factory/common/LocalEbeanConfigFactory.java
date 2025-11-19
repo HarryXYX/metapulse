@@ -48,9 +48,6 @@ public class LocalEbeanConfigFactory {
   @Value("${ebean.autoCreateDdl:false}")
   private Boolean ebeanAutoCreate;
 
-  @Value("${ebean.postgresUseIamAuth:false}")
-  private Boolean postgresUseIamAuth;
-
   @Value("${ebean.useIamAuth:false}")
   private Boolean useIamAuth;
 
@@ -58,18 +55,6 @@ public class LocalEbeanConfigFactory {
   private String cloudProvider;
 
   // Environment variable properties for cloud detection
-  @Value("${AWS_REGION:#{null}}")
-  private String awsRegion;
-
-  @Value("${AWS_ACCESS_KEY_ID:#{null}}")
-  private String awsAccessKeyId;
-
-  @Value("${AWS_SECRET_ACCESS_KEY:#{null}}")
-  private String awsSecretAccessKey;
-
-  @Value("${AWS_SESSION_TOKEN:#{null}}")
-  private String awsSessionToken;
-
   @Value("${GOOGLE_APPLICATION_CREDENTIALS:#{null}}")
   private String googleApplicationCredentials;
 
@@ -104,7 +89,7 @@ public class LocalEbeanConfigFactory {
     DataSourceConfig dataSourceConfig = new DataSourceConfig();
 
     // Configure cross-cloud IAM authentication
-    boolean shouldUseIam = useIamAuth || postgresUseIamAuth;
+    boolean shouldUseIam = useIamAuth;
 
     CrossCloudIamUtils.CrossCloudConfig crossCloudConfig =
         CrossCloudIamUtils.configureCrossCloudIam(
@@ -112,10 +97,10 @@ public class LocalEbeanConfigFactory {
             ebeanDatasourceDriver,
             shouldUseIam,
             cloudProvider,
-            awsRegion,
-            awsAccessKeyId,
-            awsSecretAccessKey,
-            awsSessionToken,
+            null, // awsRegion
+            null, // awsAccessKeyId
+            null, // awsSecretAccessKey
+            null, // awsSessionToken
             googleApplicationCredentials,
             gcpProject,
             instanceConnectionName);

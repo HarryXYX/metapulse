@@ -48,7 +48,6 @@ import com.linkedin.metadata.service.SettingsService;
 import com.linkedin.metadata.service.ViewService;
 import com.linkedin.metadata.timeline.TimelineService;
 import com.linkedin.metadata.timeseries.TimeseriesAspectService;
-import com.linkedin.metadata.utils.aws.S3Util;
 import com.linkedin.metadata.utils.elasticsearch.IndexConvention;
 import com.linkedin.metadata.utils.elasticsearch.SearchClientShim;
 import com.linkedin.metadata.utils.metrics.MetricUtils;
@@ -219,10 +218,6 @@ public class GraphQLEngineFactory {
   @Qualifier("pageModuleService")
   private PageModuleService pageModuleService;
 
-  @Autowired(required = false)
-  @Qualifier("s3Util")
-  private S3Util s3Util;
-
   @Autowired
   @Qualifier("dataHubFileService")
   private DataHubFileService dataHubFileService;
@@ -294,7 +289,6 @@ public class GraphQLEngineFactory {
     args.setConnectionService(_connectionService);
     args.setAssertionService(assertionService);
     args.setMetricUtils(metricUtils);
-    args.setS3Util(s3Util);
 
     return new GmsGraphQLEngine(args).builder().build();
   }
