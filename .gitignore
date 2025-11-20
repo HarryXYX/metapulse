@@ -103,3 +103,13 @@ backend/metadata-events/mxe-registration/src/main/resources/avro/
 frontend/src/**/*.generated.ts
 frontend/src/types.generated.ts
 frontend/src/possibleTypes.generated.ts
+
+# PDL（Pegasus Data Language）生成的文件
+**/src/mainGeneratedDataTemplate/
+**/src/mainGeneratedRest/
+**/src/mainGeneratedAvroSchema/
+**/src/mainGeneratedGraphQL/
+**/src/testGeneratedDataTemplate/
+**/src/testGeneratedRest/
+**/src/testGeneratedAvroSchema/
+**/src/testGeneratedGraphQL/

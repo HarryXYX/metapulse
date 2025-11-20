@@ -1,9 +1,0 @@
-{
-  "type" : "record",
-  "name" : "RichTextModuleParams",
-  "namespace" : "com.linkedin.module",
-  "fields" : [ {
-    "name" : "content",
-    "type" : "string"
-  } ]
-}
