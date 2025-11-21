@@ -1,6 +1,0 @@
-{
-  "definitions" : {
-    "Schemaless" : { }
-  },
-  "$ref" : "#/definitions/Schemaless"
-}

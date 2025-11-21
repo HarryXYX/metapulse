@@ -1,6 +1,0 @@
-{
-  "definitions" : {
-    "DataHubPersonaInfo" : { }
-  },
-  "$ref" : "#/definitions/DataHubPersonaInfo"
-}

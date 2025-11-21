@@ -1,6 +1,0 @@
-{
-  "definitions" : {
-    "NullType" : { }
-  },
-  "$ref" : "#/definitions/NullType"
-}
