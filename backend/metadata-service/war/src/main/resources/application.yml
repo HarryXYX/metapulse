@@ -197,3 +197,8 @@ ebean:
 configEntityRegistry:
   path: ${ENTITY_REGISTRY_CONFIG_PATH:#{null}}  # 明确设置为 null，避免使用相对路径
   resource: classpath:entity-registry.yml
+
+# ===== 系统更新配置 =====
+# 跳过系统更新等待，加快启动速度（All-in-One模式）
+systemUpdate:
+  waitForSystemUpdate: ${BOOTSTRAP_SYSTEM_UPDATE_WAIT_FOR_SYSTEM_UPDATE:false}

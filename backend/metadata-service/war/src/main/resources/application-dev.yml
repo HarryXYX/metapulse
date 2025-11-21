@@ -43,9 +43,20 @@ kafka:
     url: http://localhost:8080/schema-registry/api
     type: INTERNAL
 
+  # Producer配置 - 增加超时适应远程Kafka
+  producer:
+    acks: all
+    retries: 3
+    compressionType: snappy
+    maxRequestSize: 1048576
+    requestTimeoutMs: 120000      # 请求超时：120秒（默认30秒）
+    deliveryTimeoutMs: 180000     # 投递超时：180秒（默认120秒）
+    maxBlockMs: 180000            # 最大阻塞时间：180秒（默认60秒）
+
   consumer:
     groupId: metapulse-dev-consumers
     autoOffsetReset: earliest
+    requestTimeoutMs: 120000      # 请求超时：120秒（默认30秒）
 
   listener:
     concurrency: 2  # 开发环境减少并发
@@ -139,3 +150,8 @@ ebean:
 configEntityRegistry:
   path: ${ENTITY_REGISTRY_CONFIG_PATH:#{null}}  # 明确设置为 null，避免使用相对路径
   resource: classpath:entity-registry.yml
+
+# ===== 系统更新配置 =====
+# 跳过系统更新等待，开发环境快速启动
+systemUpdate:
+  waitForSystemUpdate: false  # 🔑 关键配置：跳过Kafka系统更新消息等待
