@@ -1,6 +1,0 @@
-{
-  "definitions" : {
-    "BytesType" : { }
-  },
-  "$ref" : "#/definitions/BytesType"
-}

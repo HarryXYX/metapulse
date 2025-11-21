@@ -1,6 +1,0 @@
-{
-  "definitions" : {
-    "RecordType" : { }
-  },
-  "$ref" : "#/definitions/RecordType"
-}

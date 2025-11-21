@@ -1,6 +1,0 @@
-{
-  "definitions" : {
-    "BooleanType" : { }
-  },
-  "$ref" : "#/definitions/BooleanType"
-}
