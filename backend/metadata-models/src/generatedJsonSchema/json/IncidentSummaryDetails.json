@@ -1,0 +1,43 @@
+{
+  "definitions" : {
+    "IncidentSummaryDetails" : {
+      "description" : "Summary statistics about incidents on an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "The urn of the incident",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of an incident",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "description" : "The time at which the incident was raised in milliseconds since epoch.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "resolvedAt" : {
+          "default" : null,
+          "description" : "The time at which the incident was marked as resolved in milliseconds since epoch. Null if the incident is still active.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "priority" : {
+          "default" : null,
+          "description" : "The priority of the incident",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "urn", "type", "createdAt" ]
+    }
+  },
+  "$ref" : "#/definitions/IncidentSummaryDetails"
+}

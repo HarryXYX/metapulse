@@ -1,0 +1,35 @@
+{
+  "definitions" : {
+    "MLHyperParam" : {
+      "description" : "Properties associated with an ML Hyper Param",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the MLHyperParam",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLHyperParam",
+          "type" : "string"
+        },
+        "value" : {
+          "default" : null,
+          "description" : "The value of the MLHyperParam",
+          "type" : "string"
+        },
+        "createdAt" : {
+          "default" : null,
+          "description" : "Date when the MLHyperParam was developed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/MLHyperParam"
+}

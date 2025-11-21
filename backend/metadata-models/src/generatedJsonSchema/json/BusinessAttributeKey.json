@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "BusinessAttributeKey" : {
+      "description" : "Key for a Query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the Business Attribute.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/BusinessAttributeKey"
+}

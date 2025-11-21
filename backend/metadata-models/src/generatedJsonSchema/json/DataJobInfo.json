@@ -1,0 +1,92 @@
+{
+  "definitions" : {
+    "DataJobInfo" : {
+      "description" : "Information about a Data processing job",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Job name",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Job description",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "Datajob type\n*NOTE**: AzkabanJobType is deprecated. Please use strings instead.",
+          "type" : "string"
+        },
+        "flowUrn" : {
+          "default" : null,
+          "description" : "DataFlow urn that this job is part of",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "status" : {
+          "default" : null,
+          "description" : "Status of the job - Deprecated for Data Process Instance model.",
+          "$ref" : "#/definitions/JobStatus"
+        },
+        "env" : {
+          "default" : null,
+          "description" : "Environment for this job",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "customProperties", "name", "type" ]
+    },
+    "TimeStamp" : {
+      "description" : "A standard event timestamp",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the event occur",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "Optional: The actor urn involved in the event.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time" ]
+    },
+    "JobStatus" : {
+      "description" : "Job statuses",
+      "enum" : [ "STARTING", "IN_PROGRESS", "STOPPING", "STOPPED", "COMPLETED", "FAILED", "UNKNOWN", "SKIPPED" ]
+    },
+    "FabricType" : {
+      "description" : "Fabric group type",
+      "enum" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ]
+    }
+  },
+  "$ref" : "#/definitions/DataJobInfo"
+}

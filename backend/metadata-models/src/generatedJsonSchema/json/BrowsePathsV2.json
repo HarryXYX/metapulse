@@ -1,0 +1,37 @@
+{
+  "definitions" : {
+    "BrowsePathsV2" : {
+      "description" : "Shared aspect containing a Browse Path to be indexed for an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "path" : {
+          "description" : "A valid browse path for the entity. This field is provided by DataHub by default.\nThis aspect is a newer version of browsePaths where we can encode more information in the path.\nThis path is also based on containers for a given entity if it has containers.\n\nThis is stored in elasticsearch as unit-separator delimited strings and only includes platform specific folders or containers.\nThese paths should not include high level info captured elsewhere ie. Platform and Environment.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BrowsePathEntry"
+          }
+        }
+      },
+      "required" : [ "path" ]
+    },
+    "BrowsePathEntry" : {
+      "description" : "Represents a single level in an entity's browsePathV2",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The ID of the browse path entry. This is what gets stored in the index.\nIf there's an urn associated with this entry, id and urn will be the same",
+          "type" : "string"
+        },
+        "urn" : {
+          "default" : null,
+          "description" : "Optional urn pointing to some entity in DataHub",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/BrowsePathsV2"
+}

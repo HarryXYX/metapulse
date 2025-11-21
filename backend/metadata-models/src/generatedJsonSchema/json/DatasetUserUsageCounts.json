@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "DatasetUserUsageCounts" : {
+      "description" : "Records a single user's usage counts for a given resource",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "user" : {
+          "description" : "The unique id of the user.",
+          "type" : "string"
+        },
+        "count" : {
+          "description" : "Number of times the dataset has been used by the user.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "userEmail" : {
+          "default" : null,
+          "description" : "If user_email is set, we attempt to resolve the user's urn upon ingest",
+          "type" : "string"
+        }
+      },
+      "required" : [ "user", "count" ]
+    }
+  },
+  "$ref" : "#/definitions/DatasetUserUsageCounts"
+}

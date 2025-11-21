@@ -1,0 +1,87 @@
+{
+  "definitions" : {
+    "DataHubSearchConfig" : {
+      "description" : "Configuration for how any given field should be indexed and matched in the DataHub search index.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldName" : {
+          "default" : null,
+          "description" : "Name of the field in the search index. Defaults to the field name otherwise",
+          "type" : "string"
+        },
+        "fieldType" : {
+          "default" : null,
+          "description" : "Type of the field. Defines how the field is indexed and matched",
+          "$ref" : "#/definitions/SearchFieldType"
+        },
+        "queryByDefault" : {
+          "default" : false,
+          "description" : "Whether we should match the field for the default search query",
+          "type" : "boolean"
+        },
+        "enableAutocomplete" : {
+          "default" : false,
+          "description" : "Whether we should use the field for default autocomplete",
+          "type" : "boolean"
+        },
+        "addToFilters" : {
+          "default" : false,
+          "description" : "Whether or not to add field to filters.",
+          "type" : "boolean"
+        },
+        "addHasValuesToFilters" : {
+          "default" : true,
+          "description" : "Whether or not to add the \"has values\" to filters.\ncheck if this is conditional on addToFilters being true",
+          "type" : "boolean"
+        },
+        "filterNameOverride" : {
+          "default" : null,
+          "description" : "Display name of the filter",
+          "type" : "string"
+        },
+        "hasValuesFilterNameOverride" : {
+          "default" : null,
+          "description" : "Display name of the has values filter",
+          "type" : "string"
+        },
+        "boostScore" : {
+          "default" : 1,
+          "description" : "Boost multiplier to the match score. Matches on fields with higher boost score ranks higher",
+          "type" : "number"
+        },
+        "hasValuesFieldName" : {
+          "default" : null,
+          "description" : "If set, add a index field of the given name that checks whether the field exists",
+          "type" : "string"
+        },
+        "numValuesFieldName" : {
+          "default" : null,
+          "description" : "If set, add a index field of the given name that checks the number of elements",
+          "type" : "string"
+        },
+        "weightsPerFieldValue" : {
+          "default" : null,
+          "description" : "(Optional) Weights to apply to score for a given value",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "number"
+          }
+        },
+        "fieldNameAliases" : {
+          "default" : null,
+          "description" : "(Optional) Aliases for this given field that can be used for sorting etc.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "queryByDefault", "enableAutocomplete", "addToFilters", "addHasValuesToFilters", "boostScore" ]
+    },
+    "SearchFieldType" : {
+      "enum" : [ "KEYWORD", "TEXT", "TEXT_PARTIAL", "BROWSE_PATH", "URN", "URN_PARTIAL", "BOOLEAN", "COUNT", "DATETIME", "OBJECT", "BROWSE_PATH_V2", "WORD_GRAM" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubSearchConfig"
+}

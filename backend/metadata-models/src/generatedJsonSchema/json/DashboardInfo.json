@@ -1,0 +1,197 @@
+{
+  "definitions" : {
+    "DashboardInfo" : {
+      "description" : "Information about a dashboard",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "Title of the dashboard",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Detailed description about the dashboard",
+          "type" : "string"
+        },
+        "charts" : {
+          "default" : [ ],
+          "description" : "Charts in a dashboard\nDeprecated! Use chartEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "chartEdges" : {
+          "default" : null,
+          "description" : "Charts in a dashboard",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "datasets" : {
+          "default" : [ ],
+          "description" : "Datasets consumed by a dashboard\nDeprecated! Use datasetEdges instead.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "datasetEdges" : {
+          "default" : null,
+          "description" : "Datasets consumed by a dashboard",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "dashboards" : {
+          "default" : [ ],
+          "description" : "Dashboards included by this dashboard.\nSome dashboard entities (e.g. PowerBI Apps) can contain other dashboards.\n\nThe Edge's sourceUrn should never be set, as it will always be the base dashboard.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Edge"
+          }
+        },
+        "lastModified" : {
+          "description" : "Captures information about who created/last modified/deleted this dashboard and when",
+          "$ref" : "#/definitions/ChangeAuditStamps"
+        },
+        "dashboardUrl" : {
+          "default" : null,
+          "description" : "URL for the dashboard. This could be used as an external link on DataHub to allow users access/view the dashboard",
+          "type" : "string"
+        },
+        "access" : {
+          "default" : null,
+          "description" : "Access level for the dashboard",
+          "$ref" : "#/definitions/AccessLevel"
+        },
+        "lastRefreshed" : {
+          "default" : null,
+          "description" : "The time when this dashboard last refreshed",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "customProperties", "title", "description", "charts", "datasets", "dashboards", "lastModified" ]
+    },
+    "Edge" : {
+      "description" : "A common structure to represent all edges to entities when used inside aspects as collections\nThis ensures that all edges have common structure around audit-stamps and will support PATCH, time-travel automatically.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "sourceUrn" : {
+          "default" : null,
+          "description" : "Urn of the source of this relationship edge.\nIf not specified, assumed to be the entity that this aspect belongs to.",
+          "type" : "string"
+        },
+        "destinationUrn" : {
+          "description" : "Urn of the destination of this relationship edge.",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created this relationship edge and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Audit stamp containing who last modified this relationship edge and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : "A generic properties bag that allows us to store specific information on this graph edge.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "destinationUrn" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    },
+    "ChangeAuditStamps" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into various lifecycle stages, and who acted to move it into those lifecycle stages. The recommended best practice is to include this record in your record schema, and annotate its fields as @readOnly in your resource. See https://github.com/linkedin/rest.li/wiki/Validation-in-Rest.li#restli-validation-annotations",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "AccessLevel" : {
+      "description" : "The various access levels",
+      "enum" : [ "PUBLIC", "PRIVATE" ]
+    }
+  },
+  "$ref" : "#/definitions/DashboardInfo"
+}

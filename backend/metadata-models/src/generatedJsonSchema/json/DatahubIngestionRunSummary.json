@@ -1,0 +1,268 @@
+{
+  "definitions" : {
+    "DatahubIngestionRunSummary" : {
+      "description" : "Summary of a datahub ingestion run for a given platform.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "timestampMillis" : {
+          "description" : "The event timestamp field as epoch at UTC in milli seconds.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "eventGranularity" : {
+          "default" : null,
+          "description" : "Granularity of the event if applicable",
+          "$ref" : "#/definitions/TimeWindowSize"
+        },
+        "partitionSpec" : {
+          "default" : {
+            "partition" : "FULL_TABLE_SNAPSHOT",
+            "type" : "FULL_TABLE",
+            "timePartition" : null
+          },
+          "description" : "The optional partition specification.",
+          "$ref" : "#/definitions/PartitionSpec"
+        },
+        "messageId" : {
+          "default" : null,
+          "description" : "The optional messageId, if provided serves as a custom user-defined unique identifier for an aspect value.",
+          "type" : "string"
+        },
+        "pipelineName" : {
+          "description" : "The name of the pipeline that ran ingestion, a stable unique user provided identifier.\n e.g. my_snowflake1-to-datahub.",
+          "type" : "string"
+        },
+        "platformInstanceId" : {
+          "description" : "The id of the instance against which the ingestion pipeline ran.\ne.g.: Bigquery project ids, MySQL hostnames etc.",
+          "type" : "string"
+        },
+        "runId" : {
+          "description" : "The runId for this pipeline instance.",
+          "type" : "string"
+        },
+        "runStatus" : {
+          "description" : "Run Status - Succeeded/Skipped/Failed etc.",
+          "$ref" : "#/definitions/JobStatus"
+        },
+        "numWorkUnitsCommitted" : {
+          "default" : null,
+          "description" : "The number of workunits written to sink.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numWorkUnitsCreated" : {
+          "default" : null,
+          "description" : "The number of workunits that are produced.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numEvents" : {
+          "default" : null,
+          "description" : "The number of events produced (MCE + MCP).",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numEntities" : {
+          "default" : null,
+          "description" : "The total number of entities produced (unique entity urns).",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numAspects" : {
+          "default" : null,
+          "description" : "The total number of aspects produced across all entities.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numSourceAPICalls" : {
+          "default" : null,
+          "description" : "Total number of source API calls.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "totalLatencySourceAPICalls" : {
+          "default" : null,
+          "description" : "Total latency across all source API calls.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numSinkAPICalls" : {
+          "default" : null,
+          "description" : "Total number of sink API calls.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "totalLatencySinkAPICalls" : {
+          "default" : null,
+          "description" : "Total latency across all sink API calls.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numWarnings" : {
+          "default" : null,
+          "description" : "Number of warnings generated.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numErrors" : {
+          "default" : null,
+          "description" : "Number of errors generated.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "numEntitiesSkipped" : {
+          "default" : null,
+          "description" : "Number of entities skipped.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "config" : {
+          "default" : null,
+          "description" : "The non-sensitive key-value pairs of the yaml config used as json string.",
+          "type" : "string"
+        },
+        "custom_summary" : {
+          "default" : null,
+          "description" : "Custom value.",
+          "type" : "string"
+        },
+        "softwareVersion" : {
+          "default" : null,
+          "description" : "The software version of this ingestion.",
+          "type" : "string"
+        },
+        "systemHostName" : {
+          "default" : null,
+          "description" : "The hostname the ingestion pipeline ran on.",
+          "type" : "string"
+        },
+        "operatingSystemName" : {
+          "default" : null,
+          "description" : "The os the ingestion pipeline ran on.",
+          "type" : "string"
+        },
+        "numProcessors" : {
+          "default" : null,
+          "description" : "The number of processors on the host the ingestion pipeline ran on.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "totalMemory" : {
+          "default" : null,
+          "description" : "The total amount of memory on the host the ingestion pipeline ran on.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "availableMemory" : {
+          "default" : null,
+          "description" : "The available memory on the host the ingestion pipeline ran on.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "timestampMillis", "partitionSpec", "pipelineName", "platformInstanceId", "runId", "runStatus" ]
+    },
+    "TimeWindowSize" : {
+      "description" : "Defines the size of a time window.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "unit" : {
+          "description" : "Interval unit such as minute/hour/day etc.",
+          "$ref" : "#/definitions/CalendarInterval"
+        },
+        "multiple" : {
+          "default" : 1,
+          "description" : "How many units. Defaults to 1.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "unit", "multiple" ]
+    },
+    "CalendarInterval" : {
+      "enum" : [ "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR" ]
+    },
+    "PartitionSpec" : {
+      "description" : "A reference to a specific partition in a dataset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "partition" : {
+          "description" : "A unique id / value for the partition for which statistics were collected,\ngenerated by applying the key definition to a given row.",
+          "type" : "string"
+        },
+        "timePartition" : {
+          "default" : null,
+          "description" : "Time window of the partition, if we are able to extract it from the partition key.",
+          "$ref" : "#/definitions/TimeWindow"
+        },
+        "type" : {
+          "default" : "PARTITION",
+          "description" : "Unused!",
+          "$ref" : "#/definitions/PartitionType"
+        }
+      },
+      "required" : [ "partition", "type" ]
+    },
+    "TimeWindow" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "startTimeMillis" : {
+          "description" : "Start time as epoch at UTC.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "length" : {
+          "description" : "The length of the window.",
+          "$ref" : "#/definitions/TimeWindowSize"
+        }
+      },
+      "required" : [ "startTimeMillis", "length" ]
+    },
+    "PartitionType" : {
+      "enum" : [ "FULL_TABLE", "QUERY", "PARTITION" ]
+    },
+    "JobStatus" : {
+      "description" : "Job statuses",
+      "enum" : [ "STARTING", "IN_PROGRESS", "STOPPING", "STOPPED", "COMPLETED", "FAILED", "UNKNOWN", "SKIPPED" ]
+    }
+  },
+  "$ref" : "#/definitions/DatahubIngestionRunSummary"
+}

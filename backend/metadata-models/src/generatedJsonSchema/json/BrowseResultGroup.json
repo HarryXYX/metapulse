@@ -1,0 +1,23 @@
+{
+  "definitions" : {
+    "BrowseResultGroup" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the group",
+          "type" : "string"
+        },
+        "count" : {
+          "description" : "Number of entities that can be reached from this path",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "name", "count" ]
+    }
+  },
+  "$ref" : "#/definitions/BrowseResultGroup"
+}

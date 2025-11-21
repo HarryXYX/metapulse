@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "AuditLogSpec" : {
+      "description" : "Information about the Audit Log operation to use in evaluating an assertion.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "operationTypes" : {
+          "default" : null,
+          "description" : "The list of operation types that should be monitored. If not provided, a default set will be used.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "userName" : {
+          "default" : null,
+          "description" : "Optional: The user name associated with the operation.",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/AuditLogSpec"
+}

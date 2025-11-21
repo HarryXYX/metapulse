@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "DeleteAspectValuesResult" : {
+      "description" : "Encapsulates the response of the deleteAspectValues API so that it can be extended\nas required in future.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "numDocsDeleted" : {
+          "default" : 0,
+          "description" : "Number of documents deleted.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "numDocsDeleted" ]
+    }
+  },
+  "$ref" : "#/definitions/DeleteAspectValuesResult"
+}

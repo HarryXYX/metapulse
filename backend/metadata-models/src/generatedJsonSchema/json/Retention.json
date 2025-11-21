@@ -1,0 +1,46 @@
+{
+  "definitions" : {
+    "Retention" : {
+      "description" : "Base class that encapsulates different retention policies.\nOnly one of the fields should be set",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "version" : {
+          "default" : null,
+          "$ref" : "#/definitions/VersionBasedRetention"
+        },
+        "time" : {
+          "default" : null,
+          "$ref" : "#/definitions/TimeBasedRetention"
+        }
+      }
+    },
+    "VersionBasedRetention" : {
+      "description" : "Keep max N latest records",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxVersions" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxVersions" ]
+    },
+    "TimeBasedRetention" : {
+      "description" : "Keep records that are less than X seconds old",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxAgeInSeconds" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxAgeInSeconds" ]
+    }
+  },
+  "$ref" : "#/definitions/Retention"
+}

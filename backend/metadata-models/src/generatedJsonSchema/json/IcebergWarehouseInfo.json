@@ -1,0 +1,46 @@
+{
+  "definitions" : {
+    "IcebergWarehouseInfo" : {
+      "description" : "An Iceberg warehouse location and credentails whose read/writes are governed by datahub catalog.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "dataRoot" : {
+          "description" : "Path of the root for the backing store of the tables in the warehouse.",
+          "type" : "string"
+        },
+        "clientId" : {
+          "description" : "clientId to be used to authenticate with storage hosting this warehouse",
+          "type" : "string"
+        },
+        "clientSecret" : {
+          "description" : "client secret to authenticate with storage hosting this warehouse",
+          "type" : "string"
+        },
+        "region" : {
+          "description" : "region where the warehouse is located.",
+          "type" : "string"
+        },
+        "role" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "tempCredentialExpirationSeconds" : {
+          "default" : null,
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "env" : {
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "dataRoot", "clientId", "clientSecret", "region", "env" ]
+    },
+    "FabricType" : {
+      "description" : "Fabric group type",
+      "enum" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ]
+    }
+  },
+  "$ref" : "#/definitions/IcebergWarehouseInfo"
+}

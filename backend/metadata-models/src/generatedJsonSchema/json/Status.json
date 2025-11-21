@@ -1,0 +1,18 @@
+{
+  "definitions" : {
+    "Status" : {
+      "description" : "The lifecycle status metadata of an entity, e.g. dataset, metric, feature, etc.\nThis aspect is used to represent soft deletes conventionally.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "removed" : {
+          "default" : false,
+          "description" : "Whether the entity has been removed (soft-deleted).",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "removed" ]
+    }
+  },
+  "$ref" : "#/definitions/Status"
+}

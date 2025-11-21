@@ -1,0 +1,27 @@
+{
+  "definitions" : {
+    "UserUsageCounts" : {
+      "description" : " Records a single user's usage counts for a given resource ",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "user" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "count" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "userEmail" : {
+          "default" : null,
+          "description" : " If user_email is set, we attempt to resolve the user's urn upon ingest ",
+          "type" : "string"
+        }
+      },
+      "required" : [ "count" ]
+    }
+  },
+  "$ref" : "#/definitions/UserUsageCounts"
+}

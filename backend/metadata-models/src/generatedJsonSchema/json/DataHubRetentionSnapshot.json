@@ -1,0 +1,95 @@
+{
+  "definitions" : {
+    "DataHubRetentionSnapshot" : {
+      "description" : "A metadata snapshot for DataHub Access Policy data.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the DataHub access policy.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataHubRetentionKey"
+            }, {
+              "$ref" : "#/definitions/DataHubRetentionConfig"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataHubRetentionKey" : {
+      "description" : "Key for a DataHub Retention",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "entityName" : {
+          "description" : "Entity name to apply retention to. * (or empty) for applying defaults.",
+          "type" : "string"
+        },
+        "aspectName" : {
+          "description" : "Aspect name to apply retention to. * (or empty) for applying defaults.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "entityName", "aspectName" ]
+    },
+    "DataHubRetentionConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "retention" : {
+          "$ref" : "#/definitions/Retention"
+        }
+      },
+      "required" : [ "retention" ]
+    },
+    "Retention" : {
+      "description" : "Base class that encapsulates different retention policies.\nOnly one of the fields should be set",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "version" : {
+          "default" : null,
+          "$ref" : "#/definitions/VersionBasedRetention"
+        },
+        "time" : {
+          "default" : null,
+          "$ref" : "#/definitions/TimeBasedRetention"
+        }
+      }
+    },
+    "VersionBasedRetention" : {
+      "description" : "Keep max N latest records",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxVersions" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxVersions" ]
+    },
+    "TimeBasedRetention" : {
+      "description" : "Keep records that are less than X seconds old",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxAgeInSeconds" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxAgeInSeconds" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubRetentionSnapshot"
+}

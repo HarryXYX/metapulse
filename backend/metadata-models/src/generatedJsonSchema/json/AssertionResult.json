@@ -1,0 +1,91 @@
+{
+  "definitions" : {
+    "AssertionResult" : {
+      "description" : "The result of running an assertion",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : " The final result, e.g. either SUCCESS, FAILURE, or ERROR.",
+          "$ref" : "#/definitions/AssertionResultType"
+        },
+        "rowCount" : {
+          "default" : null,
+          "description" : "Number of rows for evaluated batch",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "missingCount" : {
+          "default" : null,
+          "description" : "Number of rows with missing value for evaluated batch",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "unexpectedCount" : {
+          "default" : null,
+          "description" : "Number of rows with unexpected value for evaluated batch",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actualAggValue" : {
+          "default" : null,
+          "description" : "Observed aggregate value for evaluated batch",
+          "type" : "number"
+        },
+        "nativeResults" : {
+          "default" : null,
+          "description" : "Other results of evaluation",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "External URL where full results are available. Only present when assertion source is not native.",
+          "type" : "string"
+        },
+        "error" : {
+          "default" : null,
+          "description" : " The error object if AssertionResultType is an Error",
+          "$ref" : "#/definitions/AssertionResultError"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "AssertionResultType" : {
+      "description" : " The final result of evaluating an assertion, e.g. SUCCESS, FAILURE, or ERROR.",
+      "enum" : [ "INIT", "SUCCESS", "FAILURE", "ERROR" ]
+    },
+    "AssertionResultError" : {
+      "description" : " An error encountered when evaluating an AssertionResult",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : " The type of error encountered",
+          "$ref" : "#/definitions/AssertionResultErrorType"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : " Additional metadata depending on the type of error",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "AssertionResultErrorType" : {
+      "enum" : [ "SOURCE_CONNECTION_ERROR", "SOURCE_QUERY_FAILED", "INSUFFICIENT_DATA", "INVALID_PARAMETERS", "INVALID_SOURCE_TYPE", "UNSUPPORTED_PLATFORM", "CUSTOM_SQL_ERROR", "FIELD_ASSERTION_ERROR", "UNKNOWN_ERROR" ]
+    }
+  },
+  "$ref" : "#/definitions/AssertionResult"
+}

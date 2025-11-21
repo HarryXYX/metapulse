@@ -1,0 +1,6 @@
+{
+  "definitions" : {
+    "FixedType" : { }
+  },
+  "$ref" : "#/definitions/FixedType"
+}

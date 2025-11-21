@@ -1,0 +1,15 @@
+{
+  "definitions" : {
+    "RichTextModuleParams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "content" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "content" ]
+    }
+  },
+  "$ref" : "#/definitions/RichTextModuleParams"
+}

@@ -1,0 +1,24 @@
+{
+  "definitions" : {
+    "TestDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The Test Definition Type",
+          "$ref" : "#/definitions/TestDefinitionType"
+        },
+        "json" : {
+          "default" : null,
+          "description" : "JSON format configuration for the test",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "TestDefinitionType" : {
+      "enum" : [ "JSON" ]
+    }
+  },
+  "$ref" : "#/definitions/TestDefinition"
+}

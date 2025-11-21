@@ -1,0 +1,54 @@
+{
+  "definitions" : {
+    "FormPrompt" : {
+      "description" : "A prompt to present to the user to encourage filling out metadata",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The unique id for this prompt. This must be GLOBALLY unique.",
+          "type" : "string"
+        },
+        "title" : {
+          "description" : "The title of this prompt",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "The description of this prompt",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of prompt",
+          "$ref" : "#/definitions/FormPromptType"
+        },
+        "structuredPropertyParams" : {
+          "default" : null,
+          "description" : "An optional set of information specific to structured properties prompts.\nThis should be filled out if the prompt is type STRUCTURED_PROPERTY or FIELDS_STRUCTURED_PROPERTY.",
+          "$ref" : "#/definitions/StructuredPropertyParams"
+        },
+        "required" : {
+          "default" : false,
+          "description" : "Whether the prompt is required to be completed, in order for the form to be marked as complete.",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "id", "title", "type", "required" ]
+    },
+    "FormPromptType" : {
+      "enum" : [ "STRUCTURED_PROPERTY", "FIELDS_STRUCTURED_PROPERTY" ]
+    },
+    "StructuredPropertyParams" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "The structured property that is required on this entity",
+          "type" : "string"
+        }
+      },
+      "required" : [ "urn" ]
+    }
+  },
+  "$ref" : "#/definitions/FormPrompt"
+}

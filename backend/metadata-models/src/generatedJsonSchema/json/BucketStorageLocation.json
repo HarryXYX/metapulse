@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "BucketStorageLocation" : {
+      "description" : "Information where a file is stored",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "storageBucket" : {
+          "description" : "The storage bucket this file is stored in",
+          "type" : "string"
+        },
+        "storageKey" : {
+          "description" : "The key for where this file is stored inside of the given bucket",
+          "type" : "string"
+        }
+      },
+      "required" : [ "storageBucket", "storageKey" ]
+    }
+  },
+  "$ref" : "#/definitions/BucketStorageLocation"
+}

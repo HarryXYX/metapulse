@@ -1,0 +1,38 @@
+{
+  "definitions" : {
+    "ListUrnsResult" : {
+      "description" : "The model for listing a set of entity urns.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "entities" : {
+          "description" : "A list of entities returned from the list",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "start" : {
+          "description" : "Offset of the first entity in the result",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "count" : {
+          "description" : "Size of each page in the result",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "total" : {
+          "description" : "The total number of entities directly under searched path",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "entities", "start", "count", "total" ]
+    }
+  },
+  "$ref" : "#/definitions/ListUrnsResult"
+}

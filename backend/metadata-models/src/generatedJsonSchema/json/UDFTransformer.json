@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "UDFTransformer" : {
+      "description" : "Field transformation expressed in UDF",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "udf" : {
+          "description" : "A UDF mentioning how the source fields got transformed to destination field. This is the FQCN(Fully Qualified Class Name) of the udf.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "udf" ]
+    }
+  },
+  "$ref" : "#/definitions/UDFTransformer"
+}

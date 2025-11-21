@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "AvroSchema" : {
+      "description" : "Schema text for avro schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schema" : {
+          "description" : "The native Avro schema text.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "schema" ]
+    }
+  },
+  "$ref" : "#/definitions/AvroSchema"
+}

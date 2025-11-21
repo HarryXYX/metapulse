@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "DataFlowKey" : {
+      "description" : "Key for a Data Flow",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "orchestrator" : {
+          "description" : "Workflow manager like azkaban, airflow which orchestrates the flow",
+          "type" : "string"
+        },
+        "flowId" : {
+          "description" : "Unique Identifier of the data flow",
+          "type" : "string"
+        },
+        "cluster" : {
+          "description" : "Cluster where the flow is executed",
+          "type" : "string"
+        }
+      },
+      "required" : [ "orchestrator", "flowId", "cluster" ]
+    }
+  },
+  "$ref" : "#/definitions/DataFlowKey"
+}

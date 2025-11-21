@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "CorpUserKey" : {
+      "description" : "Key for a CorpUser",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "username" : {
+          "description" : "The name of the AD/LDAP user.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "username" ]
+    }
+  },
+  "$ref" : "#/definitions/CorpUserKey"
+}

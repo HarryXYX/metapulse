@@ -1,0 +1,23 @@
+{
+  "definitions" : {
+    "DatasetFieldUsageCounts" : {
+      "description" : "Records field-level usage counts for a given dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldPath" : {
+          "description" : "The name of the field.",
+          "type" : "string"
+        },
+        "count" : {
+          "description" : "Number of times the field has been used.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "fieldPath", "count" ]
+    }
+  },
+  "$ref" : "#/definitions/DatasetFieldUsageCounts"
+}

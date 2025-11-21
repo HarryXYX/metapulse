@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "AssertionKey" : {
+      "description" : "Key for a Assertion",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "assertionId" : {
+          "description" : "Unique id for the assertion.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "assertionId" ]
+    }
+  },
+  "$ref" : "#/definitions/AssertionKey"
+}

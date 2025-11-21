@@ -1,0 +1,18 @@
+{
+  "definitions" : {
+    "InstitutionalMemoryMetadataSettings" : {
+      "description" : "Settings related to a record of InstitutionalMemoryMetadata",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "showInAssetPreview" : {
+          "default" : false,
+          "description" : "Show record in asset preview like on entity header and search previews",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "showInAssetPreview" ]
+    }
+  },
+  "$ref" : "#/definitions/InstitutionalMemoryMetadataSettings"
+}

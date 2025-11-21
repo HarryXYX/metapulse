@@ -1,0 +1,38 @@
+{
+  "definitions" : {
+    "BatchSpec" : {
+      "description" : "A batch on which certain operations, e.g. data quality evaluation, is done.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "nativeBatchId" : {
+          "default" : null,
+          "description" : "The native identifier as specified by the system operating on the batch.",
+          "type" : "string"
+        },
+        "query" : {
+          "default" : null,
+          "description" : "A query that identifies a batch of data",
+          "type" : "string"
+        },
+        "limit" : {
+          "default" : null,
+          "description" : "Any limit to the number of rows in the batch, if applied",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "customProperties" ]
+    }
+  },
+  "$ref" : "#/definitions/BatchSpec"
+}

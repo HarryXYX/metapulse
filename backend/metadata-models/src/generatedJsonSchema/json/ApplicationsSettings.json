@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "ApplicationsSettings" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "enabled" : {
+          "type" : "boolean"
+        },
+        "config" : {
+          "default" : null,
+          "description" : "The configuration for the feature, in JSON format.",
+          "type" : "string"
+        },
+        "configVersion" : {
+          "default" : null,
+          "description" : "The version of the configuration schema that has been used to serialize\n       the config.\nIf not provided, the version is assumed to be the latest version.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "enabled" ]
+    }
+  },
+  "$ref" : "#/definitions/ApplicationsSettings"
+}

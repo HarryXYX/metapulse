@@ -1,0 +1,24 @@
+{
+  "definitions" : {
+    "Siblings" : {
+      "description" : "Siblings information of an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "siblings" : {
+          "description" : "List of sibling entities",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "primary" : {
+          "description" : "If this is the leader entity of the set of siblings",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "siblings", "primary" ]
+    }
+  },
+  "$ref" : "#/definitions/Siblings"
+}

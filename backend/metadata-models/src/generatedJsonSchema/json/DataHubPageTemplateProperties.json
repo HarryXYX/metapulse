@@ -1,0 +1,150 @@
+{
+  "definitions" : {
+    "DataHubPageTemplateProperties" : {
+      "description" : "The main properties of a DataHub page template",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rows" : {
+          "description" : "The rows of modules contained in this template",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DataHubPageTemplateRow"
+          }
+        },
+        "assetSummary" : {
+          "default" : null,
+          "description" : "The optional info for asset summaries. Should be populated if surfaceType is ASSET_SUMMARY",
+          "$ref" : "#/definitions/DataHubPageTemplateAssetSummary"
+        },
+        "surface" : {
+          "description" : "Info about the surface area of the product that this template is deployed in",
+          "$ref" : "#/definitions/DataHubPageTemplateSurface"
+        },
+        "visibility" : {
+          "description" : "Info about the visibility of this template",
+          "$ref" : "#/definitions/DataHubPageTemplateVisibility"
+        },
+        "created" : {
+          "description" : "Audit stamp for when and by whom this template was created",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "description" : "Audit stamp for when and by whom this template was last updated",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "rows", "surface", "visibility", "created", "lastModified" ]
+    },
+    "DataHubPageTemplateRow" : {
+      "description" : "A row of modules contained in a template",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "modules" : {
+          "description" : "The modules that exist in this template row",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "modules" ]
+    },
+    "DataHubPageTemplateAssetSummary" : {
+      "description" : "The page template info for asset summaries",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "summaryElements" : {
+          "default" : null,
+          "description" : "The optional list of properties shown on an asset summary page header.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SummaryElement"
+          }
+        }
+      }
+    },
+    "SummaryElement" : {
+      "description" : "Info for a given asset summary element",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "elementType" : {
+          "description" : "The type of element/property",
+          "$ref" : "#/definitions/SummaryElementType"
+        },
+        "structuredPropertyUrn" : {
+          "default" : null,
+          "description" : "The urn of the structured property shown. Required if propertyType is STRUCTURED_PROPERTY",
+          "type" : "string"
+        }
+      },
+      "required" : [ "elementType" ]
+    },
+    "SummaryElementType" : {
+      "enum" : [ "CREATED", "TAGS", "GLOSSARY_TERMS", "OWNERS", "DOMAIN", "STRUCTURED_PROPERTY" ]
+    },
+    "DataHubPageTemplateSurface" : {
+      "description" : "Info about the surface area of the product that this template is deployed in",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "surfaceType" : {
+          "description" : "Where exactly is this template being used",
+          "$ref" : "#/definitions/PageTemplateSurfaceType"
+        }
+      },
+      "required" : [ "surfaceType" ]
+    },
+    "PageTemplateSurfaceType" : {
+      "enum" : [ "HOME_PAGE", "ASSET_SUMMARY" ]
+    },
+    "DataHubPageTemplateVisibility" : {
+      "description" : "Info about the visibility of this template",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "scope" : {
+          "description" : "The scope of this template and who can use/see it",
+          "$ref" : "#/definitions/PageTemplateScope"
+        }
+      },
+      "required" : [ "scope" ]
+    },
+    "PageTemplateScope" : {
+      "enum" : [ "PERSONAL", "GLOBAL" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubPageTemplateProperties"
+}

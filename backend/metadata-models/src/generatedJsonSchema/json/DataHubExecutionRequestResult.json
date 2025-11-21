@@ -1,0 +1,63 @@
+{
+  "definitions" : {
+    "DataHubExecutionRequestResult" : {
+      "description" : "The result of an execution request",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "status" : {
+          "description" : "The status of the execution request",
+          "type" : "string"
+        },
+        "report" : {
+          "default" : null,
+          "description" : "The pretty-printed execution report.",
+          "type" : "string"
+        },
+        "structuredReport" : {
+          "default" : null,
+          "description" : "A structured report if available.",
+          "$ref" : "#/definitions/StructuredExecutionReport"
+        },
+        "startTimeMs" : {
+          "default" : null,
+          "description" : "Time at which the request was created",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "durationMs" : {
+          "default" : null,
+          "description" : "Duration in milliseconds",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "status" ]
+    },
+    "StructuredExecutionReport" : {
+      "description" : "A flexible carrier for structured results of an execution request.\nThe goal is to allow for free flow of structured responses from execution tasks to the orchestrator or observer.\nThe full spectrum of different execution report types is not intended to be modeled by this object.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The type of the structured report. (e.g. INGESTION_REPORT, TEST_CONNECTION_REPORT, etc.)",
+          "type" : "string"
+        },
+        "serializedValue" : {
+          "description" : "The serialized value of the structured report",
+          "type" : "string"
+        },
+        "contentType" : {
+          "description" : "The content-type of the serialized value (e.g. application/json, application/json;gzip etc.)",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type", "serializedValue", "contentType" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubExecutionRequestResult"
+}

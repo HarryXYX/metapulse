@@ -1,0 +1,26 @@
+{
+  "definitions" : {
+    "DataHubRoleInfo" : {
+      "description" : "Information about a DataHub Role.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the Role",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Description of the Role",
+          "type" : "string"
+        },
+        "editable" : {
+          "default" : false,
+          "description" : "Whether the role should be editable via the UI",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "name", "description", "editable" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubRoleInfo"
+}

@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "DataHubPersonaKey" : {
+      "description" : "Key for a persona type",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the persona type",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubPersonaKey"
+}

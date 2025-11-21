@@ -1,0 +1,45 @@
+{
+  "definitions" : {
+    "TimeWindow" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "startTimeMillis" : {
+          "description" : "Start time as epoch at UTC.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "length" : {
+          "description" : "The length of the window.",
+          "$ref" : "#/definitions/TimeWindowSize"
+        }
+      },
+      "required" : [ "startTimeMillis", "length" ]
+    },
+    "TimeWindowSize" : {
+      "description" : "Defines the size of a time window.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "unit" : {
+          "description" : "Interval unit such as minute/hour/day etc.",
+          "$ref" : "#/definitions/CalendarInterval"
+        },
+        "multiple" : {
+          "default" : 1,
+          "description" : "How many units. Defaults to 1.",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "unit", "multiple" ]
+    },
+    "CalendarInterval" : {
+      "enum" : [ "SECOND", "MINUTE", "HOUR", "DAY", "WEEK", "MONTH", "QUARTER", "YEAR" ]
+    }
+  },
+  "$ref" : "#/definitions/TimeWindow"
+}

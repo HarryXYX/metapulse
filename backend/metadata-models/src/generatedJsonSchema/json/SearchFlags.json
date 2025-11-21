@@ -1,0 +1,142 @@
+{
+  "definitions" : {
+    "SearchFlags" : {
+      "description" : "Set of flags to control search behavior",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "skipCache" : {
+          "default" : false,
+          "description" : "Whether to skip cache",
+          "type" : "boolean"
+        },
+        "maxAggValues" : {
+          "default" : 20,
+          "description" : "The maximum number of values in a facet aggregation",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "fulltext" : {
+          "default" : null,
+          "description" : "Structured or unstructured fulltext query",
+          "type" : "boolean"
+        },
+        "skipHighlighting" : {
+          "default" : false,
+          "description" : "Whether to skip highlighting",
+          "type" : "boolean"
+        },
+        "skipAggregates" : {
+          "default" : false,
+          "description" : "Whether to skip aggregates/facets",
+          "type" : "boolean"
+        },
+        "getSuggestions" : {
+          "default" : false,
+          "description" : "Whether to request for search suggestions on the _entityName virtualized field",
+          "type" : "boolean"
+        },
+        "groupingSpec" : {
+          "default" : null,
+          "description" : "Instructions for grouping results before returning",
+          "$ref" : "#/definitions/GroupingSpec"
+        },
+        "includeSoftDeleted" : {
+          "default" : false,
+          "description" : "include soft deleted entities in results",
+          "type" : "boolean"
+        },
+        "includeRestricted" : {
+          "default" : false,
+          "description" : "include restricted entities in results (default is to filter)",
+          "type" : "boolean"
+        },
+        "customHighlightingFields" : {
+          "default" : null,
+          "description" : "Include mentioned fields inside elastic highlighting query",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "rewriteQuery" : {
+          "default" : true,
+          "description" : "invoke query rewrite chain for filters based on configured rewriters",
+          "type" : "boolean"
+        },
+        "includeDefaultFacets" : {
+          "default" : true,
+          "description" : "Include default facets when getting facets to aggregate on in search requests.\nBy default we include these, but custom aggregation requests don't need them.",
+          "type" : "boolean"
+        },
+        "filterNonLatestVersions" : {
+          "default" : true,
+          "description" : "Include only latest versions in version sets, default true",
+          "type" : "boolean"
+        },
+        "fieldConfiguration" : {
+          "default" : null,
+          "description" : "Which fieldConfiguration should be applied. The possible values\nare defined in the configuration file `search_config.yaml`",
+          "type" : "string"
+        },
+        "sliceOptions" : {
+          "default" : null,
+          "description" : "Sets slice parameter for elasticsearch query,\nto allow multiple clients to scroll the same query at once.\nOnly supported by the ElasticSearchService",
+          "$ref" : "#/definitions/SliceOptions"
+        }
+      },
+      "required" : [ "skipCache", "maxAggValues", "skipHighlighting", "skipAggregates", "getSuggestions", "includeSoftDeleted", "includeRestricted", "rewriteQuery", "includeDefaultFacets", "filterNonLatestVersions" ]
+    },
+    "GroupingSpec" : {
+      "description" : "A set of directives to control how results are grouped.\nThe underlying generic groupings are nested to allow for further evolution of the grouping spec.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "groupingCriteria" : {
+          "default" : [ ],
+          "description" : "A list of generic directives to group results by.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/GroupingCriterion"
+          }
+        }
+      },
+      "required" : [ "groupingCriteria" ]
+    },
+    "GroupingCriterion" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "baseEntityType" : {
+          "default" : null,
+          "description" : "The type of the entity to be grouped.\ne.g. schemaField\nOmitting this field will result in all base entities being grouped.",
+          "type" : "string"
+        },
+        "groupingEntityType" : {
+          "description" : "The type of the entity to be grouped into.\ne.g. dataset, domain, etc.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "groupingEntityType" ]
+    },
+    "SliceOptions" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "max" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "id", "max" ]
+    }
+  },
+  "$ref" : "#/definitions/SearchFlags"
+}

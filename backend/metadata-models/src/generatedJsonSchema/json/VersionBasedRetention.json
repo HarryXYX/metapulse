@@ -1,0 +1,18 @@
+{
+  "definitions" : {
+    "VersionBasedRetention" : {
+      "description" : "Keep max N latest records",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "maxVersions" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "maxVersions" ]
+    }
+  },
+  "$ref" : "#/definitions/VersionBasedRetention"
+}

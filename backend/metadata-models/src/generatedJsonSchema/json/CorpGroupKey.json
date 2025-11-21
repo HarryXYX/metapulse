@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "CorpGroupKey" : {
+      "description" : "Key for a CorpGroup",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The URL-encoded name of the AD/LDAP group. Serves as a globally unique identifier within DataHub.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/CorpGroupKey"
+}

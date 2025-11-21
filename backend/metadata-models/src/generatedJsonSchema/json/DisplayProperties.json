@@ -1,0 +1,46 @@
+{
+  "definitions" : {
+    "DisplayProperties" : {
+      "description" : "Properties related to how the entity is displayed in the Datahub UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "colorHex" : {
+          "default" : null,
+          "description" : "The color associated with the entity in Hex. For example #FFFFFF.",
+          "type" : "string"
+        },
+        "icon" : {
+          "default" : null,
+          "description" : "The icon associated with the entity",
+          "$ref" : "#/definitions/IconProperties"
+        }
+      }
+    },
+    "IconProperties" : {
+      "description" : "Properties describing an icon associated with an entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "iconLibrary" : {
+          "description" : "The source of the icon: e.g. Antd, Material, etc",
+          "$ref" : "#/definitions/IconLibrary"
+        },
+        "name" : {
+          "description" : "The name of the icon",
+          "type" : "string"
+        },
+        "style" : {
+          "description" : "Any modifier for the icon, this will be library-specific, e.g. filled/outlined, etc",
+          "type" : "string"
+        }
+      },
+      "required" : [ "iconLibrary", "name", "style" ]
+    },
+    "IconLibrary" : {
+      "description" : "Enum of possible icon sources",
+      "enum" : [ "MATERIAL" ]
+    }
+  },
+  "$ref" : "#/definitions/DisplayProperties"
+}

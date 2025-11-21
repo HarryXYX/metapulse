@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "EditableMLFeatureProperties" : {
+      "description" : "Properties associated with a MLFeature editable from the UI",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the MLFeature",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/EditableMLFeatureProperties"
+}

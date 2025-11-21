@@ -1,0 +1,20 @@
+{
+  "definitions" : {
+    "DataHubPageTemplateSurface" : {
+      "description" : "Info about the surface area of the product that this template is deployed in",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "surfaceType" : {
+          "description" : "Where exactly is this template being used",
+          "$ref" : "#/definitions/PageTemplateSurfaceType"
+        }
+      },
+      "required" : [ "surfaceType" ]
+    },
+    "PageTemplateSurfaceType" : {
+      "enum" : [ "HOME_PAGE", "ASSET_SUMMARY" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubPageTemplateSurface"
+}

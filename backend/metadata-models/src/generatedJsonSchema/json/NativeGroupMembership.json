@@ -1,0 +1,19 @@
+{
+  "definitions" : {
+    "NativeGroupMembership" : {
+      "description" : "Carries information about the native CorpGroups a user is in.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nativeGroups" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "nativeGroups" ]
+    }
+  },
+  "$ref" : "#/definitions/NativeGroupMembership"
+}

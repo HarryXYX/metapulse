@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "Embed" : {
+      "description" : "Information regarding rendering an embed for an asset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "renderUrl" : {
+          "default" : null,
+          "description" : "An embed URL to be rendered inside of an iframe.",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/Embed"
+}

@@ -1,0 +1,48 @@
+{
+  "definitions" : {
+    "PolicyMatchFilter" : {
+      "description" : "The filter for specifying the resource or actor to apply privileges to",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "criteria" : {
+          "description" : "A list of criteria to apply conjunctively (so all criteria must pass)",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PolicyMatchCriterion"
+          }
+        }
+      },
+      "required" : [ "criteria" ]
+    },
+    "PolicyMatchCriterion" : {
+      "description" : "A criterion for matching a field with given value",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "field" : {
+          "description" : "The name of the field that the criterion refers to",
+          "type" : "string"
+        },
+        "values" : {
+          "description" : "Values. Matches criterion if any one of the values matches condition (OR-relationship)",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "condition" : {
+          "default" : "EQUALS",
+          "description" : "The condition for the criterion",
+          "$ref" : "#/definitions/PolicyMatchCondition"
+        }
+      },
+      "required" : [ "field", "values", "condition" ]
+    },
+    "PolicyMatchCondition" : {
+      "description" : "The matching condition in a filter criterion",
+      "enum" : [ "EQUALS", "STARTS_WITH", "NOT_EQUALS" ]
+    }
+  },
+  "$ref" : "#/definitions/PolicyMatchFilter"
+}

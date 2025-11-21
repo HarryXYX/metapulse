@@ -1,0 +1,20 @@
+{
+  "definitions" : {
+    "UnionType" : {
+      "description" : "Union field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedTypes" : {
+          "default" : null,
+          "description" : "List of types in union type.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/UnionType"
+}

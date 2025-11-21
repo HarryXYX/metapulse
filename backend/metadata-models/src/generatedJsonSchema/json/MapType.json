@@ -1,0 +1,22 @@
+{
+  "definitions" : {
+    "MapType" : {
+      "description" : "Map field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "keyType" : {
+          "default" : null,
+          "description" : "Key type in a map",
+          "type" : "string"
+        },
+        "valueType" : {
+          "default" : null,
+          "description" : "Type of the value in a map",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/MapType"
+}

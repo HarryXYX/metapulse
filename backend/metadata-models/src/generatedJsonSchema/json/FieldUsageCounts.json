@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "FieldUsageCounts" : {
+      "description" : " Records field-level usage counts for a given resource ",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldName" : {
+          "type" : "string"
+        },
+        "count" : {
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "fieldName", "count" ]
+    }
+  },
+  "$ref" : "#/definitions/FieldUsageCounts"
+}

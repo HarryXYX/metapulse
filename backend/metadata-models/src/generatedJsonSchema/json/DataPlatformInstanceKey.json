@@ -1,0 +1,21 @@
+{
+  "definitions" : {
+    "DataPlatformInstanceKey" : {
+      "description" : "Key for a Dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Data platform urn associated with the instance",
+          "type" : "string"
+        },
+        "instance" : {
+          "description" : "Unique instance id",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platform", "instance" ]
+    }
+  },
+  "$ref" : "#/definitions/DataPlatformInstanceKey"
+}

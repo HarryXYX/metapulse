@@ -1,0 +1,16 @@
+{
+  "definitions" : {
+    "StructuredPropertyKey" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The id for a structured proeprty.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/StructuredPropertyKey"
+}

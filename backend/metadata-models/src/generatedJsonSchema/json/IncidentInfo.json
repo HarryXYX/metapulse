@@ -1,0 +1,176 @@
+{
+  "definitions" : {
+    "IncidentInfo" : {
+      "description" : "Information about an incident raised on an asset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The type of incident",
+          "$ref" : "#/definitions/IncidentType"
+        },
+        "customType" : {
+          "default" : null,
+          "description" : "An optional custom incident type. Present only if type is 'CUSTOM'.",
+          "type" : "string"
+        },
+        "title" : {
+          "default" : null,
+          "description" : "Optional title associated with the incident",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Optional description associated with the incident",
+          "type" : "string"
+        },
+        "entities" : {
+          "description" : "A reference to the entity associated with the incident.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "priority" : {
+          "default" : null,
+          "description" : "A numeric severity or priority for the incident. On the UI we will translate this into something easy to understand.\nCurrently supported: 0 - CRITICAL, 1 - HIGH, 2 - MED, 3 - LOW\n(We probably should have modeled as an enum)",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "assignees" : {
+          "default" : null,
+          "description" : "The parties assigned with resolving the incident",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IncidentAssignee"
+          }
+        },
+        "status" : {
+          "description" : "The current status of an incident, i.e. active or inactive.",
+          "$ref" : "#/definitions/IncidentStatus"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "The source of an incident, i.e. how it was generated.",
+          "$ref" : "#/definitions/IncidentSource"
+        },
+        "startedAt" : {
+          "default" : null,
+          "description" : "The time at which the incident actually started (may be before the date it was raised).",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "created" : {
+          "description" : "The time at which the request was initially created",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "type", "entities", "status", "created" ]
+    },
+    "IncidentType" : {
+      "description" : "A type of asset incident",
+      "enum" : [ "FRESHNESS", "VOLUME", "FIELD", "SQL", "DATA_SCHEMA", "OPERATIONAL", "CUSTOM" ]
+    },
+    "IncidentAssignee" : {
+      "description" : "The incident assignee type.\nThis is in a record so that we can add additional fields if we need to later (e.g.\nthe type of the assignee.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "actor" : {
+          "description" : "The user or group assigned to the incident.",
+          "type" : "string"
+        },
+        "assignedAt" : {
+          "description" : "The time & actor responsible for assiging the assignee.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "actor", "assignedAt" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    },
+    "IncidentStatus" : {
+      "description" : "Information about an incident raised on an asset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "state" : {
+          "description" : "The top-level state of the incident, whether it's active or resolved.",
+          "$ref" : "#/definitions/IncidentState"
+        },
+        "stage" : {
+          "default" : null,
+          "description" : "The lifecycle stage for the incident - Null means no stage was assigned yet.\nIn the future, we may add CUSTOM here with a customStage string field for user-defined stages.",
+          "$ref" : "#/definitions/IncidentStage"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Optional message associated with the incident",
+          "type" : "string"
+        },
+        "lastUpdated" : {
+          "description" : "The time at which the request was initially created",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "state", "lastUpdated" ]
+    },
+    "IncidentState" : {
+      "enum" : [ "ACTIVE", "RESOLVED" ]
+    },
+    "IncidentStage" : {
+      "enum" : [ "TRIAGE", "INVESTIGATION", "WORK_IN_PROGRESS", "FIXED", "NO_ACTION_REQUIRED" ]
+    },
+    "IncidentSource" : {
+      "description" : "Information about the source of an incident raised on an asset.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Message associated with the incident",
+          "$ref" : "#/definitions/IncidentSourceType"
+        },
+        "sourceUrn" : {
+          "default" : null,
+          "description" : "Reference to an URN related to the source of an incident.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "IncidentSourceType" : {
+      "enum" : [ "MANUAL", "ASSERTION_FAILURE" ]
+    }
+  },
+  "$ref" : "#/definitions/IncidentInfo"
+}

@@ -1,0 +1,70 @@
+{
+  "definitions" : {
+    "BaseFieldMapping" : {
+      "description" : "Base model representing field mappings",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "description" : "Audit stamp containing who reported the field mapping and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "transformation" : {
+          "description" : "Transfomration function between the fields involved",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/TransformationType"
+          }, {
+            "$ref" : "#/definitions/UDFTransformer"
+          } ]
+        }
+      },
+      "required" : [ "created", "transformation" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    },
+    "TransformationType" : {
+      "description" : "Type of the transformation involved in generating destination fields from source fields.",
+      "enum" : [ "BLACKBOX", "IDENTITY" ]
+    },
+    "UDFTransformer" : {
+      "description" : "Field transformation expressed in UDF",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "udf" : {
+          "description" : "A UDF mentioning how the source fields got transformed to destination field. This is the FQCN(Fully Qualified Class Name) of the udf.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "udf" ]
+    }
+  },
+  "$ref" : "#/definitions/BaseFieldMapping"
+}

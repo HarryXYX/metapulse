@@ -1,0 +1,40 @@
+{
+  "definitions" : {
+    "DataHubPageTemplateAssetSummary" : {
+      "description" : "The page template info for asset summaries",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "summaryElements" : {
+          "default" : null,
+          "description" : "The optional list of properties shown on an asset summary page header.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SummaryElement"
+          }
+        }
+      }
+    },
+    "SummaryElement" : {
+      "description" : "Info for a given asset summary element",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "elementType" : {
+          "description" : "The type of element/property",
+          "$ref" : "#/definitions/SummaryElementType"
+        },
+        "structuredPropertyUrn" : {
+          "default" : null,
+          "description" : "The urn of the structured property shown. Required if propertyType is STRUCTURED_PROPERTY",
+          "type" : "string"
+        }
+      },
+      "required" : [ "elementType" ]
+    },
+    "SummaryElementType" : {
+      "enum" : [ "CREATED", "TAGS", "GLOSSARY_TERMS", "OWNERS", "DOMAIN", "STRUCTURED_PROPERTY" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubPageTemplateAssetSummary"
+}

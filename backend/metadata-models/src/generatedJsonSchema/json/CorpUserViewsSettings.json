@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "CorpUserViewsSettings" : {
+      "description" : "Settings related to the 'Views' feature.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "defaultView" : {
+          "default" : null,
+          "description" : "The default View which is selected for the user.\nIf none is chosen, then this value will be left blank.",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/CorpUserViewsSettings"
+}

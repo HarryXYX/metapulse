@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "MySqlDDL" : {
+      "description" : "Schema holder for MySql data definition language that describes an MySql table.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tableSchema" : {
+          "description" : "The native schema in the dataset's platform. This is a human readable (json blob) table schema.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "tableSchema" ]
+    }
+  },
+  "$ref" : "#/definitions/MySqlDDL"
+}

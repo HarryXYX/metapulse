@@ -1,0 +1,25 @@
+{
+  "definitions" : {
+    "CorpUserHomePageSettings" : {
+      "description" : "Settings related to the home page for a user",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "pageTemplate" : {
+          "default" : null,
+          "description" : "The page template that will be rendered in the UI by default for this user",
+          "type" : "string"
+        },
+        "dismissedAnnouncements" : {
+          "default" : null,
+          "description" : "The list of announcement urns that have been dismissed by the user",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/CorpUserHomePageSettings"
+}

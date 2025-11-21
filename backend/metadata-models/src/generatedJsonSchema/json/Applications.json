@@ -1,0 +1,20 @@
+{
+  "definitions" : {
+    "Applications" : {
+      "description" : "Links from an Asset to its Applications",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "applications" : {
+          "description" : "The Applications attached to an Asset",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "applications" ]
+    }
+  },
+  "$ref" : "#/definitions/Applications"
+}

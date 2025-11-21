@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "EditableContainerProperties" : {
+      "description" : "Editable information about an Asset Container as defined on the DataHub Platform",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "description" : {
+          "default" : null,
+          "description" : "Description of the Asset Container as its received on the DataHub Platform",
+          "type" : "string"
+        }
+      }
+    }
+  },
+  "$ref" : "#/definitions/EditableContainerProperties"
+}

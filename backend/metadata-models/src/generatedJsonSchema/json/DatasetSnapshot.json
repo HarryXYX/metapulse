@@ -1,0 +1,1388 @@
+{
+  "definitions" : {
+    "DatasetSnapshot" : {
+      "description" : "A metadata snapshot for a specific dataset entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the dataset. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DatasetKey"
+            }, {
+              "$ref" : "#/definitions/DatasetProperties"
+            }, {
+              "$ref" : "#/definitions/EditableDatasetProperties"
+            }, {
+              "$ref" : "#/definitions/DatasetDeprecation"
+            }, {
+              "$ref" : "#/definitions/DatasetUpstreamLineage"
+            }, {
+              "$ref" : "#/definitions/UpstreamLineage"
+            }, {
+              "$ref" : "#/definitions/InstitutionalMemory"
+            }, {
+              "$ref" : "#/definitions/Ownership"
+            }, {
+              "$ref" : "#/definitions/Status"
+            }, {
+              "$ref" : "#/definitions/SchemaMetadata"
+            }, {
+              "$ref" : "#/definitions/EditableSchemaMetadata"
+            }, {
+              "$ref" : "#/definitions/GlobalTags"
+            }, {
+              "$ref" : "#/definitions/GlossaryTerms"
+            }, {
+              "$ref" : "#/definitions/BrowsePaths"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInstance"
+            }, {
+              "$ref" : "#/definitions/ViewProperties"
+            }, {
+              "$ref" : "#/definitions/BrowsePathsV2"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DatasetKey" : {
+      "description" : "Key for a Dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Data platform urn associated with the dataset",
+          "type" : "string"
+        },
+        "name" : {
+          "description" : "Unique guid for dataset",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where dataset belongs to or where it was generated.",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "platform", "name", "origin" ]
+    },
+    "FabricType" : {
+      "description" : "Fabric group type",
+      "enum" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ]
+    },
+    "DatasetProperties" : {
+      "description" : "Properties associated with a Dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "customProperties" : {
+          "default" : { },
+          "description" : "Custom property bag.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "externalUrl" : {
+          "default" : null,
+          "description" : "URL where the reference exist",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the Dataset",
+          "type" : "string"
+        },
+        "qualifiedName" : {
+          "default" : null,
+          "description" : "Fully-qualified name of the Dataset",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the dataset",
+          "type" : "string"
+        },
+        "uri" : {
+          "default" : null,
+          "description" : "The abstracted URI such as hdfs:///data/tracking/PageViewEvent, file:///dir/file_name. Uri should not include any environment specific properties. Some datasets might not have a standardized uri, which makes this field optional (i.e. kafka topic).",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was created in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "A timestamp documenting when the asset was last modified in the source Data Platform (not on DataHub)",
+          "$ref" : "#/definitions/TimeStamp"
+        },
+        "tags" : {
+          "default" : [ ],
+          "description" : "[Legacy] Unstructured tags for the dataset. Structured tags can be applied via the `GlobalTags` aspect.\nThis is now deprecated.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "customProperties", "tags" ]
+    },
+    "TimeStamp" : {
+      "description" : "A standard event timestamp",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the event occur",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "Optional: The actor urn involved in the event.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time" ]
+    },
+    "EditableDatasetProperties" : {
+      "description" : "EditableDatasetProperties stores editable changes made to dataset properties. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Documentation of the dataset",
+          "type" : "string"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Editable display name of the Dataset",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "lastModified" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    },
+    "DatasetDeprecation" : {
+      "description" : "Dataset deprecation status\nDeprecated! This aspect is deprecated in favor of the more-general-purpose 'Deprecation' aspect.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "deprecated" : {
+          "description" : "Whether the dataset is deprecated by owner.",
+          "type" : "boolean"
+        },
+        "decommissionTime" : {
+          "default" : null,
+          "description" : "The time user plan to decommission this dataset.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "note" : {
+          "description" : "Additional information about the dataset deprecation plan, such as the wiki, doc, RB.",
+          "type" : "string"
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "The corpuser URN which will be credited for modifying this deprecation content.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "deprecated", "note" ]
+    },
+    "DatasetUpstreamLineage" : {
+      "description" : "Fine Grained upstream lineage for fields in a dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldMappings" : {
+          "description" : "Upstream to downstream field level lineage mappings",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DatasetFieldMapping"
+          }
+        }
+      },
+      "required" : [ "fieldMappings" ]
+    },
+    "DatasetFieldMapping" : {
+      "description" : "Representation of mapping between fields in source dataset to the field in destination dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "description" : "Audit stamp containing who reported the field mapping and when",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "transformation" : {
+          "description" : "Transfomration function between the fields involved",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/TransformationType"
+          }, {
+            "$ref" : "#/definitions/UDFTransformer"
+          } ]
+        },
+        "sourceFields" : {
+          "description" : "Source fields from which the fine grained lineage is derived",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "destinationField" : {
+          "description" : "Destination field which is derived from source fields",
+          "type" : "string"
+        }
+      },
+      "required" : [ "created", "transformation", "sourceFields", "destinationField" ]
+    },
+    "TransformationType" : {
+      "description" : "Type of the transformation involved in generating destination fields from source fields.",
+      "enum" : [ "BLACKBOX", "IDENTITY" ]
+    },
+    "UDFTransformer" : {
+      "description" : "Field transformation expressed in UDF",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "udf" : {
+          "description" : "A UDF mentioning how the source fields got transformed to destination field. This is the FQCN(Fully Qualified Class Name) of the udf.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "udf" ]
+    },
+    "UpstreamLineage" : {
+      "description" : "Upstream lineage of a dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "upstreams" : {
+          "description" : "List of upstream dataset lineage information",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Upstream"
+          }
+        },
+        "fineGrainedLineages" : {
+          "default" : null,
+          "description" : " List of fine-grained lineage information, including field-level lineage",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/FineGrainedLineage"
+          }
+        }
+      },
+      "required" : [ "upstreams" ]
+    },
+    "Upstream" : {
+      "description" : "Upstream lineage information about a dataset including the source reporting the lineage",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "auditStamp" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "Audit stamp containing who reported the lineage and when.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Audit stamp containing who created the lineage and when.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "dataset" : {
+          "description" : "The upstream dataset the lineage points to",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the lineage",
+          "$ref" : "#/definitions/DatasetLineageType"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : "A generic properties bag that allows us to store specific information on this graph edge.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "query" : {
+          "default" : null,
+          "description" : "If the lineage is generated by a query, a reference to the query",
+          "type" : "string"
+        }
+      },
+      "required" : [ "auditStamp", "dataset", "type" ]
+    },
+    "DatasetLineageType" : {
+      "description" : "The various types of supported dataset lineage",
+      "enum" : [ "COPY", "TRANSFORMED", "VIEW" ]
+    },
+    "FineGrainedLineage" : {
+      "description" : "A fine-grained lineage from upstream fields/datasets to downstream field(s)",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "upstreamType" : {
+          "description" : "The type of upstream entity",
+          "$ref" : "#/definitions/FineGrainedLineageUpstreamType"
+        },
+        "upstreams" : {
+          "default" : null,
+          "description" : "Upstream entities in the lineage",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "downstreamType" : {
+          "description" : "The type of downstream field(s)",
+          "$ref" : "#/definitions/FineGrainedLineageDownstreamType"
+        },
+        "downstreams" : {
+          "default" : null,
+          "description" : "Downstream fields in the lineage",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "transformOperation" : {
+          "default" : null,
+          "description" : "The transform operation applied to the upstream entities to produce the downstream field(s)",
+          "type" : "string"
+        },
+        "confidenceScore" : {
+          "default" : 1,
+          "description" : "The confidence in this lineage between 0 (low confidence) and 1 (high confidence)",
+          "type" : "number"
+        },
+        "query" : {
+          "default" : null,
+          "description" : "The query that was used to generate this lineage. \nPresent only if the lineage was generated from a detected query.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "upstreamType", "downstreamType", "confidenceScore" ]
+    },
+    "FineGrainedLineageUpstreamType" : {
+      "description" : "The type of upstream entity in a fine-grained lineage",
+      "enum" : [ "FIELD_SET", "DATASET", "NONE" ]
+    },
+    "FineGrainedLineageDownstreamType" : {
+      "description" : "The type of downstream field(s) in a fine-grained lineage",
+      "enum" : [ "FIELD", "FIELD_SET" ]
+    },
+    "InstitutionalMemory" : {
+      "description" : "Institutional memory of an entity. This is a way to link to relevant documentation and provide description of the documentation. Institutional or tribal knowledge is very important for users to leverage the entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "elements" : {
+          "description" : "List of records that represent institutional memory of an entity. Each record consists of a link, description, creator and timestamps associated with that record.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/InstitutionalMemoryMetadata"
+          }
+        }
+      },
+      "required" : [ "elements" ]
+    },
+    "InstitutionalMemoryMetadata" : {
+      "description" : "Metadata corresponding to a record of institutional memory.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "url" : {
+          "description" : "Link to an engineering design document or a wiki page.",
+          "type" : "string"
+        },
+        "description" : {
+          "description" : "Description of the link.",
+          "type" : "string"
+        },
+        "createStamp" : {
+          "description" : "Audit stamp associated with creation of this record",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "updateStamp" : {
+          "default" : null,
+          "description" : "Audit stamp associated with updation of this record",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "settings" : {
+          "default" : null,
+          "description" : "Settings for this record",
+          "$ref" : "#/definitions/InstitutionalMemoryMetadataSettings"
+        }
+      },
+      "required" : [ "url", "description", "createStamp" ]
+    },
+    "InstitutionalMemoryMetadataSettings" : {
+      "description" : "Settings related to a record of InstitutionalMemoryMetadata",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "showInAssetPreview" : {
+          "default" : false,
+          "description" : "Show record in asset preview like on entity header and search previews",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "showInAssetPreview" ]
+    },
+    "Ownership" : {
+      "description" : "Ownership information of an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "owners" : {
+          "description" : "List of owners of the entity.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Owner"
+          }
+        },
+        "ownerTypes" : {
+          "default" : { },
+          "description" : "Ownership type to Owners map, populated via mutation hook.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "Audit stamp containing who last modified the record and when. A value of 0 in the time field indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "owners", "ownerTypes", "lastModified" ]
+    },
+    "Owner" : {
+      "description" : "Ownership information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "owner" : {
+          "description" : "Owner URN, e.g. urn:li:corpuser:ldap, urn:li:corpGroup:group_name, and urn:li:multiProduct:mp_name\n(Caveat: only corpuser is currently supported in the frontend.)",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the ownership",
+          "$ref" : "#/definitions/OwnershipType"
+        },
+        "typeUrn" : {
+          "default" : null,
+          "description" : "The type of the ownership\nUrn of type O",
+          "type" : "string"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "Source information for the ownership",
+          "$ref" : "#/definitions/OwnershipSource"
+        },
+        "attribution" : {
+          "default" : null,
+          "description" : "Information about who, why, and how this metadata was applied",
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      },
+      "required" : [ "owner", "type" ]
+    },
+    "OwnershipType" : {
+      "description" : "Asset owner types",
+      "enum" : [ "CUSTOM", "TECHNICAL_OWNER", "BUSINESS_OWNER", "DATA_STEWARD", "NONE", "DEVELOPER", "DATAOWNER", "DELEGATE", "PRODUCER", "CONSUMER", "STAKEHOLDER" ]
+    },
+    "OwnershipSource" : {
+      "description" : "Source/provider of the ownership information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The type of the source",
+          "$ref" : "#/definitions/OwnershipSourceType"
+        },
+        "url" : {
+          "default" : null,
+          "description" : "A reference URL for the source",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "OwnershipSourceType" : {
+      "enum" : [ "AUDIT", "DATABASE", "FILE_SYSTEM", "ISSUE_TRACKING_SYSTEM", "MANUAL", "SERVICE", "SOURCE_CONTROL", "OTHER" ]
+    },
+    "MetadataAttribution" : {
+      "description" : "Information about who, why, and how this metadata was applied",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When this metadata was updated.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) responsible for applying the assocated metadata. This can\neither be a user (in case of UI edits) or the datahub system for automation.",
+          "type" : "string"
+        },
+        "source" : {
+          "default" : null,
+          "description" : "The DataHub source responsible for applying the associated metadata. This will only be filled out\nwhen a DataHub source is responsible. This includes the specific metadata test urn, the automation urn.",
+          "type" : "string"
+        },
+        "sourceDetail" : {
+          "default" : { },
+          "description" : "The details associated with why this metadata was applied. For example, this could include\nthe actual regex rule, sql statement, ingestion pipeline ID, etc.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "time", "actor", "sourceDetail" ]
+    },
+    "Status" : {
+      "description" : "The lifecycle status metadata of an entity, e.g. dataset, metric, feature, etc.\nThis aspect is used to represent soft deletes conventionally.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "removed" : {
+          "default" : false,
+          "description" : "Whether the entity has been removed (soft-deleted).",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "removed" ]
+    },
+    "SchemaMetadata" : {
+      "description" : "SchemaMetadata to describe metadata related to store schema",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schemaName" : {
+          "description" : "Schema name e.g. PageViewEvent, identity.Profile, ams.account_management_tracking",
+          "type" : "string"
+        },
+        "platform" : {
+          "description" : "Standardized platform urn where schema is defined. The data platform Urn (urn:li:platform:{platform_name})",
+          "type" : "string"
+        },
+        "version" : {
+          "description" : "Every change to SchemaMetadata in the resource results in a new version. Version is server assigned. This version is differ from platform native schema version.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "dataset" : {
+          "default" : null,
+          "description" : "Dataset this schema metadata is associated with.",
+          "type" : "string"
+        },
+        "cluster" : {
+          "default" : null,
+          "description" : "The cluster this schema metadata resides from",
+          "type" : "string"
+        },
+        "hash" : {
+          "description" : "the SHA1 hash of the schema content",
+          "type" : "string"
+        },
+        "platformSchema" : {
+          "description" : "The native schema in the dataset's platform.",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/EspressoSchema"
+          }, {
+            "$ref" : "#/definitions/OracleDDL"
+          }, {
+            "$ref" : "#/definitions/MySqlDDL"
+          }, {
+            "$ref" : "#/definitions/PrestoDDL"
+          }, {
+            "$ref" : "#/definitions/KafkaSchema"
+          }, {
+            "$ref" : "#/definitions/BinaryJsonSchema"
+          }, {
+            "$ref" : "#/definitions/OrcSchema"
+          }, {
+            "$ref" : "#/definitions/Schemaless"
+          }, {
+            "$ref" : "#/definitions/KeyValueSchema"
+          }, {
+            "$ref" : "#/definitions/OtherSchema"
+          } ]
+        },
+        "fields" : {
+          "description" : "Client provided a list of fields from document schema.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/SchemaField"
+          }
+        },
+        "primaryKeys" : {
+          "default" : null,
+          "description" : "Client provided list of fields that define primary keys to access record. Field order defines hierarchical espresso keys. Empty lists indicates absence of primary key access patter. Value is a SchemaField@fieldPath.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "foreignKeysSpecs" : {
+          "default" : null,
+          "description" : "Map captures all the references schema makes to external datasets. Map key is ForeignKeySpecName typeref.",
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ForeignKeySpec"
+          }
+        },
+        "foreignKeys" : {
+          "default" : null,
+          "description" : "List of foreign key constraints for the schema",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ForeignKeyConstraint"
+          }
+        }
+      },
+      "required" : [ "schemaName", "platform", "version", "created", "lastModified", "hash", "platformSchema", "fields" ]
+    },
+    "EspressoSchema" : {
+      "description" : "Schema text of an espresso table schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "documentSchema" : {
+          "description" : "The native espresso document schema.",
+          "type" : "string"
+        },
+        "tableSchema" : {
+          "description" : "The espresso table schema definition.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "documentSchema", "tableSchema" ]
+    },
+    "OracleDDL" : {
+      "description" : "Schema holder for oracle data definition language that describes an oracle table.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tableSchema" : {
+          "description" : "The native schema in the dataset's platform. This is a human readable (json blob) table schema.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "tableSchema" ]
+    },
+    "MySqlDDL" : {
+      "description" : "Schema holder for MySql data definition language that describes an MySql table.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tableSchema" : {
+          "description" : "The native schema in the dataset's platform. This is a human readable (json blob) table schema.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "tableSchema" ]
+    },
+    "PrestoDDL" : {
+      "description" : "Schema holder for presto data definition language that describes a presto view.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawSchema" : {
+          "description" : "The raw schema in the dataset's platform. This includes the DDL and the columns extracted from DDL.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "rawSchema" ]
+    },
+    "KafkaSchema" : {
+      "description" : "Schema holder for kafka schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "documentSchema" : {
+          "description" : "The native kafka document schema. This is a human readable avro document schema.",
+          "type" : "string"
+        },
+        "documentSchemaType" : {
+          "default" : null,
+          "description" : "The native kafka document schema type. This can be AVRO/PROTOBUF/JSON.",
+          "type" : "string"
+        },
+        "keySchema" : {
+          "default" : null,
+          "description" : "The native kafka key schema as retrieved from Schema Registry",
+          "type" : "string"
+        },
+        "keySchemaType" : {
+          "default" : null,
+          "description" : "The native kafka key schema type. This can be AVRO/PROTOBUF/JSON.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "documentSchema" ]
+    },
+    "BinaryJsonSchema" : {
+      "description" : "Schema text of binary JSON schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schema" : {
+          "description" : "The native schema text for binary JSON file format.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "schema" ]
+    },
+    "OrcSchema" : {
+      "description" : "Schema text of an ORC schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "schema" : {
+          "description" : "The native schema for ORC file format.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "schema" ]
+    },
+    "Schemaless" : { },
+    "KeyValueSchema" : {
+      "description" : "Schema text of a key-value store schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "keySchema" : {
+          "description" : "The raw schema for the key in the key-value store.",
+          "type" : "string"
+        },
+        "valueSchema" : {
+          "description" : "The raw schema for the value in the key-value store.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "keySchema", "valueSchema" ]
+    },
+    "OtherSchema" : {
+      "description" : "Schema holder for undefined schema types.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawSchema" : {
+          "description" : "The native schema in the dataset's platform.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "rawSchema" ]
+    },
+    "SchemaField" : {
+      "description" : "SchemaField to describe metadata related to dataset schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldPath" : {
+          "description" : "Flattened name of the field. Field is computed from jsonPath field.",
+          "type" : "string"
+        },
+        "jsonPath" : {
+          "default" : null,
+          "description" : "Flattened name of a field in JSON Path notation.",
+          "type" : "string"
+        },
+        "nullable" : {
+          "default" : false,
+          "description" : "Indicates if this field is optional or nullable",
+          "type" : "boolean"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description",
+          "type" : "string"
+        },
+        "label" : {
+          "default" : null,
+          "description" : "Label of the field. Provides a more human-readable name for the field than field path. Some sources will\nprovide this metadata but not all sources have the concept of a label. If just one string is associated with\na field in a source, that is most likely a description.\n\nNote that this field is deprecated and is not surfaced in the UI.",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the creation of this schema field.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the last modification of this schema field.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "type" : {
+          "description" : "Platform independent field type of the field.",
+          "$ref" : "#/definitions/SchemaFieldDataType"
+        },
+        "nativeDataType" : {
+          "description" : "The native type of the field in the dataset's platform as declared by platform schema.",
+          "type" : "string"
+        },
+        "recursive" : {
+          "default" : false,
+          "description" : "There are use cases when a field in type B references type A. A field in A references field of type B. In such cases, we will mark the first field as recursive.",
+          "type" : "boolean"
+        },
+        "globalTags" : {
+          "default" : null,
+          "description" : "Tags associated with the field",
+          "$ref" : "#/definitions/GlobalTags"
+        },
+        "glossaryTerms" : {
+          "default" : null,
+          "description" : "Glossary terms associated with the field",
+          "$ref" : "#/definitions/GlossaryTerms"
+        },
+        "isPartOfKey" : {
+          "default" : false,
+          "description" : "For schema fields that are part of complex keys, set this field to true\nWe do this to easily distinguish between value and key fields",
+          "type" : "boolean"
+        },
+        "isPartitioningKey" : {
+          "default" : null,
+          "description" : "For Datasets which are partitioned, this determines the partitioning key.\nNote that multiple columns can be part of a partitioning key, but currently we do not support\nrendering the ordered partitioning key.",
+          "type" : "boolean"
+        },
+        "jsonProps" : {
+          "default" : null,
+          "description" : "For schema fields that have other properties that are not modeled explicitly,\nuse this field to serialize those properties into a JSON string",
+          "type" : "string"
+        }
+      },
+      "required" : [ "fieldPath", "nullable", "type", "nativeDataType", "recursive", "isPartOfKey" ]
+    },
+    "SchemaFieldDataType" : {
+      "description" : "Schema field data types",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Data platform specific types",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/BooleanType"
+          }, {
+            "$ref" : "#/definitions/FixedType"
+          }, {
+            "$ref" : "#/definitions/StringType"
+          }, {
+            "$ref" : "#/definitions/BytesType"
+          }, {
+            "$ref" : "#/definitions/NumberType"
+          }, {
+            "$ref" : "#/definitions/DateType"
+          }, {
+            "$ref" : "#/definitions/TimeType"
+          }, {
+            "$ref" : "#/definitions/EnumType"
+          }, {
+            "$ref" : "#/definitions/NullType"
+          }, {
+            "$ref" : "#/definitions/MapType"
+          }, {
+            "$ref" : "#/definitions/ArrayType"
+          }, {
+            "$ref" : "#/definitions/UnionType"
+          }, {
+            "$ref" : "#/definitions/RecordType"
+          } ]
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "BooleanType" : { },
+    "FixedType" : { },
+    "StringType" : { },
+    "BytesType" : { },
+    "NumberType" : { },
+    "DateType" : { },
+    "TimeType" : { },
+    "EnumType" : { },
+    "NullType" : { },
+    "MapType" : {
+      "description" : "Map field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "keyType" : {
+          "default" : null,
+          "description" : "Key type in a map",
+          "type" : "string"
+        },
+        "valueType" : {
+          "default" : null,
+          "description" : "Type of the value in a map",
+          "type" : "string"
+        }
+      }
+    },
+    "ArrayType" : {
+      "description" : "Array field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedType" : {
+          "default" : null,
+          "description" : "List of types this array holds.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "UnionType" : {
+      "description" : "Union field type.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "nestedTypes" : {
+          "default" : null,
+          "description" : "List of types in union type.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "RecordType" : { },
+    "GlobalTags" : {
+      "description" : "Tag aspect used for applying tags to an entity",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tags" : {
+          "description" : "Tags associated with a given entity",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/TagAssociation"
+          }
+        }
+      },
+      "required" : [ "tags" ]
+    },
+    "TagAssociation" : {
+      "description" : "Properties of an applied tag. For now, just an Urn. In the future we can extend this with other properties, e.g.\npropagation parameters.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "tag" : {
+          "description" : "Urn of the applied tag",
+          "type" : "string"
+        },
+        "context" : {
+          "default" : null,
+          "description" : "Additional context about the association",
+          "type" : "string"
+        },
+        "attribution" : {
+          "default" : null,
+          "description" : "Information about who, why, and how this metadata was applied",
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      },
+      "required" : [ "tag" ]
+    },
+    "GlossaryTerms" : {
+      "description" : "Related business terms information",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "terms" : {
+          "description" : "The related business terms",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/GlossaryTermAssociation"
+          }
+        },
+        "auditStamp" : {
+          "description" : "Audit stamp containing who reported the related business term",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "terms", "auditStamp" ]
+    },
+    "GlossaryTermAssociation" : {
+      "description" : "Properties of an applied glossary term.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "Urn of the applied glossary term",
+          "type" : "string"
+        },
+        "actor" : {
+          "default" : null,
+          "description" : "The user URN which will be credited for adding associating this term to the entity",
+          "type" : "string"
+        },
+        "context" : {
+          "default" : null,
+          "description" : "Additional context about the association",
+          "type" : "string"
+        },
+        "attribution" : {
+          "default" : null,
+          "description" : "Information about who, why, and how this metadata was applied",
+          "$ref" : "#/definitions/MetadataAttribution"
+        }
+      },
+      "required" : [ "urn" ]
+    },
+    "ForeignKeySpec" : {
+      "description" : "Description of a foreign key in a schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "foreignKey" : {
+          "description" : "Foreign key definition in metadata schema.",
+          "oneOf" : [ {
+            "$ref" : "#/definitions/DatasetFieldForeignKey"
+          }, {
+            "$ref" : "#/definitions/UrnForeignKey"
+          } ]
+        }
+      },
+      "required" : [ "foreignKey" ]
+    },
+    "DatasetFieldForeignKey" : {
+      "description" : "For non-urn based foregin keys.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "parentDataset" : {
+          "description" : "dataset that stores the resource.",
+          "type" : "string"
+        },
+        "currentFieldPaths" : {
+          "description" : "List of fields in hosting(current) SchemaMetadata that conform a foreign key. List can contain a single entry or multiple entries if several entries in hosting schema conform a foreign key in a single parent dataset.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "parentField" : {
+          "description" : "SchemaField@fieldPath that uniquely identify field in parent dataset that this field references.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "parentDataset", "currentFieldPaths", "parentField" ]
+    },
+    "UrnForeignKey" : {
+      "description" : "If SchemaMetadata fields make any external references and references are of type com.linkedin.common.Urn or any children, this models can be used to mark it.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "currentFieldPath" : {
+          "description" : "Field in hosting(current) SchemaMetadata.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "currentFieldPath" ]
+    },
+    "ForeignKeyConstraint" : {
+      "description" : "Description of a foreign key constraint in a schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the constraint, likely provided from the source",
+          "type" : "string"
+        },
+        "foreignFields" : {
+          "description" : "Fields the constraint maps to on the foreign dataset",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "sourceFields" : {
+          "description" : "Fields the constraint maps to on the source dataset",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "foreignDataset" : {
+          "description" : "Reference to the foreign dataset for ease of lookup",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "foreignFields", "sourceFields", "foreignDataset" ]
+    },
+    "EditableSchemaMetadata" : {
+      "description" : "EditableSchemaMetadata stores editable changes made to schema metadata. This separates changes made from\ningestion pipelines and edits in the UI to avoid accidental overwrites of user-provided data by ingestion pipelines.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "created" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the creation of this resource/association/sub-resource. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : {
+            "actor" : "urn:li:corpuser:unknown",
+            "impersonator" : null,
+            "time" : 0,
+            "message" : null
+          },
+          "description" : "An AuditStamp corresponding to the last modification of this resource/association/sub-resource. If no modification has happened since creation, lastModified should be the same as created. A value of 0 for time indicates missing data.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "deleted" : {
+          "default" : null,
+          "description" : "An AuditStamp corresponding to the deletion of this resource/association/sub-resource. Logically, deleted MUST have a later timestamp than creation. It may or may not have the same time as lastModified depending upon the resource/association/sub-resource semantics.",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "editableSchemaFieldInfo" : {
+          "description" : "Client provided a list of fields from document schema.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/EditableSchemaFieldInfo"
+          }
+        }
+      },
+      "required" : [ "created", "lastModified", "editableSchemaFieldInfo" ]
+    },
+    "EditableSchemaFieldInfo" : {
+      "description" : "SchemaField to describe metadata related to dataset schema.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldPath" : {
+          "description" : "FieldPath uniquely identifying the SchemaField this metadata is associated with",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description",
+          "type" : "string"
+        },
+        "globalTags" : {
+          "default" : null,
+          "description" : "Tags associated with the field",
+          "$ref" : "#/definitions/GlobalTags"
+        },
+        "glossaryTerms" : {
+          "default" : null,
+          "description" : "Glossary terms associated with the field",
+          "$ref" : "#/definitions/GlossaryTerms"
+        }
+      },
+      "required" : [ "fieldPath" ]
+    },
+    "BrowsePaths" : {
+      "description" : "Shared aspect containing Browse Paths to be indexed for an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "paths" : {
+          "description" : "A list of valid browse paths for the entity.\n\nBrowse paths are expected to be forward slash-separated strings. For example: 'prod/snowflake/datasetName'",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "paths" ]
+    },
+    "DataPlatformInstance" : {
+      "description" : "The specific instance of the data platform that this entity belongs to",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platform" : {
+          "description" : "Data Platform",
+          "type" : "string"
+        },
+        "instance" : {
+          "default" : null,
+          "description" : "Instance of the data platform (e.g. db instance)",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platform" ]
+    },
+    "ViewProperties" : {
+      "description" : "Details about a View. \ne.g. Gets activated when subTypes is view",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "materialized" : {
+          "description" : "Whether the view is materialized",
+          "type" : "boolean"
+        },
+        "viewLogic" : {
+          "description" : "The view logic",
+          "type" : "string"
+        },
+        "formattedViewLogic" : {
+          "default" : null,
+          "description" : "The formatted view logic. This is particularly used for SQL sources, where the SQL\nlogic is formatted for better readability, and with dbt, where this contains the\ncompiled SQL logic.",
+          "type" : "string"
+        },
+        "viewLanguage" : {
+          "description" : "The view logic language / dialect",
+          "type" : "string"
+        }
+      },
+      "required" : [ "materialized", "viewLogic", "viewLanguage" ]
+    },
+    "BrowsePathsV2" : {
+      "description" : "Shared aspect containing a Browse Path to be indexed for an entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "path" : {
+          "description" : "A valid browse path for the entity. This field is provided by DataHub by default.\nThis aspect is a newer version of browsePaths where we can encode more information in the path.\nThis path is also based on containers for a given entity if it has containers.\n\nThis is stored in elasticsearch as unit-separator delimited strings and only includes platform specific folders or containers.\nThese paths should not include high level info captured elsewhere ie. Platform and Environment.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/BrowsePathEntry"
+          }
+        }
+      },
+      "required" : [ "path" ]
+    },
+    "BrowsePathEntry" : {
+      "description" : "Represents a single level in an entity's browsePathV2",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "The ID of the browse path entry. This is what gets stored in the index.\nIf there's an urn associated with this entry, id and urn will be the same",
+          "type" : "string"
+        },
+        "urn" : {
+          "default" : null,
+          "description" : "Optional urn pointing to some entity in DataHub",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DatasetSnapshot"
+}

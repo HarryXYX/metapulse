@@ -1,0 +1,24 @@
+{
+  "definitions" : {
+    "AssertionStdParameter" : {
+      "description" : "Single parameter for AssertionStdOperators.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The parameter value",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "The type of the parameter",
+          "$ref" : "#/definitions/AssertionStdParameterType"
+        }
+      },
+      "required" : [ "value", "type" ]
+    },
+    "AssertionStdParameterType" : {
+      "enum" : [ "STRING", "NUMBER", "LIST", "SET", "UNKNOWN" ]
+    }
+  },
+  "$ref" : "#/definitions/AssertionStdParameter"
+}

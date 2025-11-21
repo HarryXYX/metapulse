@@ -1,0 +1,16 @@
+{
+  "definitions" : {
+    "DataHubUpgradeKey" : {
+      "description" : "Key for a DataHubUpgrade",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubUpgradeKey"
+}

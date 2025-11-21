@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "RoleUser" : {
+      "description" : "Provisioned users of a role",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "user" : {
+          "description" : "Link provisioned corp user for a role",
+          "type" : "string"
+        }
+      },
+      "required" : [ "user" ]
+    }
+  },
+  "$ref" : "#/definitions/RoleUser"
+}

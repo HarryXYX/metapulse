@@ -1,0 +1,39 @@
+{
+  "definitions" : {
+    "DataHubIngestionSourceConfig" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "recipe" : {
+          "description" : "The JSON recipe to use for ingestion",
+          "type" : "string"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "The PyPI version of the datahub CLI to use when executing a recipe",
+          "type" : "string"
+        },
+        "executorId" : {
+          "default" : null,
+          "description" : "The id of the executor to use to execute the ingestion run",
+          "type" : "string"
+        },
+        "debugMode" : {
+          "default" : null,
+          "description" : "Whether or not to run this ingestion source in debug mode",
+          "type" : "boolean"
+        },
+        "extraArgs" : {
+          "default" : null,
+          "description" : "Extra arguments for the ingestion run.",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "recipe" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubIngestionSourceConfig"
+}

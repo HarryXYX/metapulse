@@ -1,0 +1,42 @@
+{
+  "definitions" : {
+    "DataHubConnectionDetails" : {
+      "description" : "Information about a connection to an external platform.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The type of the connection. This defines the schema / encoding of the connection details.",
+          "$ref" : "#/definitions/DataHubConnectionDetailsType"
+        },
+        "name" : {
+          "default" : null,
+          "description" : "Display name of the connection",
+          "type" : "string"
+        },
+        "json" : {
+          "default" : null,
+          "description" : "An JSON payload containing raw connection details.\nThis will be present if the type is JSON.",
+          "$ref" : "#/definitions/DataHubJsonConnection"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "DataHubConnectionDetailsType" : {
+      "enum" : [ "JSON" ]
+    },
+    "DataHubJsonConnection" : {
+      "description" : "A set of connection details consisting of an encrypted JSON blob.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "encryptedBlob" : {
+          "description" : "The encrypted JSON connection details.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "encryptedBlob" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubConnectionDetails"
+}

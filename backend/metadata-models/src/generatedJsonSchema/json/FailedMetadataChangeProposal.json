@@ -1,0 +1,249 @@
+{
+  "definitions" : {
+    "FailedMetadataChangeProposal" : {
+      "description" : "Kafka event for capturing a failure to process a specific MetadataChangeEvent.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "auditHeader" : {
+          "default" : null,
+          "description" : "Kafka audit header. See go/kafkaauditheader for more info.",
+          "$ref" : "#/definitions/KafkaAuditHeader"
+        },
+        "metadataChangeProposal" : {
+          "description" : "The even that failed to be processed.",
+          "$ref" : "#/definitions/MetadataChangeProposal"
+        },
+        "error" : {
+          "description" : "The error message or the stacktrace for the failure.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "metadataChangeProposal", "error" ]
+    },
+    "KafkaAuditHeader" : {
+      "description" : "This header records information about the context of an event as it is emitted into kafka and is intended to be used by the kafka audit application.  For more information see go/kafkaauditheader",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "The time at which the event was emitted into kafka.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "server" : {
+          "description" : "The fully qualified name of the host from which the event is being emitted.",
+          "type" : "string"
+        },
+        "instance" : {
+          "default" : null,
+          "description" : "The instance on the server from which the event is being emitted. e.g. i001",
+          "type" : "string"
+        },
+        "appName" : {
+          "description" : "The name of the application from which the event is being emitted. see go/appname",
+          "type" : "string"
+        },
+        "messageId" : {
+          "description" : "A unique identifier for the message",
+          "$ref" : "#/definitions/UUID"
+        },
+        "auditVersion" : {
+          "default" : null,
+          "description" : "The version that is being used for auditing. In version 0, the audit trail buckets events into 10 minute audit windows based on the EventHeader timestamp. In version 1, the audit trail buckets events as follows: if the schema has an outer KafkaAuditHeader, use the outer audit header timestamp for bucketing; else if the EventHeader has an inner KafkaAuditHeader use that inner audit header's timestamp for bucketing",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        },
+        "fabricUrn" : {
+          "default" : null,
+          "description" : "The fabricUrn of the host from which the event is being emitted. Fabric Urn in the format of urn:li:fabric:{fabric_name}. See go/fabric.",
+          "type" : "string"
+        },
+        "clusterConnectionString" : {
+          "default" : null,
+          "description" : "This is a String that the client uses to establish some kind of connection with the Kafka cluster. The exact format of it depends on specific versions of clients and brokers. This information could potentially identify the fabric and cluster with which the client is producing to or consuming from.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "server", "appName", "messageId" ]
+    },
+    "UUID" : {
+      "type" : "string",
+      "pattern" : "^[\u0000-ÿ]*$",
+      "minLength" : 16,
+      "maxLength" : 16
+    },
+    "MetadataChangeProposal" : {
+      "description" : "Kafka event for proposing a metadata change for an entity. A corresponding MetadataChangeLog is emitted when the change is accepted and committed, otherwise a FailedMetadataChangeProposal will be emitted instead.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "auditHeader" : {
+          "default" : null,
+          "description" : "Kafka audit header. Currently remains unused in the open source.",
+          "$ref" : "#/definitions/KafkaAuditHeader"
+        },
+        "entityType" : {
+          "description" : "Type of the entity being written to",
+          "type" : "string"
+        },
+        "entityUrn" : {
+          "default" : null,
+          "description" : "Urn of the entity being written",
+          "type" : "string"
+        },
+        "entityKeyAspect" : {
+          "default" : null,
+          "description" : "Key aspect of the entity being written",
+          "$ref" : "#/definitions/GenericAspect"
+        },
+        "changeType" : {
+          "description" : "Type of change being proposed",
+          "$ref" : "#/definitions/ChangeType"
+        },
+        "aspectName" : {
+          "default" : null,
+          "description" : "Aspect of the entity being written to\nNot filling this out implies that the writer wants to affect the entire entity\nNote: This is only valid for CREATE, UPSERT, and DELETE operations.",
+          "type" : "string"
+        },
+        "aspect" : {
+          "default" : null,
+          "description" : "The value of the new aspect.",
+          "$ref" : "#/definitions/GenericAspect"
+        },
+        "systemMetadata" : {
+          "default" : null,
+          "description" : "System properties that one might want to attach to an event",
+          "$ref" : "#/definitions/SystemMetadata"
+        },
+        "headers" : {
+          "default" : null,
+          "description" : "Headers - intended to mimic http headers",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "entityType", "changeType" ]
+    },
+    "GenericAspect" : {
+      "description" : "Generic record structure for serializing an Aspect",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The value of the aspect, serialized as bytes.",
+          "type" : "string",
+          "pattern" : "^[\u0000-ÿ]*$"
+        },
+        "contentType" : {
+          "description" : "The content type, which represents the fashion in which the aspect was serialized.\nThe only type currently supported is application/json.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "value", "contentType" ]
+    },
+    "ChangeType" : {
+      "description" : "Descriptor for a change action",
+      "enum" : [ "UPSERT", "CREATE", "UPDATE", "DELETE", "PATCH", "RESTATE", "CREATE_ENTITY" ]
+    },
+    "SystemMetadata" : {
+      "description" : "Metadata associated with each metadata change that is processed by the system",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "lastObserved" : {
+          "default" : 0,
+          "description" : "The timestamp the metadata was observed at",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "runId" : {
+          "default" : "no-run-id-provided",
+          "description" : "The original run id that produced the metadata. Populated in case of batch-ingestion.",
+          "type" : "string"
+        },
+        "lastRunId" : {
+          "default" : "no-run-id-provided",
+          "description" : "The last run id that produced the metadata. Populated in case of batch-ingestion.",
+          "type" : "string"
+        },
+        "pipelineName" : {
+          "default" : null,
+          "description" : "The ingestion pipeline id that produced the metadata. Populated in case of batch ingestion.",
+          "type" : "string"
+        },
+        "registryName" : {
+          "default" : null,
+          "description" : "The model registry name that was used to process this event",
+          "type" : "string"
+        },
+        "registryVersion" : {
+          "default" : null,
+          "description" : "The model registry version that was used to process this event",
+          "type" : "string"
+        },
+        "properties" : {
+          "default" : null,
+          "description" : "Additional properties",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Aspect version\n   Initial implementation will use the aspect version's number, however stored as\n   a string in the case where a different aspect versioning scheme is later adopted.",
+          "type" : "string"
+        },
+        "aspectCreated" : {
+          "default" : null,
+          "description" : "When the aspect was initially created and who created it, detected by version 0 -> 1 change",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "aspectModified" : {
+          "default" : null,
+          "description" : "When the aspect was last modified and the actor that performed the modification",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "lastObserved", "runId", "lastRunId" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    }
+  },
+  "$ref" : "#/definitions/FailedMetadataChangeProposal"
+}

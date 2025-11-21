@@ -1,0 +1,29 @@
+{
+  "definitions" : {
+    "DataProcessKey" : {
+      "description" : "Key for a Data Process",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Process name i.e. an ETL job name",
+          "type" : "string"
+        },
+        "orchestrator" : {
+          "description" : "Standardized Orchestrator where data process is defined.\nTODO: Migrate towards something that can be validated like DataPlatform urn",
+          "type" : "string"
+        },
+        "origin" : {
+          "description" : "Fabric type where dataset belongs to or where it was generated.",
+          "$ref" : "#/definitions/FabricType"
+        }
+      },
+      "required" : [ "name", "orchestrator", "origin" ]
+    },
+    "FabricType" : {
+      "description" : "Fabric group type",
+      "enum" : [ "DEV", "TEST", "QA", "UAT", "EI", "PRE", "STG", "NON_PROD", "PROD", "CORP", "RVW", "PRD", "TST", "SIT", "SBX", "SANDBOX" ]
+    }
+  },
+  "$ref" : "#/definitions/DataProcessKey"
+}

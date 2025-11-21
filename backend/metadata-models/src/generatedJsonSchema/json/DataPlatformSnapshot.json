@@ -1,0 +1,74 @@
+{
+  "definitions" : {
+    "DataPlatformSnapshot" : {
+      "description" : "A metadata snapshot for a specific dataplatform entity.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "urn" : {
+          "description" : "URN for the entity the metadata snapshot is associated with.",
+          "type" : "string"
+        },
+        "aspects" : {
+          "description" : "The list of metadata aspects associated with the data platform. Depending on the use case, this can either be all, or a selection, of supported aspects.",
+          "type" : "array",
+          "items" : {
+            "oneOf" : [ {
+              "$ref" : "#/definitions/DataPlatformKey"
+            }, {
+              "$ref" : "#/definitions/DataPlatformInfo"
+            } ]
+          }
+        }
+      },
+      "required" : [ "urn", "aspects" ]
+    },
+    "DataPlatformKey" : {
+      "description" : "Key for a Data Platform",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "platformName" : {
+          "description" : "Data platform name i.e. hdfs, oracle, espresso",
+          "type" : "string"
+        }
+      },
+      "required" : [ "platformName" ]
+    },
+    "DataPlatformInfo" : {
+      "description" : "Information about a data platform",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Name of the data platform",
+          "type" : "string"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "The name that will be used for displaying a platform type.",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "Platform type this data platform describes",
+          "$ref" : "#/definitions/PlatformType"
+        },
+        "datasetNameDelimiter" : {
+          "description" : "The delimiter in the dataset names on the data platform, e.g. '/' for HDFS and '.' for Oracle",
+          "type" : "string"
+        },
+        "logoUrl" : {
+          "default" : null,
+          "description" : "The URL for a logo associated with the platform",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "type", "datasetNameDelimiter" ]
+    },
+    "PlatformType" : {
+      "description" : "Platform types available at LinkedIn",
+      "enum" : [ "FILE_SYSTEM", "KEY_VALUE_STORE", "MESSAGE_BROKER", "OBJECT_STORE", "OLAP_DATASTORE", "OTHERS", "QUERY_ENGINE", "RELATIONAL_DB", "SEARCH_ENGINE" ]
+    }
+  },
+  "$ref" : "#/definitions/DataPlatformSnapshot"
+}

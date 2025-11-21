@@ -1,0 +1,49 @@
+{
+  "definitions" : {
+    "TestInfo" : {
+      "description" : "Information about a DataHub Test",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The name of the test",
+          "type" : "string"
+        },
+        "category" : {
+          "description" : "Category of the test",
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Description of the test",
+          "type" : "string"
+        },
+        "definition" : {
+          "description" : "Configuration for the Test",
+          "$ref" : "#/definitions/TestDefinition"
+        }
+      },
+      "required" : [ "name", "category", "definition" ]
+    },
+    "TestDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The Test Definition Type",
+          "$ref" : "#/definitions/TestDefinitionType"
+        },
+        "json" : {
+          "default" : null,
+          "description" : "JSON format configuration for the test",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "TestDefinitionType" : {
+      "enum" : [ "JSON" ]
+    }
+  },
+  "$ref" : "#/definitions/TestInfo"
+}

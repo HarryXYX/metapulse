@@ -1,0 +1,214 @@
+{
+  "definitions" : {
+    "PropertyDefinition" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "qualifiedName" : {
+          "description" : "The fully qualified name of the property. e.g. io.acryl.datahub.myProperty",
+          "type" : "string"
+        },
+        "displayName" : {
+          "default" : null,
+          "description" : "The display name of the property. This is the name that will be shown in the UI and can be used to look up the property id.",
+          "type" : "string"
+        },
+        "valueType" : {
+          "description" : "The value type of the property. Must be a dataType.\ne.g. To indicate that the property is of type DATE, use urn:li:dataType:datahub.date",
+          "type" : "string"
+        },
+        "typeQualifier" : {
+          "default" : null,
+          "description" : "A map that allows for type specialization of the valueType.\ne.g. a valueType of urn:li:dataType:datahub.urn\ncan be specialized to be a USER or GROUP URN by adding a typeQualifier like \n{ \"allowedTypes\": [\"urn:li:entityType:datahub.corpuser\", \"urn:li:entityType:datahub.corpGroup\"] }",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string"
+            }
+          }
+        },
+        "allowedValues" : {
+          "default" : null,
+          "description" : "A list of allowed values that the property is allowed to take. \nIf this is not specified, then the property can take any value of given type.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PropertyValue"
+          }
+        },
+        "cardinality" : {
+          "default" : "SINGLE",
+          "description" : "The cardinality of the property. If not specified, then the property is assumed to be single valued..",
+          "$ref" : "#/definitions/PropertyCardinality"
+        },
+        "entityTypes" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "default" : null,
+          "description" : "The description of the property. This is the description that will be shown in the UI.",
+          "type" : "string"
+        },
+        "searchConfiguration" : {
+          "default" : null,
+          "description" : "Search configuration for this property. If not specified, then the property is indexed using the default mapping.\nfrom the logical type.",
+          "$ref" : "#/definitions/DataHubSearchConfig"
+        },
+        "immutable" : {
+          "default" : false,
+          "description" : "Whether the structured property value is immutable once applied to an entity.",
+          "type" : "boolean"
+        },
+        "version" : {
+          "default" : null,
+          "description" : "Definition version - Allows breaking schema changes. String is compared case-insensitive and new\n                     versions must be monotonically increasing. Cannot use periods/dots.\n                     Suggestions: v1, v2\n                                  20240610, 20240611",
+          "type" : "string"
+        },
+        "created" : {
+          "default" : null,
+          "description" : "Created Audit stamp",
+          "$ref" : "#/definitions/AuditStamp"
+        },
+        "lastModified" : {
+          "default" : null,
+          "description" : "Last Modified Audit stamp",
+          "$ref" : "#/definitions/AuditStamp"
+        }
+      },
+      "required" : [ "qualifiedName", "valueType", "cardinality", "entityTypes", "immutable" ]
+    },
+    "PropertyValue" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "description" : {
+          "default" : null,
+          "description" : "Optional description of the property value",
+          "type" : "string"
+        }
+      },
+      "required" : [ "value" ]
+    },
+    "PropertyCardinality" : {
+      "enum" : [ "SINGLE", "MULTIPLE" ]
+    },
+    "DataHubSearchConfig" : {
+      "description" : "Configuration for how any given field should be indexed and matched in the DataHub search index.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldName" : {
+          "default" : null,
+          "description" : "Name of the field in the search index. Defaults to the field name otherwise",
+          "type" : "string"
+        },
+        "fieldType" : {
+          "default" : null,
+          "description" : "Type of the field. Defines how the field is indexed and matched",
+          "$ref" : "#/definitions/SearchFieldType"
+        },
+        "queryByDefault" : {
+          "default" : false,
+          "description" : "Whether we should match the field for the default search query",
+          "type" : "boolean"
+        },
+        "enableAutocomplete" : {
+          "default" : false,
+          "description" : "Whether we should use the field for default autocomplete",
+          "type" : "boolean"
+        },
+        "addToFilters" : {
+          "default" : false,
+          "description" : "Whether or not to add field to filters.",
+          "type" : "boolean"
+        },
+        "addHasValuesToFilters" : {
+          "default" : true,
+          "description" : "Whether or not to add the \"has values\" to filters.\ncheck if this is conditional on addToFilters being true",
+          "type" : "boolean"
+        },
+        "filterNameOverride" : {
+          "default" : null,
+          "description" : "Display name of the filter",
+          "type" : "string"
+        },
+        "hasValuesFilterNameOverride" : {
+          "default" : null,
+          "description" : "Display name of the has values filter",
+          "type" : "string"
+        },
+        "boostScore" : {
+          "default" : 1,
+          "description" : "Boost multiplier to the match score. Matches on fields with higher boost score ranks higher",
+          "type" : "number"
+        },
+        "hasValuesFieldName" : {
+          "default" : null,
+          "description" : "If set, add a index field of the given name that checks whether the field exists",
+          "type" : "string"
+        },
+        "numValuesFieldName" : {
+          "default" : null,
+          "description" : "If set, add a index field of the given name that checks the number of elements",
+          "type" : "string"
+        },
+        "weightsPerFieldValue" : {
+          "default" : null,
+          "description" : "(Optional) Weights to apply to score for a given value",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "number"
+          }
+        },
+        "fieldNameAliases" : {
+          "default" : null,
+          "description" : "(Optional) Aliases for this given field that can be used for sorting etc.",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "queryByDefault", "enableAutocomplete", "addToFilters", "addHasValuesToFilters", "boostScore" ]
+    },
+    "SearchFieldType" : {
+      "enum" : [ "KEYWORD", "TEXT", "TEXT_PARTIAL", "BROWSE_PATH", "URN", "URN_PARTIAL", "BOOLEAN", "COUNT", "DATETIME", "OBJECT", "BROWSE_PATH_V2", "WORD_GRAM" ]
+    },
+    "AuditStamp" : {
+      "description" : "Data captured on a resource/association/sub-resource level giving insight into when that resource/association/sub-resource moved into a particular lifecycle stage, and who acted to move it into that specific lifecycle stage.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "time" : {
+          "description" : "When did the resource/association/sub-resource move into the specific lifecycle stage represented by this AuditEvent.",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "actor" : {
+          "description" : "The entity (e.g. a member URN) which will be credited for moving the resource/association/sub-resource into the specific lifecycle stage. It is also the one used to authorize the change.",
+          "type" : "string"
+        },
+        "impersonator" : {
+          "default" : null,
+          "description" : "The entity (e.g. a service URN) which performs the change on behalf of the Actor and must be authorized to act as the Actor.",
+          "type" : "string"
+        },
+        "message" : {
+          "default" : null,
+          "description" : "Additional context around how DataHub was informed of the particular change. For example: was the change created by an automated process, or manually.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "time", "actor" ]
+    }
+  },
+  "$ref" : "#/definitions/PropertyDefinition"
+}

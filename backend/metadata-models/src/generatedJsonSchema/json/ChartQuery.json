@@ -1,0 +1,24 @@
+{
+  "definitions" : {
+    "ChartQuery" : {
+      "description" : "Information for chart query which is used for getting data of the chart",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawQuery" : {
+          "description" : "Raw query to build a chart from input datasets",
+          "type" : "string"
+        },
+        "type" : {
+          "description" : "Chart query type",
+          "$ref" : "#/definitions/ChartQueryType"
+        }
+      },
+      "required" : [ "rawQuery", "type" ]
+    },
+    "ChartQueryType" : {
+      "enum" : [ "LOOKML", "SQL" ]
+    }
+  },
+  "$ref" : "#/definitions/ChartQuery"
+}

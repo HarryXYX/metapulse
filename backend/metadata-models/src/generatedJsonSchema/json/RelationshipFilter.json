@@ -1,0 +1,91 @@
+{
+  "definitions" : {
+    "RelationshipFilter" : {
+      "description" : "The relationship filter to apply in a graph query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "or" : {
+          "default" : null,
+          "description" : "A list of disjunctive criterion for the filter. (or operation to combine filters)",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConjunctiveCriterion"
+          }
+        },
+        "criteria" : {
+          "default" : null,
+          "description" : "Deprecated! A list of conjunctive criterion for the filter. If \"or\" field is provided, then this field is ignored.",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Criterion"
+          }
+        },
+        "direction" : {
+          "default" : "UNDIRECTED",
+          "description" : "The relationship direction between two nodes in a graph query",
+          "$ref" : "#/definitions/RelationshipDirection"
+        }
+      },
+      "required" : [ "direction" ]
+    },
+    "ConjunctiveCriterion" : {
+      "description" : "A list of criterion and'd together.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "and" : {
+          "description" : "A list of and criteria the filter applies to the query",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Criterion"
+          }
+        }
+      },
+      "required" : [ "and" ]
+    },
+    "Criterion" : {
+      "description" : "A criterion for matching a field with given value",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "field" : {
+          "description" : "The name of the field that the criterion refers to",
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "The value of the intended field",
+          "type" : "string"
+        },
+        "values" : {
+          "default" : [ ],
+          "description" : "Values. one of which the intended field should match\nNote, if values is set, the above \"value\" field will be ignored",
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "condition" : {
+          "default" : "EQUAL",
+          "description" : "The condition for the criterion, e.g. EQUAL, START_WITH",
+          "$ref" : "#/definitions/Condition"
+        },
+        "negated" : {
+          "default" : false,
+          "description" : "Whether the condition should be negated",
+          "type" : "boolean"
+        }
+      },
+      "required" : [ "field", "value", "values", "condition", "negated" ]
+    },
+    "Condition" : {
+      "description" : "The matching condition in a filter criterion",
+      "enum" : [ "CONTAIN", "END_WITH", "EQUAL", "IEQUAL", "IS_NULL", "EXISTS", "GREATER_THAN", "GREATER_THAN_OR_EQUAL_TO", "IN", "LESS_THAN", "LESS_THAN_OR_EQUAL_TO", "START_WITH", "DESCENDANTS_INCL", "ANCESTORS_INCL", "RELATED_INCL" ]
+    },
+    "RelationshipDirection" : {
+      "description" : "The relationship direction in a relationship filter",
+      "enum" : [ "INCOMING", "OUTGOING", "UNDIRECTED" ]
+    }
+  },
+  "$ref" : "#/definitions/RelationshipFilter"
+}

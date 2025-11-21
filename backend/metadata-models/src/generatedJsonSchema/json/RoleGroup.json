@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "RoleGroup" : {
+      "description" : "Provisioned groups of a role",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "group" : {
+          "description" : "Link provisioned corp group for a role",
+          "type" : "string"
+        }
+      },
+      "required" : [ "group" ]
+    }
+  },
+  "$ref" : "#/definitions/RoleGroup"
+}

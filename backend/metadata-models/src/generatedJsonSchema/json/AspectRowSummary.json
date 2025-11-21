@@ -1,0 +1,48 @@
+{
+  "definitions" : {
+    "AspectRowSummary" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "runId" : {
+          "type" : "string"
+        },
+        "aspectName" : {
+          "type" : "string"
+        },
+        "urn" : {
+          "type" : "string"
+        },
+        "timestamp" : {
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "metadata" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "keyAspect" : {
+          "type" : "boolean"
+        },
+        "aspect" : {
+          "default" : null,
+          "$ref" : "#/definitions/Aspect"
+        },
+        "telemetryTraceId" : {
+          "default" : null,
+          "type" : "string"
+        }
+      },
+      "required" : [ "runId", "aspectName", "urn", "timestamp", "metadata", "version", "keyAspect" ]
+    },
+    "Aspect" : { }
+  },
+  "$ref" : "#/definitions/AspectRowSummary"
+}

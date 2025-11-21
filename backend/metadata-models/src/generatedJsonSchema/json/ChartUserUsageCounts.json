@@ -1,0 +1,24 @@
+{
+  "definitions" : {
+    "ChartUserUsageCounts" : {
+      "description" : "Records a single user's usage counts for a given resource",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "user" : {
+          "description" : "The unique id of the user.",
+          "type" : "string"
+        },
+        "viewsCount" : {
+          "default" : null,
+          "description" : "The number of times the user has viewed the chart",
+          "type" : "integer",
+          "minimum" : -2147483648,
+          "maximum" : 2147483647
+        }
+      },
+      "required" : [ "user" ]
+    }
+  },
+  "$ref" : "#/definitions/ChartUserUsageCounts"
+}

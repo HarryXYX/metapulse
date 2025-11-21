@@ -1,0 +1,20 @@
+{
+  "definitions" : {
+    "MatchedField" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "Matched field name",
+          "type" : "string"
+        },
+        "value" : {
+          "description" : "Matched field value",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name", "value" ]
+    }
+  },
+  "$ref" : "#/definitions/MatchedField"
+}

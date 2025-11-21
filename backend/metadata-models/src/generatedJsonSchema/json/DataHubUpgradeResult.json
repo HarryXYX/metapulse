@@ -1,0 +1,36 @@
+{
+  "definitions" : {
+    "DataHubUpgradeResult" : {
+      "description" : "Information collected when a DataHubUpgrade successfully finishes",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "state" : {
+          "default" : "SUCCEEDED",
+          "description" : "Upgrade state  UpgradeResult.Result",
+          "$ref" : "#/definitions/DataHubUpgradeState"
+        },
+        "timestampMs" : {
+          "description" : "Timestamp when we started this DataHubUpgrade",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "result" : {
+          "default" : null,
+          "description" : "Result map to place helpful information about this upgrade job",
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "state", "timestampMs" ]
+    },
+    "DataHubUpgradeState" : {
+      "enum" : [ "IN_PROGRESS", "SUCCEEDED", "FAILED", "ABORTED" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubUpgradeResult"
+}

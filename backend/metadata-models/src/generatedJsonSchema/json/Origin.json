@@ -1,0 +1,26 @@
+{
+  "definitions" : {
+    "Origin" : {
+      "description" : "Carries information about where an entity originated from.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "Where an entity originated from. Either NATIVE or EXTERNAL.",
+          "$ref" : "#/definitions/OriginType"
+        },
+        "externalType" : {
+          "default" : null,
+          "description" : "Only populated if type is EXTERNAL. The externalType of the entity, such as the name of the identity provider.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "OriginType" : {
+      "description" : "Enum to define where an entity originated from.",
+      "enum" : [ "NATIVE", "EXTERNAL" ]
+    }
+  },
+  "$ref" : "#/definitions/Origin"
+}

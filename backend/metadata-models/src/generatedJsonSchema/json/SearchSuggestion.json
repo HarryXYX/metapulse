@@ -1,0 +1,28 @@
+{
+  "definitions" : {
+    "SearchSuggestion" : {
+      "description" : "The model for the search result",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "text" : {
+          "description" : "The suggestion text for this search query",
+          "type" : "string"
+        },
+        "score" : {
+          "description" : "The score for how close this suggestion is to the original search query.\nThe closer to 1 means it is closer to the original query and 0 is further away.",
+          "type" : "number"
+        },
+        "frequency" : {
+          "description" : "How many matches there are with the suggested text for the given field",
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "text", "score", "frequency" ]
+    }
+  },
+  "$ref" : "#/definitions/SearchSuggestion"
+}

@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "GlossaryTermKey" : {
+      "description" : "Key for a GlossaryTerm",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "name" : {
+          "description" : "The term name, which serves as a unique id",
+          "type" : "string"
+        }
+      },
+      "required" : [ "name" ]
+    }
+  },
+  "$ref" : "#/definitions/GlossaryTermKey"
+}

@@ -1,0 +1,30 @@
+{
+  "definitions" : {
+    "CustomAssertionInfo" : {
+      "description" : "Attributes that are applicable to Custom Assertions",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The type of custom assertion.\nThis is how your assertion will appear categorized in DataHub UI. ",
+          "type" : "string"
+        },
+        "entity" : {
+          "description" : "The entity targeted by this assertion.\nThis can have support more entityTypes (e.g. dataJob) in future",
+          "type" : "string"
+        },
+        "field" : {
+          "default" : null,
+          "description" : "dataset schema field targeted by this assertion.\n\nThis field is expected to be provided if the assertion is on dataset field",
+          "type" : "string"
+        },
+        "logic" : {
+          "default" : null,
+          "type" : "string"
+        }
+      },
+      "required" : [ "type", "entity" ]
+    }
+  },
+  "$ref" : "#/definitions/CustomAssertionInfo"
+}

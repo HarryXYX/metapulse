@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "QueryKey" : {
+      "description" : "Key for a Query",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "id" : {
+          "description" : "A unique id for the Query.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "id" ]
+    }
+  },
+  "$ref" : "#/definitions/QueryKey"
+}

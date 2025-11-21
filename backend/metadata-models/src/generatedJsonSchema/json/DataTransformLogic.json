@@ -1,0 +1,52 @@
+{
+  "definitions" : {
+    "DataTransformLogic" : {
+      "description" : "Information about a Query against one or more data assets (e.g. Tables or Views).",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "transforms" : {
+          "description" : "List of transformations applied",
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/DataTransform"
+          }
+        }
+      },
+      "required" : [ "transforms" ]
+    },
+    "DataTransform" : {
+      "description" : "Information about a transformation. It may be a query,",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "queryStatement" : {
+          "default" : null,
+          "description" : "The data transform may be defined by a query statement",
+          "$ref" : "#/definitions/QueryStatement"
+        }
+      }
+    },
+    "QueryStatement" : {
+      "description" : "A query statement against one or more data assets.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "description" : "The query text",
+          "type" : "string"
+        },
+        "language" : {
+          "default" : "SQL",
+          "description" : "The language of the Query, e.g. SQL.",
+          "$ref" : "#/definitions/QueryLanguage"
+        }
+      },
+      "required" : [ "value", "language" ]
+    },
+    "QueryLanguage" : {
+      "enum" : [ "SQL", "UNKNOWN" ]
+    }
+  },
+  "$ref" : "#/definitions/DataTransformLogic"
+}

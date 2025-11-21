@@ -1,0 +1,17 @@
+{
+  "definitions" : {
+    "OtherSchema" : {
+      "description" : "Schema holder for undefined schema types.",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "rawSchema" : {
+          "description" : "The native schema in the dataset's platform.",
+          "type" : "string"
+        }
+      },
+      "required" : [ "rawSchema" ]
+    }
+  },
+  "$ref" : "#/definitions/OtherSchema"
+}

@@ -1,0 +1,19 @@
+{
+  "definitions" : {
+    "DataHubIngestionSourceSource" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "type" : {
+          "description" : "The source type of the ingestion source",
+          "$ref" : "#/definitions/DataHubIngestionSourceSourceType"
+        }
+      },
+      "required" : [ "type" ]
+    },
+    "DataHubIngestionSourceSourceType" : {
+      "enum" : [ "SYSTEM" ]
+    }
+  },
+  "$ref" : "#/definitions/DataHubIngestionSourceSource"
+}

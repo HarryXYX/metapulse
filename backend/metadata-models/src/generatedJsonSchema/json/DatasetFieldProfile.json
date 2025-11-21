@@ -1,0 +1,131 @@
+{
+  "definitions" : {
+    "DatasetFieldProfile" : {
+      "description" : "Stats corresponding to fields in a dataset",
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "fieldPath" : {
+          "type" : "string"
+        },
+        "uniqueCount" : {
+          "default" : null,
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "uniqueProportion" : {
+          "default" : null,
+          "type" : "number"
+        },
+        "nullCount" : {
+          "default" : null,
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        },
+        "nullProportion" : {
+          "default" : null,
+          "type" : "number"
+        },
+        "min" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "max" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "mean" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "median" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "stdev" : {
+          "default" : null,
+          "type" : "string"
+        },
+        "quantiles" : {
+          "default" : null,
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Quantile"
+          }
+        },
+        "distinctValueFrequencies" : {
+          "default" : null,
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ValueFrequency"
+          }
+        },
+        "histogram" : {
+          "default" : null,
+          "$ref" : "#/definitions/Histogram"
+        },
+        "sampleValues" : {
+          "default" : null,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        }
+      },
+      "required" : [ "fieldPath" ]
+    },
+    "Quantile" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "quantile" : {
+          "type" : "string"
+        },
+        "value" : {
+          "type" : "string"
+        }
+      },
+      "required" : [ "quantile", "value" ]
+    },
+    "ValueFrequency" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "frequency" : {
+          "type" : "integer",
+          "format" : "int64",
+          "minimum" : -9223372036854775808,
+          "maximum" : 9223372036854775807
+        }
+      },
+      "required" : [ "value", "frequency" ]
+    },
+    "Histogram" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "boundaries" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "heights" : {
+          "type" : "array",
+          "items" : {
+            "type" : "number"
+          }
+        }
+      },
+      "required" : [ "boundaries", "heights" ]
+    }
+  },
+  "$ref" : "#/definitions/DatasetFieldProfile"
+}

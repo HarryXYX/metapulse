@@ -1,0 +1,24 @@
+{
+  "definitions" : {
+    "Histogram" : {
+      "type" : "object",
+      "additionalProperties" : false,
+      "properties" : {
+        "boundaries" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "heights" : {
+          "type" : "array",
+          "items" : {
+            "type" : "number"
+          }
+        }
+      },
+      "required" : [ "boundaries", "heights" ]
+    }
+  },
+  "$ref" : "#/definitions/Histogram"
+}

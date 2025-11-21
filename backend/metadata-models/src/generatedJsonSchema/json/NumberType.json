@@ -1,0 +1,6 @@
+{
+  "definitions" : {
+    "NumberType" : { }
+  },
+  "$ref" : "#/definitions/NumberType"
+}
