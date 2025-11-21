@@ -113,5 +113,5 @@ frontend/src/possibleTypes.generated.ts
 **/src/testGeneratedRest/
 **/src/testGeneratedAvroSchema/
 **/src/testGeneratedGraphQL/
-**/src/generatedJsonSchema/           # JSON Schema（从Avro生成）
-**/build/openapi/generated/           # OpenAPI生成的Java代码
+**/src/generatedJsonSchema/
+**/build/openapi/generated/
