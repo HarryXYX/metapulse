@@ -99,7 +99,7 @@ git clone <repository-url>
 cd metapulse
 
 # 2. 构建项目
-./scripts/build.sh
+./scripts/deploy/build-app.sh
 
 # 3. 启动所有服务
 docker-compose up -d
@@ -271,9 +271,13 @@ metapulse/
 │   └── vite.config.ts
 │
 ├── scripts/                    # 工具脚本
-│   ├── setup.sh               # 环境初始化
-│   ├── dev.sh                 # 开发启动
-│   └── build.sh               # 构建脚本
+│   ├── dev/                   # 开发脚本
+│   │   ├── setup-local-env.sh    # 本地环境初始化
+│   │   └── setup-server-env.sh   # 服务器环境初始化
+│   └── deploy/                # 部署脚本
+│       ├── build-app.sh          # 构建应用
+│       ├── start-services.sh     # 启动依赖服务
+│       └── start-all.sh          # 启动所有服务
 │
 ├── docs/                       # 文档目录
 │   ├── DEPLOYMENT.md          # 部署指南（详细）
@@ -421,10 +425,10 @@ cd backend
 ### 集成构建
 
 ```bash
-./scripts/build.sh                   # 完整构建（前端+后端）
-./scripts/build.sh frontend-only     # 仅构建前端
-./scripts/build.sh backend-only      # 仅构建后端
-./scripts/build.sh full skip-tests   # 跳过测试的完整构建
+./scripts/deploy/build-app.sh                   # 完整构建（前端+后端）
+./scripts/deploy/build-app.sh frontend-only     # 仅构建前端
+./scripts/deploy/build-app.sh backend-only      # 仅构建后端
+./scripts/deploy/build-app.sh full skip-tests   # 跳过测试的完整构建
 ```
 
 ### Docker 服务管理

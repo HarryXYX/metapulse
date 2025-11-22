@@ -8,20 +8,21 @@
 
 ```
 scripts/
-├── dev/                    # 开发相关脚本（本地运行）
-│   └── setup.sh           # 初始化本地开发环境
+├── dev/                       # 开发相关脚本
+│   ├── setup-local-env.sh    # 初始化本地开发环境
+│   └── setup-server-env.sh   # 初始化服务器环境
 │
-└── deploy/                 # 部署相关脚本（服务器运行）
-    ├── deps-only.sh       # 启动依赖服务（开发模式）
-    ├── full.sh            # 完整应用部署
-    └── build.sh           # 构建应用
+└── deploy/                    # 部署相关脚本
+    ├── build-app.sh          # 构建应用
+    ├── start-services.sh     # 启动依赖服务（开发模式）
+    └── start-all.sh          # 启动所有服务（完整部署）
 ```
 
 ---
 
-## 🛠️ 开发脚本（本地运行）
+## 🛠️ 开发脚本
 
-### dev/setup.sh - 初始化开发环境
+### dev/setup-local-env.sh - 初始化本地开发环境
 
 **功能**：
 - 检查 Java、Node.js、Yarn 环境
@@ -34,19 +35,69 @@ scripts/
 **运行方式**：
 ```bash
 # 在本地机器运行
-./scripts/dev/setup.sh
+./scripts/dev/setup-local-env.sh
 ```
 
 **执行后续步骤**：
-1. 在服务器启动依赖服务：`./scripts/deploy/deps-only.sh`
+1. 在服务器启动依赖服务：`./scripts/deploy/start-services.sh`
 2. 本地 IDEA 启动后端（profile: dev）
 3. 本地 VSCode 启动前端（`yarn dev`）
 
 ---
 
-## 🚀 部署脚本（服务器运行）
+### dev/setup-server-env.sh - 初始化服务器环境
 
-### deploy/deps-only.sh - 启动依赖服务
+**功能**：
+- 检测操作系统类型（CentOS/Ubuntu/Debian）
+- 检查并安装 Java 17+
+- 检查并安装 Git
+- 检查中间件连接（MySQL、Elasticsearch、Kafka）
+- 检查磁盘空间和内存
+
+**使用场景**：首次设置服务器环境
+
+**运行方式**：
+```bash
+# 在服务器运行
+ssh user@server
+./scripts/dev/setup-server-env.sh
+```
+
+---
+
+## 🚀 部署脚本
+
+### deploy/build-app.sh - 构建应用
+
+**功能**：
+- 构建前端（React + Vite）
+- 集成前端资源到后端
+- 构建后端 WAR 包
+
+**使用场景**：生产部署前的构建
+
+**运行方式**：
+```bash
+# 完整构建（包含测试）
+./scripts/deploy/build-app.sh
+
+# 完整构建（跳过测试，推荐）
+./scripts/deploy/build-app.sh full skip-tests
+
+# 仅构建后端
+./scripts/deploy/build-app.sh backend-only
+
+# 仅构建前端
+./scripts/deploy/build-app.sh frontend-only
+```
+
+**构建产物**：
+- 前端：`frontend/dist/`
+- 后端：`backend/metadata-service/war/build/libs/war.war`
+
+---
+
+### deploy/start-services.sh - 启动依赖服务
 
 **功能**：
 - 仅启动 MySQL、Elasticsearch、Kafka
@@ -62,7 +113,7 @@ ssh user@47.80.65.112
 cd /path/to/metapulse
 
 # 运行脚本
-./scripts/deploy/deps-only.sh
+./scripts/deploy/start-services.sh
 ```
 
 **交互选项**：
@@ -78,37 +129,7 @@ cd /path/to/metapulse
 
 ---
 
-### deploy/build.sh - 构建应用
-
-**功能**：
-- 构建前端（React + Vite）
-- 集成前端资源到后端
-- 构建后端 WAR 包
-
-**使用场景**：生产部署前的构建
-
-**运行方式**：
-```bash
-# 完整构建（包含测试）
-./scripts/deploy/build.sh
-
-# 完整构建（跳过测试，推荐）
-./scripts/deploy/build.sh full skip-tests
-
-# 仅构建后端
-./scripts/deploy/build.sh backend-only
-
-# 仅构建前端
-./scripts/deploy/build.sh frontend-only
-```
-
-**构建产物**：
-- 前端：`frontend/dist/`
-- 后端：`backend/metadata-service/war/build/libs/war.war`
-
----
-
-### deploy/full.sh - 完整应用部署
+### deploy/start-all.sh - 启动所有服务
 
 **功能**：
 - 部署所有服务（依赖 + 应用）
@@ -124,7 +145,7 @@ ssh user@47.80.65.112
 cd /path/to/metapulse
 
 # 运行脚本
-./scripts/deploy/full.sh
+./scripts/deploy/start-all.sh
 ```
 
 **交互选项**：
@@ -148,7 +169,7 @@ cd /path/to/metapulse
 **本地机器**：
 ```bash
 # 1. 初始化开发环境
-./scripts/dev/setup.sh
+./scripts/dev/setup-local-env.sh
 ```
 
 **服务器**：
@@ -156,7 +177,7 @@ cd /path/to/metapulse
 # 2. 启动依赖服务
 ssh user@47.80.65.112
 cd /path/to/metapulse
-./scripts/deploy/deps-only.sh
+./scripts/deploy/start-services.sh
 # 选择: 1 (启动)
 ```
 
@@ -181,7 +202,7 @@ yarn dev
 **服务器（仅第一次或重启后）**：
 ```bash
 # 确保依赖服务运行
-./scripts/deploy/deps-only.sh
+./scripts/deploy/start-services.sh
 # 选择: 1 (启动)
 ```
 
@@ -201,10 +222,10 @@ cd frontend && yarn dev
 **服务器**：
 ```bash
 # 1. 构建应用
-./scripts/deploy/build.sh full skip-tests
+./scripts/deploy/build-app.sh full skip-tests
 
 # 2. 部署应用
-./scripts/deploy/full.sh
+./scripts/deploy/start-all.sh
 # 选择: 1 (启动所有服务)
 
 # 3. 验证部署
@@ -218,11 +239,11 @@ curl http://localhost:8080/actuator/health
 **服务器**：
 ```bash
 # 方式一：使用脚本自动化
-./scripts/deploy/full.sh
+./scripts/deploy/start-all.sh
 # 选择: 5 (重新构建并部署)
 
 # 方式二：手动步骤
-./scripts/deploy/build.sh full skip-tests
+./scripts/deploy/build-app.sh full skip-tests
 docker compose down
 docker compose up -d
 ```
@@ -241,7 +262,7 @@ docker compose -f docker-compose.services.yml logs
 netstat -tuln | grep -E '3306|9092|9200'
 
 # 重启服务
-./scripts/deploy/deps-only.sh
+./scripts/deploy/start-services.sh
 # 选择: 2 (重启)
 ```
 
@@ -285,7 +306,8 @@ docker compose restart metapulse
 ## ⚠️ 注意事项
 
 1. **脚本运行位置**：
-   - `dev/setup.sh` - 在本地运行
+   - `dev/setup-local-env.sh` - 在本地运行
+   - `dev/setup-server-env.sh` - 在服务器运行
    - `deploy/*` - 在服务器运行
 
 2. **服务器 IP**：

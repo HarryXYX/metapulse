@@ -69,7 +69,7 @@ org.gradle.caching=true
 - `--max-old-space-size=2048`: Node.js 堆内存 **2GB**（降低 1GB vs 之前）
 - `--openssl-legacy-provider`: 支持旧版 OpenSSL（兼容性）
 
-### 3. 构建脚本优化 (`scripts/deploy/build.sh`)
+### 3. 构建脚本优化 (`scripts/deploy/build-app.sh`)
 
 **关键优化**:
 - ✅ **自动清理缓存**：前端构建后自动清理 `node_modules/.cache` 和 `.vite`
@@ -83,7 +83,7 @@ org.gradle.caching=true
 ### 完整构建（推荐用于生产部署）
 
 ```bash
-./scripts/deploy/build.sh full skip-tests
+./scripts/deploy/build-app.sh full skip-tests
 ```
 
 **执行流程**:
@@ -96,7 +96,7 @@ org.gradle.caching=true
 ### 仅构建前端
 
 ```bash
-./scripts/deploy/build.sh frontend-only
+./scripts/deploy/build-app.sh frontend-only
 ```
 
 **适用场景**: 前端代码修改，后端无变化
@@ -104,7 +104,7 @@ org.gradle.caching=true
 ### 仅构建后端
 
 ```bash
-./scripts/deploy/build.sh backend-only
+./scripts/deploy/build-app.sh backend-only
 ```
 
 **适用场景**: 后端代码修改，前端无变化
@@ -152,7 +152,7 @@ free -h
 
 ```bash
 # 跳过后端测试（节省 2-3 分钟）
-./scripts/deploy/build.sh full skip-tests
+./scripts/deploy/build-app.sh full skip-tests
 
 # 或者手动跳过
 cd backend
@@ -260,7 +260,7 @@ cd backend
 
 ```bash
 # 本地构建
-./scripts/deploy/build.sh full skip-tests
+./scripts/deploy/build-app.sh full skip-tests
 
 # 构建 Docker 镜像
 cd backend
@@ -292,7 +292,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build
-        run: ./scripts/deploy/build.sh full skip-tests
+        run: ./scripts/deploy/build-app.sh full skip-tests
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:

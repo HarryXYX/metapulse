@@ -39,11 +39,11 @@ if [ ! -f "$WAR_FILE" ]; then
     echo ""
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         echo "🏗️  执行构建..."
-        ./scripts/deploy/build.sh full skip-tests
+        ./scripts/deploy/build-app.sh full skip-tests
         echo ""
     else
         echo "❌ 需要先构建应用"
-        echo "   运行: ./scripts/deploy/build.sh"
+        echo "   运行: ./scripts/deploy/build-app.sh"
         exit 1
     fi
 fi
@@ -116,7 +116,7 @@ case $REPLY in
         # 执行构建
         echo ""
         echo "2️⃣  执行构建..."
-        ./scripts/deploy/build.sh full skip-tests
+        ./scripts/deploy/build-app.sh full skip-tests
 
         # 启动服务
         echo ""

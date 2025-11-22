@@ -30,7 +30,7 @@ metapulse/
 
 ```bash
 # Initialize environment (checks dependencies, installs packages)
-./scripts/setup.sh
+./scripts/dev/setup-local-env.sh
 
 # Start dependency services (MySQL, Elasticsearch, Kafka)
 docker-compose up -d mysql elasticsearch kafka
@@ -102,16 +102,16 @@ cd backend
 
 ```bash
 # Build everything (frontend + backend)
-./scripts/build.sh
+./scripts/deploy/build-app.sh
 
 # Frontend-only build
-./scripts/build.sh frontend-only
+./scripts/deploy/build-app.sh frontend-only
 
 # Backend-only build
-./scripts/build.sh backend-only
+./scripts/deploy/build-app.sh backend-only
 
 # Build without tests
-./scripts/build.sh full skip-tests
+./scripts/deploy/build-app.sh full skip-tests
 
 # Integrate frontend assets into backend
 cd backend
@@ -127,19 +127,19 @@ cd backend
 **Option 1: Separate processes (recommended for development)**
 ```bash
 # Terminal 1 - Backend
-./scripts/dev.sh backend
+cd backend && ./gradlew bootRun
 
 # Terminal 2 - Frontend
-./scripts/dev.sh frontend
+cd frontend && yarn dev
 ```
 
 **Option 2: Docker Compose**
 ```bash
 # Build first
-./scripts/build.sh
+./scripts/deploy/build-app.sh
 
 # Start all services
-docker-compose up -d
+./scripts/deploy/start-all.sh
 
 # View logs
 docker-compose logs -f metapulse
@@ -216,7 +216,7 @@ All consumers are embedded in the WAR for All-in-One deployment.
 
 ```bash
 # Complete build
-./scripts/build.sh
+./scripts/deploy/build-app.sh
 
 # Deploy WAR file
 java -jar backend/metadata-service/war/build/libs/war.war
