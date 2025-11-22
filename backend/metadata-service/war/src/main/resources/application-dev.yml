@@ -71,11 +71,11 @@ elasticsearch:
   threadCount: 2  # 开发环境减少线程
 
 # ===== Consumer开关（开发环境全部启用） =====
-environment:
-  MAE_CONSUMER_ENABLED: true
-  MCE_CONSUMER_ENABLED: true
-  MCP_CONSUMER_ENABLED: true
-  PE_CONSUMER_ENABLED: true
+# 注意：这些需要作为环境变量传递，或者在启动时使用 -D 参数
+# 示例：java -DMCE_CONSUMER_ENABLED=true -DMCP_CONSUMER_ENABLED=true ...
+#
+# 临时解决方案：通过 Spring Boot 的默认值机制设置
+# 实际的条件判断会读取这些属性
 
 # ===== Entity Client配置 =====
 entityClient:
