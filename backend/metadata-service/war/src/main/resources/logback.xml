@@ -25,9 +25,7 @@
             <!-- 30 days to keep -->
             <maxHistory>30</maxHistory>
         </rollingPolicy>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
+        <!-- 移除 ThresholdFilter，记录所有级别的日志 -->
         <encoder>
             <pattern>%date{ISO8601} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
@@ -83,10 +81,10 @@
         <appender-ref ref="GRAPHQL_DEBUG_FILE" />
     </appender>
 
-    <!-- Remove this to disable logging debug -->
-    <logger name="com.linkedin" level="DEBUG">
+    <!-- DEBUG 日志已整合到 FILE appender，无需单独配置 -->
+    <!-- <logger name="com.linkedin" level="DEBUG">
         <appender-ref ref="DEBUG_FILE"/>
-    </logger>
+    </logger> -->
 
     <logger name="org.apache.kafka.clients" level="INFO">
         <appender-ref ref="STDOUT" />

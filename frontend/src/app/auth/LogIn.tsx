@@ -91,6 +91,11 @@ export const LogIn: React.VFC<LogInProps> = () => {
                         const error = (data && data.message) || response.status;
                         return Promise.reject(error);
                     }
+                    // Extract and save access token
+                    const data = await response.json();
+                    if (data.accessToken) {
+                        localStorage.setItem('accessToken', data.accessToken);
+                    }
                     isLoggedInVar(true);
                     refreshContext();
                     analytics.event({ type: EventType.LogInEvent });

@@ -4,6 +4,12 @@ plugins {
 
 apply from: '../../gradle/coverage/java-coverage.gradle'
 
+configurations {
+  all {
+    exclude group: 'javax.servlet', module: 'javax.servlet-api'
+  }
+}
+
 dependencies {
   implementation project(':metadata-auth:auth-api')
   implementation project(':metadata-service:auth-impl')
@@ -18,6 +24,7 @@ dependencies {
   implementation externalDependency.guice
   implementation externalDependency.slf4jApi
   implementation externalDependency.opentelemetryApi
+  implementation externalDependency.servletApi
   compileOnly externalDependency.lombok
 
   annotationProcessor externalDependency.lombok

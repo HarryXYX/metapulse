@@ -5,6 +5,17 @@
 server:
   port: 8080
 
+# ===== Consumer 启用开关（开发环境全部启用） =====
+environment:
+  MAE_CONSUMER_ENABLED: "true"
+  MCE_CONSUMER_ENABLED: "true"
+  MCP_CONSUMER_ENABLED: "true"
+  PE_CONSUMER_ENABLED: "true"
+
+# ===== Entity Client配置 =====
+entityClient:
+  impl: java  # 本地方法调用
+
 # ===== 数据库配置 =====
 spring:
   datasource:
@@ -70,24 +81,14 @@ elasticsearch:
   password:
   threadCount: 2  # 开发环境减少线程
 
-# ===== Consumer开关（开发环境全部启用） =====
-# 注意：这些需要作为环境变量传递，或者在启动时使用 -D 参数
-# 示例：java -DMCE_CONSUMER_ENABLED=true -DMCP_CONSUMER_ENABLED=true ...
-#
-# 临时解决方案：通过 Spring Boot 的默认值机制设置
-# 实际的条件判断会读取这些属性
-
-# ===== Entity Client配置 =====
-entityClient:
-  impl: java  # 本地方法调用
-
-# ===== 认证配置（开发环境可选择关闭） =====
+# ===== 认证配置（开发环境） =====
 authentication:
-  enabled: false  # 开发环境建议关闭认证，方便测试
+  enabled: true  # 启用认证，使用 metapulse-admin/metapulse-admin 登录
+  excludedPaths: /logIn,/schema-registry/*,/health,/health/live,/config,/config/search/export,/public-iceberg/*,/actuator/prometheus
   systemClientId: __datahub_system
   systemClientSecret: JohnSnowKnowsNothing
   tokenService:
-    signingKey: WnVBrnu2tBFoY5rLnQmVlQ==
+    signingKey: +8Qx7hZjcZq21cdr9f0paEceHRw47YU5pRt4P7fWpSc=  # 256-bit key for HS256
 
 # ===== 日志配置（开发环境更详细） =====
 logging:
@@ -143,7 +144,7 @@ ebean:
   password: metapulse
   url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
   driver: com.mysql.cj.jdbc.Driver
-  autoCreateDdl: true  # ✨ 关键配置：启用自动建表
+  autoCreateDdl: false  # 关闭自动建表，保留数据库数据
 
 # ===== Entity Registry 配置 =====
 # 使用 classpath 方式加载（文件在 metadata-models 模块中）
@@ -155,3 +156,12 @@ configEntityRegistry:
 # 跳过系统更新等待，开发环境快速启动
 systemUpdate:
   waitForSystemUpdate: false  # 🔑 关键配置：跳过Kafka系统更新消息等待
+
+# ===== 默认用户配置（开发环境） =====
+defaultUser:
+  enabled: true
+  username: metapulse-admin
+  password: metapulse-admin
+  fullName: MetaPulse Admin
+  email: admin@metapulse.com
+  title: Administrator

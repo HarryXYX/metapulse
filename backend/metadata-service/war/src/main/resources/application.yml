@@ -137,7 +137,7 @@ authentication:
   systemClientId: ${SYSTEM_CLIENT_ID:__datahub_system}
   systemClientSecret: ${SYSTEM_CLIENT_SECRET:JohnSnowKnowsNothing}
   tokenService:
-    signingKey: ${TOKEN_SERVICE_SIGNING_KEY:WnVBrnu2tBFoY5rLnQmVlQ==}
+    signingKey: ${TOKEN_SERVICE_SIGNING_KEY:Y7Egrstd0MagJKIk+twHAg4+zBjXfhh0DIHLzBMrp9U=}
 
 # ===== 日志配置 =====
 logging:
@@ -202,3 +202,13 @@ configEntityRegistry:
 # 跳过系统更新等待，加快启动速度（All-in-One模式）
 systemUpdate:
   waitForSystemUpdate: ${BOOTSTRAP_SYSTEM_UPDATE_WAIT_FOR_SYSTEM_UPDATE:false}
+
+# ===== 默认用户配置 =====
+# 自动创建默认管理员用户（开发环境配置会覆盖这些值）
+defaultUser:
+  enabled: ${DEFAULT_USER_ENABLED:true}
+  username: ${DEFAULT_USER_USERNAME:datahub}
+  password: ${DEFAULT_USER_PASSWORD:datahub}
+  fullName: ${DEFAULT_USER_FULL_NAME:DataHub Admin}
+  email: ${DEFAULT_USER_EMAIL:admin@example.com}
+  title: ${DEFAULT_USER_TITLE:Administrator}

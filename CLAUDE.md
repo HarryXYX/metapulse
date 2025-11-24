@@ -1,287 +1,310 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+本文件为 Claude Code (claude.ai/code) 在此仓库中工作时提供指导。
 
-## Project Overview
+## ⚠️ 重要约定
 
-MetaPulse is an enterprise metadata management platform based on DataHub, using a **frontend-backend separated Monorepo architecture** with an **All-in-One backend deployment**.
+### 日志读取规范
+**后端日志必须从以下位置读取**：
+- **主日志文件**: `/tmp/datahub/logs/gms/gms.log`（包含所有日志）
+- **GraphQL 日志**: `/tmp/datahub/logs/gms/gms.graphql.log`（仅 GraphQL 日志）
+- **日志目录**: `/tmp/datahub/logs/gms/`
 
-### Key Architecture Points
+❌ **错误示例**：不要从 `/tmp/metapulse-boot.log` 或其他临时位置读取
+✅ **正确示例**：始终使用 `tail -100 /tmp/datahub/logs/gms/gms.log`
 
-- **Monorepo Structure**: Both frontend and backend code reside in the same repository
-- **All-in-One Backend**: Single WAR package containing Web services and Kafka Consumers
-- **Independent Development**: Frontend and backend can be developed, built, and tested independently
-- **Local Method Calls**: EntityClient uses Java implementation without HTTP overhead
+### DataHub 源码位置
+- 本地 DataHub 源码路径: `/project/datahub`
+- 所有关于 DataHub 的问题都应该查询本地源码解答
 
-### Directory Structure
+## 项目概览
+
+MetaPulse 是一个基于 DataHub 的企业级元数据管理平台，采用**前后端分离的 Monorepo 架构**和**All-in-One 后端部署**方式。
+
+### 关键架构特点
+
+- **Monorepo 结构**：前端和后端代码位于同一仓库
+- **All-in-One 后端**：单一 WAR 包包含 Web 服务和 Kafka Consumers
+- **独立开发**：前端和后端可以独立开发、构建和测试
+- **本地方法调用**：EntityClient 使用 Java 实现，无 HTTP 开销
+
+### 目录结构
 
 ```
 metapulse/
-├── frontend/              # React + TypeScript + Vite frontend
-├── backend/               # Gradle multi-module Java backend
-├── scripts/               # Build and development scripts
-├── docker/                # Docker configurations
-└── docker-compose.yml     # Service orchestration
+├── frontend/              # React + TypeScript + Vite 前端
+├── backend/               # Gradle 多模块 Java 后端
+├── scripts/               # 构建和开发脚本
+├── docker/                # Docker 配置
+└── docker-compose.yml     # 服务编排
 ```
 
-## Development Commands
+## 开发命令
 
-### Environment Setup
+### 环境设置
 
 ```bash
-# Initialize environment (checks dependencies, installs packages)
+# 初始化环境（检查依赖、安装包）
 ./scripts/dev/setup-local-env.sh
 
-# Start dependency services (MySQL, Elasticsearch, Kafka)
+# 启动依赖服务（MySQL、Elasticsearch、Kafka）
 docker-compose up -d mysql elasticsearch kafka
 ```
 
-### Frontend Development (VSCode recommended)
+### 前端开发（推荐使用 VSCode）
 
 ```bash
 cd frontend
 
-# Install dependencies
+# 安装依赖
 yarn install
 
-# Start dev server on localhost:3000 (with hot reload)
+# 启动开发服务器 localhost:3000（支持热重载）
 yarn dev
 
-# Generate TypeScript types from GraphQL schemas
+# 从 GraphQL schemas 生成 TypeScript 类型
 yarn generate
 
-# Linting and formatting
-yarn lint              # Run linting
-yarn lint --fix        # Fix linting issues
-yarn format            # Run Prettier
+# 代码检查和格式化
+yarn lint              # 运行代码检查
+yarn lint --fix        # 修复代码检查问题
+yarn format            # 运行 Prettier
 
-# Type checking
+# 类型检查
 yarn type-check
 
-# Testing
-yarn test              # Run all tests
-yarn test path/to/file.test.tsx --run  # Run specific test
+# 测试
+yarn test              # 运行所有测试
+yarn test path/to/file.test.tsx --run  # 运行特定测试
 
-# Build for production
+# 生产构建
 yarn build
 ```
 
-**Frontend Notes**:
-- Development server runs on `http://localhost:3000`
-- API requests are proxied to `http://localhost:8080`
-- Hot Module Replacement (HMR) is enabled
-- See `frontend/CLAUDE.md` for detailed style guide
+**前端注意事项**：
+- 开发服务器运行在 `http://localhost:3000`
+- API 请求代理到 `http://localhost:8080`
+- 启用了热模块替换（HMR）
+- 详细的样式指南请查看 `frontend/CLAUDE.md`
 
-### Backend Development (IntelliJ IDEA recommended)
+### 后端开发（推荐使用 IntelliJ IDEA）
 
 ```bash
 cd backend
 
-# Start development server
+# 启动开发服务器
 ./gradlew bootRun
 
-# Start with specific profile
+# 使用特定 profile 启动
 ./gradlew bootRun --args='--spring.profiles.active=development'
 
-# Testing
-./gradlew test                           # Run all tests
-./gradlew :metadata-service:war:test    # Run specific module tests
+# 测试
+./gradlew test                           # 运行所有测试
+./gradlew :metadata-service:war:test    # 运行特定模块测试
 
-# Building
-./gradlew build                          # Build all modules
-./gradlew build -x test                 # Build without tests
-./gradlew clean                         # Clean build artifacts
+# 构建
+./gradlew build                          # 构建所有模块
+./gradlew build -x test                 # 构建但跳过测试
+./gradlew clean                         # 清理构建产物
 ```
 
-**Backend Notes**:
-- Backend runs on `http://localhost:8080`
+**后端注意事项**：
+- 后端运行在 `http://localhost:8080`
 - GraphQL Playground: `http://localhost:8080/api/graphql`
-- Health check: `http://localhost:8080/actuator/health`
+- 健康检查: `http://localhost:8080/actuator/health`
 
-### Integrated Build
+**日志位置**（通过 IDEA 启动 GMSApplication 时）：
+- 日志目录: `/tmp/datahub/logs/gms/`
+- 主日志文件: `/tmp/datahub/logs/gms/gms.log`（包含所有级别的日志）
+- GraphQL 日志: `/tmp/datahub/logs/gms/gms.graphql.log`（仅 GraphQL 相关日志）
+- 可通过环境变量 `LOG_DIR` 自定义日志目录
+- 日志配置: `backend/metadata-service/war/src/main/resources/logback.xml`
+
+
+### 集成构建
 
 ```bash
-# Build everything (frontend + backend)
+# 构建所有内容（前端 + 后端）
 ./scripts/deploy/build-app.sh
 
-# Frontend-only build
+# 仅构建前端
 ./scripts/deploy/build-app.sh frontend-only
 
-# Backend-only build
+# 仅构建后端
 ./scripts/deploy/build-app.sh backend-only
 
-# Build without tests
+# 构建但跳过测试
 ./scripts/deploy/build-app.sh full skip-tests
 
-# Integrate frontend assets into backend
+# 将前端资源集成到后端
 cd backend
 ./gradlew :metadata-service:war:integrateFrontend
 ```
 
-**Build Output**:
-- Frontend: `frontend/dist/`
-- Backend WAR (includes frontend): `backend/metadata-service/war/build/libs/war.war`
+**构建输出**：
+- 前端: `frontend/dist/`
+- 后端 WAR（包含前端）: `backend/metadata-service/war/build/libs/war.war`
 
-### Running in Development
+### 开发环境运行
 
-**Option 1: Separate processes (recommended for development)**
+**方式 1：分离进程（推荐用于开发）**
 ```bash
-# Terminal 1 - Backend
+# 终端 1 - 后端
 cd backend && ./gradlew bootRun
 
-# Terminal 2 - Frontend
+# 终端 2 - 前端
 cd frontend && yarn dev
 ```
 
-**Option 2: Docker Compose**
+**方式 2：Docker Compose**
 ```bash
-# Build first
+# 先构建
 ./scripts/deploy/build-app.sh
 
-# Start all services
+# 启动所有服务
 ./scripts/deploy/start-all.sh
 
-# View logs
+# 查看日志
 docker-compose logs -f metapulse
 ```
 
-## Architecture Details
+## 架构详情
 
-### Backend Gradle Modules (75 total)
+### 后端 Gradle 模块（共75个）
 
-**Core modules**:
-- `entity-registry` - Entity type definitions
-- `metadata-models` - Data models and schemas
-- `metadata-io` - I/O operations and persistence
-- `metadata-auth` - Authentication and authorization
-- `metadata-utils` - Shared utilities
+**核心模块**：
+- `entity-registry` - 实体类型定义
+- `metadata-models` - 数据模型和 schemas
+- `metadata-io` - I/O 操作和持久化
+- `metadata-auth` - 认证和授权
+- `metadata-utils` - 共享工具类
 
-**Service modules** (`metadata-service/`):
-- `war/` - **Main All-in-One WAR application**
-- `graphql-servlet-impl/` - GraphQL API implementation
-- `restli-servlet-impl/` - REST API implementation
-- `auth-servlet-impl/` - Authentication servlet
-- `configuration/` - Application configuration
+**服务模块**（`metadata-service/`）：
+- `war/` - **主要的 All-in-One WAR 应用**
+- `graphql-servlet-impl/` - GraphQL API 实现
+- `restli-servlet-impl/` - REST API 实现
+- `auth-servlet-impl/` - 认证 servlet
+- `configuration/` - 应用配置
 
-**Consumer modules** (`metadata-jobs/`):
+**Consumer 模块**（`metadata-jobs/`）：
 - `mce-consumer-job` - Metadata Change Event consumer
 - `mae-consumer-job` - Metadata Audit Event consumer
 - `pe-consumer` - Platform Event consumer
 
-All consumers are embedded in the WAR for All-in-One deployment.
+所有 consumers 都嵌入在 WAR 中以实现 All-in-One 部署。
 
-### Frontend Architecture
+### 前端架构
 
-- **Framework**: React 17 + TypeScript + Vite
-- **GraphQL Client**: Apollo Client 3.3.19
-- **UI Library**: Ant Design 4.24.7
-- **Visualization**: Visx 3.x
-- **Styling**: styled-components
+- **框架**: React 17 + TypeScript + Vite
+- **GraphQL 客户端**: Apollo Client 3.3.19
+- **UI 库**: Ant Design 4.24.7
+- **可视化**: Visx 3.x
+- **样式**: styled-components
 
-**Key directories**:
-- `src/app/` - Application components (page-based organization)
-- `src/graphql/` - GraphQL queries and generated types
-- `src/conf/` - Global configuration
-- See `frontend/CLAUDE.md` for detailed component organization
+**关键目录**：
+- `src/app/` - 应用组件（按页面组织）
+- `src/graphql/` - GraphQL 查询和生成的类型
+- `src/conf/` - 全局配置
+- 详细的组件组织请查看 `frontend/CLAUDE.md`
 
-### Technology Stack
+### 技术栈
 
-| Layer | Technology | Version |
+| 层级 | 技术 | 版本 |
 |-------|-----------|---------|
-| Backend | Java | 17 |
-| Backend | Spring Boot | 3.4.5 |
-| Backend | Gradle | 8.14.3 |
-| Frontend | React | 17 |
-| Frontend | TypeScript | Latest |
-| Frontend | Vite | Latest |
-| Search | Elasticsearch | 8.17.4 |
-| Database | MySQL | 8.0+ |
-| Messaging | Kafka | 8.0.0 |
+| 后端 | Java | 17 |
+| 后端 | Spring Boot | 3.4.5 |
+| 后端 | Gradle | 8.14.3 |
+| 前端 | React | 17 |
+| 前端 | TypeScript | Latest |
+| 前端 | Vite | Latest |
+| 搜索 | Elasticsearch | 8.17.4 |
+| 数据库 | MySQL | 8.0+ |
+| 消息队列 | Kafka | 8.0.0 |
 
-## Common Development Workflows
+## 常见开发工作流
 
-### Adding a GraphQL Query
+### 添加 GraphQL 查询
 
-1. Define query in `frontend/src/graphql/*.graphql`
-2. Run `yarn generate` to create TypeScript types
-3. Import and use generated types in components
+1. 在 `frontend/src/graphql/*.graphql` 中定义查询
+2. 运行 `yarn generate` 创建 TypeScript 类型
+3. 在组件中导入和使用生成的类型
 
-### Testing Changes Locally
+### 本地测试更改
 
-1. Start backend: `cd backend && ./gradlew bootRun`
-2. Start frontend: `cd frontend && yarn dev`
-3. Access at `http://localhost:3000`
+1. 启动后端: `cd backend && ./gradlew bootRun`
+2. 启动前端: `cd frontend && yarn dev`
+3. 访问 `http://localhost:3000`
 
-### Building for Production
+### 生产构建
 
 ```bash
-# Complete build
+# 完整构建
 ./scripts/deploy/build-app.sh
 
-# Deploy WAR file
+# 部署 WAR 文件
 java -jar backend/metadata-service/war/build/libs/war.war
 ```
 
-### Working with Docker
+### 使用 Docker
 
 ```bash
-# Build Docker image
+# 构建 Docker 镜像
 cd backend
 ./gradlew docker
 
-# Start with Docker Compose
+# 使用 Docker Compose 启动
 docker-compose up -d
 
-# View specific service logs
+# 查看特定服务日志
 docker-compose logs -f metapulse
 ```
 
-## Environment Configuration
+## 环境配置
 
-### Backend Environment Variables
+### 后端环境变量
 
-Key variables (see `.env.example` for complete list):
-- `SERVER_PORT` - Service port (default: 8080)
-- `DB_HOST`, `DB_PORT`, `DB_DATABASE` - MySQL connection
-- `ELASTICSEARCH_HOST`, `ELASTICSEARCH_PORT` - Search engine
-- `KAFKA_BOOTSTRAP_SERVERS` - Message queue
-- `MAE_CONSUMER_ENABLED`, `MCE_CONSUMER_ENABLED`, `PE_CONSUMER_ENABLED` - Enable/disable consumers
+关键变量（完整列表见 `.env.example`）：
+- `SERVER_PORT` - 服务端口（默认: 8080）
+- `DB_HOST`, `DB_PORT`, `DB_DATABASE` - MySQL 连接
+- `ELASTICSEARCH_HOST`, `ELASTICSEARCH_PORT` - 搜索引擎
+- `KAFKA_BOOTSTRAP_SERVERS` - 消息队列
+- `MAE_CONSUMER_ENABLED`, `MCE_CONSUMER_ENABLED`, `PE_CONSUMER_ENABLED` - 启用/禁用 consumers
 
-### Frontend Environment Variables
+### 前端环境变量
 
-**Development** (`.env.development`):
+**开发环境**（`.env.development`）：
 - `VITE_BACKEND_URL=http://localhost:8080`
 - `VITE_GRAPHQL_ENDPOINT=/api/graphql`
 - `VITE_APP_ENV=development`
 
-**Production** (`.env.production`):
-- `VITE_BACKEND_URL=` (empty for same-origin)
+**生产环境**（`.env.production`）：
+- `VITE_BACKEND_URL=`（空表示同源）
 - `VITE_GRAPHQL_ENDPOINT=/api/graphql`
 - `VITE_APP_ENV=production`
 
-## Code Quality Standards
+## 代码质量标准
 
-### Frontend
-- Follow Airbnb JavaScript Style Guide
-- Use TypeScript interfaces for props
-- Prefer `type` over `interface`
-- Use styled-components for styling
-- Run linter and type-check before committing
+### 前端
+- 遵循 Airbnb JavaScript 风格指南
+- 使用 TypeScript interfaces 定义 props
+- 优先使用 `type` 而非 `interface`
+- 使用 styled-components 进行样式设计
+- 提交前运行 linter 和类型检查
 
-### Backend
-- Follow Google Java Style Guide
-- Write unit tests for all new code
-- Use Spring Boot best practices
-- Document public APIs with Javadoc
+### 后端
+- 遵循 Google Java 风格指南
+- 为所有新代码编写单元测试
+- 使用 Spring Boot 最佳实践
+- 用 Javadoc 文档化公共 API
 
-### Git Commits
-- Use Conventional Commits format
-- Include meaningful commit messages
-- Reference issue numbers when applicable
+### Git 提交
+- 使用 Conventional Commits 格式
+- 包含有意义的提交消息
+- 在适用时引用 issue 编号
 
-## Troubleshooting
+## 故障排除
 
-### Frontend build failures
+### 前端构建失败
 ```bash
 cd frontend
 rm -rf node_modules yarn.lock .cache
@@ -289,20 +312,24 @@ yarn install
 yarn build
 ```
 
-### Backend startup issues
-- Check MySQL: `docker-compose ps mysql`
-- Check Elasticsearch: `curl http://localhost:9200`
-- Check Kafka: `docker-compose logs kafka`
+### 后端启动问题
+- **查看后端日志**: `tail -100 /tmp/datahub/logs/gms/gms.log`
+- **实时监控日志**: `tail -f /tmp/datahub/logs/gms/gms.log`
+- **搜索特定日志**: `grep "ERROR\|WARN" /tmp/datahub/logs/gms/gms.log | tail -50`
+- 检查 MySQL: `docker-compose ps mysql`
+- 检查 Elasticsearch: `curl http://localhost:9200`
+- 检查 Kafka: `docker-compose logs kafka`
 
-### GraphQL proxy failures
-- Verify backend is running on port 8080
-- Check `VITE_BACKEND_URL` in frontend `.env.development`
-- Test GraphQL endpoint: `curl http://localhost:8080/api/graphql`
+### GraphQL 代理失败
+- 验证后端运行在 8080 端口
+- 检查前端 `.env.development` 中的 `VITE_BACKEND_URL`
+- 测试 GraphQL 端点: `curl http://localhost:8080/api/graphql`
 
-## Important Notes
+## 重要说明
 
-- **All-in-One Architecture**: The WAR file contains both web services and Kafka consumers
-- **Frontend Integration**: Frontend assets are built separately then integrated into the WAR
-- **Development Isolation**: Frontend and backend can be developed independently
-- **Monorepo Benefits**: Unified version control, easier refactoring across stack
-- 我的根目录里的datahub项目就是datahub的源码，具体路径是/project/datahub，我所有问到的datahub的问题，都通过我本地的源码去解答
+- **All-in-One 架构**：WAR 文件包含 Web 服务和 Kafka consumers
+- **前端集成**：前端资源单独构建后集成到 WAR 中
+- **开发隔离**：前端和后端可以独立开发
+- **Monorepo 优势**：统一版本控制，更容易跨栈重构
+- 根目录里的 datahub 项目就是 datahub 的源码，具体路径是 `/project/datahub`，所有问到的 datahub 问题都通过本地源码解答
+- 后台日志都从/tmp/datahub/logs/gms文件夹下读取

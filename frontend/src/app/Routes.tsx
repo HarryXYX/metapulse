@@ -24,7 +24,7 @@ const ProtectedRoute = ({
     if (!isLoggedIn) {
         // use window.location.replace to make an http request to frontend server, history.replace is for client-side navigation in React
         window.location.replace(
-            `${resolveRuntimePath(PageRoutes.AUTHENTICATE)}?redirect_uri=${encodeURIComponent(currentPath)}`,
+            `${resolveRuntimePath(PageRoutes.LOG_IN)}?redirect_uri=${encodeURIComponent(currentPath)}`,
         );
         return null;
     }

@@ -2,6 +2,7 @@ import '@src/App.less';
 import '@src/AppV2.less';
 
 import { ApolloClient, ApolloProvider, InMemoryCache, ServerError, createHttpLink } from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import Cookies from 'js-cookie';
 import React from 'react';
@@ -35,7 +36,7 @@ const errorLink = onError((error) => {
             isLoggedInVar(false);
             Cookies.remove(GlobalCfg.CLIENT_AUTH_COOKIE);
             const currentPath = removeRuntimePath(window.location.pathname) + window.location.search;
-            const authUrl = resolveRuntimePath(PageRoutes.AUTHENTICATE);
+            const authUrl = resolveRuntimePath(PageRoutes.LOG_IN);
             window.location.replace(`${authUrl}?redirect_uri=${encodeURIComponent(currentPath)}`);
         }
     }
@@ -49,9 +50,21 @@ const errorLink = onError((error) => {
     // }
 });
 
+const authLink = setContext((_, { headers }) => {
+    // Get the authentication token from local storage if it exists
+    const token = localStorage.getItem('accessToken');
+    // Return the headers to the context so httpLink can read them
+    return {
+        headers: {
+            ...headers,
+            authorization: token ? `Bearer ${token}` : '',
+        },
+    };
+});
+
 const client = new ApolloClient({
     connectToDevTools: true,
-    link: errorLink.concat(httpLink),
+    link: errorLink.concat(authLink).concat(httpLink),
     cache: new InMemoryCache({
         typePolicies: {
             Query: {
