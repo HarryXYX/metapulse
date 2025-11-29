@@ -46,11 +46,11 @@ public class TagGroupTagsResolver implements DataFetcher<CompletableFuture<Entit
           try {
             final Urn urn = Urn.createFromString(tagGroupUrn);
 
-            // Query incoming "BelongsTo" relationships (Tags that belong to this TagGroup)
+            // Query incoming "BelongsToGroup" relationships (Tags that belong to this TagGroup)
             final EntityRelationships entityRelationships =
                 _graphClient.getRelatedEntities(
                     tagGroupUrn,
-                    Collections.singleton("BelongsTo"),
+                    Collections.singleton("BelongsToGroup"),
                     com.linkedin.metadata.query.filter.RelationshipDirection.INCOMING,
                     0,
                     1000,
@@ -86,22 +86,24 @@ public class TagGroupTagsResolver implements DataFetcher<CompletableFuture<Entit
         entityRelationships.getTotal() - (entityRelationships.getCount() - viewable.size()));
     result.setRelationships(
         viewable.stream()
-            .map(entityRelationship -> mapEntityRelationship(entityRelationship))
+            .map(entityRelationship -> mapEntityRelationship(context, entityRelationship))
             .collect(Collectors.toList()));
 
     return result;
   }
 
   private com.linkedin.datahub.graphql.generated.EntityRelationship mapEntityRelationship(
+      final QueryContext context,
       final EntityRelationship entityRelationship) {
     final com.linkedin.datahub.graphql.generated.EntityRelationship result =
         new com.linkedin.datahub.graphql.generated.EntityRelationship();
     final Urn urn = entityRelationship.getEntity();
     result.setType(entityRelationship.getType());
-    result.setDirection(RelationshipDirection.valueOf(entityRelationship.getDirection().name()));
-    result.setEntity(UrnToEntityMapper.map(null, urn));
+    // Direction is known from context - we queried INCOMING relationships
+    result.setDirection(RelationshipDirection.INCOMING);
+    result.setEntity(UrnToEntityMapper.map(context, urn));
     if (entityRelationship.getCreated() != null) {
-      result.setCreated(AuditStampMapper.map(null, entityRelationship.getCreated()));
+      result.setCreated(AuditStampMapper.map(context, entityRelationship.getCreated()));
     }
     return result;
   }

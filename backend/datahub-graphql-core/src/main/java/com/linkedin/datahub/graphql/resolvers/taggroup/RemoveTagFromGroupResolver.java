@@ -7,7 +7,9 @@ import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.concurrency.GraphQLConcurrencyUtils;
 import com.linkedin.datahub.graphql.exception.AuthorizationException;
 import com.linkedin.entity.client.EntityClient;
+import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.metadata.Constants;
+import com.linkedin.mxe.MetadataChangeProposal;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.concurrent.CompletableFuture;
@@ -54,13 +56,17 @@ public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture
                   String.format("%s is not a valid TagGroup urn", tagGroupUrnStr));
             }
 
-            // Remove the relationship from Tag to TagGroup
-            _entityClient.removeEdge(
+            // Remove the tagGroupAssociation aspect by deleting it
+            MetadataChangeProposal proposal = new MetadataChangeProposal();
+            proposal.setEntityUrn(tagUrn);
+            proposal.setEntityType(Constants.TAG_ENTITY_NAME);
+            proposal.setAspectName("tagGroupAssociation");
+            proposal.setChangeType(ChangeType.DELETE);
+
+            _entityClient.ingestProposal(
                 context.getOperationContext(),
-                tagUrn,
-                tagGroupUrn,
-                "BelongsTo",
-                null);
+                proposal,
+                false);
 
             log.info("Successfully removed Tag {} from TagGroup {}", tagUrnStr, tagGroupUrnStr);
             return true;

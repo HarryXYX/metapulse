@@ -8,6 +8,8 @@ import com.linkedin.datahub.graphql.concurrency.GraphQLConcurrencyUtils;
 import com.linkedin.datahub.graphql.exception.AuthorizationException;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.metadata.Constants;
+import com.linkedin.metadata.entity.AspectUtils;
+import com.linkedin.tag.TagGroupAssociation;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.concurrent.CompletableFuture;
@@ -65,13 +67,16 @@ public class AddTagToGroupResolver implements DataFetcher<CompletableFuture<Bool
                   String.format("%s is not a valid TagGroup urn", tagGroupUrnStr));
             }
 
-            // Add the relationship from Tag to TagGroup
-            _entityClient.addEdge(
+            // Create TagGroupAssociation aspect
+            TagGroupAssociation association = new TagGroupAssociation();
+            association.setTagGroup(tagGroupUrn);
+
+            // Update the Tag entity with the tagGroupAssociation aspect
+            _entityClient.ingestProposal(
                 context.getOperationContext(),
-                tagUrn,
-                tagGroupUrn,
-                "BelongsTo",
-                null);
+                AspectUtils.buildMetadataChangeProposal(
+                    tagUrn, "tagGroupAssociation", association),
+                false);
 
             log.info("Successfully added Tag {} to TagGroup {}", tagUrnStr, tagGroupUrnStr);
             return true;
