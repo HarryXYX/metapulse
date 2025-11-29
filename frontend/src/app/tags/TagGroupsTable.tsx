@@ -159,69 +159,55 @@ const TagGroupsTable = ({ searchQuery, searchData, loading, refetch }: Props) =>
             if (tagGroup.__typename !== 'TagGroup') return null;
             const tags = tagGroup?.tags?.relationships || [];
 
+            if (tags.length === 0) {
+                return (
+                    <ExpandedRowContainer>
+                        <ExpandedTitle>Associated Tags</ExpandedTitle>
+                        <div>No tags associated with this group</div>
+                    </ExpandedRowContainer>
+                );
+            }
+
             return (
                 <ExpandedRowContainer>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                        <ExpandedTitle style={{ marginBottom: 0 }}>
-                            Associated Tags {tags.length > 0 && `(${tags.length})`}
-                        </ExpandedTitle>
-                        {canManageTags && (
-                            <Button
-                                size="sm"
-                                variant="outline"
-                                color="violet"
-                                onClick={() => {
-                                    setAddTagsToGroupUrn(tagGroup.urn);
-                                    setShowAddTagsModal(true);
-                                }}
-                            >
-                                Add Tags
-                            </Button>
-                        )}
-                    </div>
-                    {tags.length === 0 ? (
-                        <div style={{ color: '#8c8c8c', padding: '16px', textAlign: 'center', backgroundColor: '#fff', borderRadius: '4px', border: '1px dashed #d9d9d9' }}>
-                            No tags associated with this group. Click "Add Tags" to add some.
-                        </div>
-                    ) : (
-                        tags.map((relationship: any) => {
-                            const tag = relationship.entity;
-                            if (!tag || tag.__typename !== 'Tag') return null;
+                    <ExpandedTitle>Associated Tags ({tags.length})</ExpandedTitle>
+                    {tags.map((relationship: any) => {
+                        const tag = relationship.entity;
+                        if (!tag || tag.__typename !== 'Tag') return null;
 
-                            const tagName = tag.properties?.name || tag.urn;
-                            const tagColor = tag.properties?.colorHex || '#1890ff';
+                        const tagName = tag.properties?.name || tag.urn;
+                        const tagColor = tag.properties?.colorHex || '#1890ff';
 
-                            return (
-                                <TagItemContainer key={tag.urn}>
-                                    <TagItemInfo>
-                                        <ColorDot $color={tagColor} />
-                                        <StyledTag onClick={() => handleTagClick(tag.urn)}>{tagName}</StyledTag>
-                                        {tag.properties?.description && (
-                                            <span style={{ color: '#8c8c8c', fontSize: '12px' }}>
-                                                {tag.properties.description}
-                                            </span>
-                                        )}
-                                    </TagItemInfo>
-                                    {canManageTags && (
-                                        <ActionButtons>
-                                            <Button
-                                                size="sm"
-                                                variant="text"
-                                                color="red"
-                                                onClick={() => {
-                                                    if (window.confirm('Remove tag from this group?')) {
-                                                        handleRemoveTag(tag.urn, tagGroup.urn, tagName);
-                                                    }
-                                                }}
-                                            >
-                                                Remove
-                                            </Button>
-                                        </ActionButtons>
+                        return (
+                            <TagItemContainer key={tag.urn}>
+                                <TagItemInfo>
+                                    <ColorDot $color={tagColor} />
+                                    <StyledTag onClick={() => handleTagClick(tag.urn)}>{tagName}</StyledTag>
+                                    {tag.properties?.description && (
+                                        <span style={{ color: '#8c8c8c', fontSize: '12px' }}>
+                                            {tag.properties.description}
+                                        </span>
                                     )}
-                                </TagItemContainer>
-                            );
-                        })
-                    )}
+                                </TagItemInfo>
+                                {canManageTags && (
+                                    <ActionButtons>
+                                        <Button
+                                            size="sm"
+                                            variant="text"
+                                            color="red"
+                                            onClick={() => {
+                                                if (window.confirm('Remove tag from this group?')) {
+                                                    handleRemoveTag(tag.urn, tagGroup.urn, tagName);
+                                                }
+                                            }}
+                                        >
+                                            Remove
+                                        </Button>
+                                    </ActionButtons>
+                                )}
+                            </TagItemContainer>
+                        );
+                    })}
                 </ExpandedRowContainer>
             );
         },
@@ -369,7 +355,9 @@ const TagGroupsTable = ({ searchQuery, searchData, loading, refetch }: Props) =>
                     expandedRowRender,
                     rowExpandable: (record) => {
                         const tagGroup = record.entity;
-                        return tagGroup.__typename === 'TagGroup';
+                        if (tagGroup.__typename !== 'TagGroup') return false;
+                        const tags = tagGroup.tags?.relationships || [];
+                        return tags.length > 0;
                     },
                 }}
             />
