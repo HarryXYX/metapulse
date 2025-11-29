@@ -1,0 +1,179 @@
+query listTagGroups($input: SearchInput!) {
+  search(input: $input) {
+    start
+    count
+    total
+    searchResults {
+      entity {
+        urn
+        type
+        ... on TagGroup {
+          urn
+          type
+          properties {
+            name
+            description
+            colorHex
+          }
+          tags {
+            start
+            count
+            total
+            relationships {
+              entity {
+                ... on Tag {
+                  urn
+                  properties {
+                    name
+                    description
+                    colorHex
+                  }
+                }
+              }
+              type
+              direction
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+query getTagGroup($urn: String!) {
+  tagGroup(urn: $urn) {
+    urn
+    type
+    properties {
+      name
+      description
+      colorHex
+    }
+    tags {
+      start
+      count
+      total
+      relationships {
+        entity {
+          ... on Tag {
+            urn
+            properties {
+              name
+              description
+              colorHex
+            }
+            ownership {
+              owners {
+                owner {
+                  ... on CorpUser {
+                    urn
+                    username
+                    info {
+                      active
+                      displayName
+                      title
+                      email
+                      firstName
+                      lastName
+                      fullName
+                    }
+                  }
+                  ... on CorpGroup {
+                    urn
+                    name
+                    info {
+                      displayName
+                      email
+                      description
+                    }
+                  }
+                }
+                ownershipType {
+                  urn
+                  type
+                  info {
+                    name
+                    description
+                  }
+                }
+              }
+            }
+          }
+        }
+        type
+        direction
+      }
+    }
+    ownership {
+      owners {
+        owner {
+          ... on CorpUser {
+            urn
+            username
+            info {
+              active
+              displayName
+              title
+              email
+              firstName
+              lastName
+              fullName
+            }
+          }
+          ... on CorpGroup {
+            urn
+            name
+            info {
+              displayName
+              email
+              description
+            }
+          }
+        }
+        ownershipType {
+          urn
+          type
+          info {
+            name
+            description
+          }
+        }
+      }
+    }
+  }
+}
+
+mutation createTagGroup($input: CreateTagGroupInput!) {
+  createTagGroup(input: $input)
+}
+
+mutation updateTagGroup($urn: String!, $input: TagGroupUpdateInput!) {
+  updateTagGroup(urn: $urn, input: $input) {
+    urn
+    properties {
+      name
+      description
+      colorHex
+    }
+  }
+}
+
+mutation deleteTagGroup($urn: String!) {
+  deleteTagGroup(urn: $urn)
+}
+
+mutation addTagToGroup($tagUrn: String!, $tagGroupUrn: String!) {
+  addTagToGroup(tagUrn: $tagUrn, tagGroupUrn: $tagGroupUrn)
+}
+
+mutation removeTagFromGroup($tagUrn: String!, $tagGroupUrn: String!) {
+  removeTagFromGroup(tagUrn: $tagUrn, tagGroupUrn: $tagGroupUrn)
+}
+
+mutation batchAddTagsToGroup($tagUrns: [String!]!, $tagGroupUrn: String!) {
+  batchAddTagsToGroup(tagUrns: $tagUrns, tagGroupUrn: $tagGroupUrn)
+}
+
+mutation batchRemoveTagsFromGroup($tagUrns: [String!]!, $tagGroupUrn: String!) {
+  batchRemoveTagsFromGroup(tagUrns: $tagUrns, tagGroupUrn: $tagGroupUrn)
+}

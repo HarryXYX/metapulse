@@ -25,6 +25,7 @@ import { SettingsPage } from '@app/settings/SettingsPage';
 import { SettingsPage as SettingsPageV2 } from '@app/settingsV2/SettingsPage';
 import { NoPageFound } from '@app/shared/NoPageFound';
 import { ManageTags } from '@app/tags/ManageTags';
+import { ManageTagGroups } from '@app/tags/ManageTagGroups';
 import {
     useAppConfig,
     useBusinessAttributesFlag,
@@ -84,6 +85,7 @@ export const SearchRoutes = (): JSX.Element => {
                     render={() => (isThemeV2 ? <SearchPageV2 /> : <SearchPage />)}
                 />
                 <Route path={PageRoutes.BROWSE_RESULTS} render={() => <BrowseResultsPage />} />
+                {showTags ? <Route path={PageRoutes.MANAGE_TAG_GROUPS} render={() => <ManageTagGroups />} /> : null}
                 {showTags ? <Route path={PageRoutes.MANAGE_TAGS} render={() => <ManageTags />} /> : null}
                 <Route path={PageRoutes.MANAGE_APPLICATIONS} render={() => <ManageApplications />} />
                 <Route

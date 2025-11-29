@@ -1,17 +1,16 @@
-import { Button, PageTitle, Pagination, SearchBar, StructuredPopover } from '@components';
+import { Button, PageTitle, Pagination, SearchBar } from '@components';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { useUserContext } from '@app/context/useUserContext';
 import { PageContainer } from '@app/govern/structuredProperties/styledComponents';
-import CreateNewTagModal from '@app/tags/CreateNewTagModal/CreateNewTagModal';
-import EmptyTags from '@app/tags/EmptyTags';
-import TagsTable from '@app/tags/TagsTable';
+import CreateTagGroupModal from '@app/tags/CreateTagGroupModal/CreateTagGroupModal';
+import EmptyTagGroups from '@app/tags/EmptyTagGroups';
+import TagGroupsTable from '@app/tags/TagGroupsTable';
 import { Message } from '@src/app/shared/Message';
-import { useEntityRegistry } from '@src/app/useEntityRegistry';
 import { useShowNavBarRedesign } from '@src/app/useShowNavBarRedesign';
-import { useGetSearchResultsForMultipleQuery } from '@src/graphql/search.generated';
+import { useListTagGroupsQuery } from '@src/graphql/tagGroup.generated';
 import { EntityType } from '@src/types.generated';
 import { PageRoutes } from '@src/conf/Global';
 
@@ -48,7 +47,6 @@ const SearchContainer = styled.div`
     margin-bottom: 16px;
 `;
 
-// Simple loading indicator at the top of the page
 const LoadingBar = styled.div`
     position: fixed;
     top: 0;
@@ -74,25 +72,24 @@ const LoadingBar = styled.div`
 
 const PAGE_SIZE = 10;
 
-const ManageTags = () => {
+const ManageTagGroups = () => {
     const isShowNavBarRedesign = useShowNavBarRedesign();
     const history = useHistory();
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZE);
     const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('*');
-    const entityRegistry = useEntityRegistry();
-    const [showCreateTagModal, setShowCreateTagModal] = useState(false);
+    const [showCreateModal, setShowCreateModal] = useState(false);
 
     // Check permissions using UserContext
     const userContext = useUserContext();
-    const canCreateTags = userContext?.platformPrivileges?.createTags || userContext?.platformPrivileges?.manageTags;
+    const canManageTags = userContext?.platformPrivileges?.manageTags;
 
     // Debounce search query input to reduce unnecessary renders
     useEffect(() => {
         const timer = setTimeout(() => {
-            setDebouncedSearchQuery(searchQuery);
-        }, 300); // 300ms delay
+            setDebouncedSearchQuery(searchQuery || '*');
+        }, 300);
 
         return () => clearTimeout(timer);
     }, [searchQuery]);
@@ -100,11 +97,10 @@ const ManageTags = () => {
     // Search query configuration
     const searchInputs = useMemo(
         () => ({
-            types: [EntityType.Tag],
+            type: EntityType.TagGroup,
             query: debouncedSearchQuery,
             start: (currentPage - 1) * pageSize,
             count: pageSize,
-            filters: [],
         }),
         [currentPage, debouncedSearchQuery, pageSize],
     );
@@ -114,115 +110,80 @@ const ManageTags = () => {
         loading: searchLoading,
         error: searchError,
         refetch,
-        networkStatus,
-    } = useGetSearchResultsForMultipleQuery({
+    } = useListTagGroupsQuery({
         variables: { input: searchInputs },
-        fetchPolicy: 'cache-first', // Changed from cache-and-network to prevent double loading
-        notifyOnNetworkStatusChange: false, // Changed to false to reduce unnecessary re-renders
+        fetchPolicy: 'cache-first',
+        notifyOnNetworkStatusChange: false,
     });
 
-    const totalTags = searchData?.searchAcrossEntities?.total || 0;
+    const totalTagGroups = searchData?.search?.total || 0;
 
     // Check if we have results to display
     const hasSearchResults = useMemo(() => {
-        const results = searchData?.searchAcrossEntities?.searchResults || [];
-        if (debouncedSearchQuery) {
-            // If there's a search query, check if any tags match
-            return results.some((result) => {
-                const tag = result.entity;
-                const displayName = entityRegistry.getDisplayName(EntityType.Tag, tag);
-                return displayName.toLowerCase().includes(debouncedSearchQuery.toLowerCase());
-            });
-        }
-        // Otherwise just check if we have any results
+        const results = searchData?.search?.searchResults || [];
         return results.length > 0;
-    }, [searchData, debouncedSearchQuery, entityRegistry]);
+    }, [searchData]);
 
     if (searchError) {
-        return <Message type="error" content={`Failed to load tags: ${searchError.message}`} />;
+        return <Message type="error" content={`Failed to load tag groups: ${searchError.message}`} />;
     }
-
-    // Create the Create Tag button with proper permissions handling
-    const renderCreateTagButton = () => {
-        if (!canCreateTags) {
-            return (
-                <StructuredPopover
-                    title="You do not have permission to create tags"
-                    placement="left"
-                    showArrow
-                    mouseEnterDelay={0.1}
-                    mouseLeaveDelay={0.1}
-                >
-                    <span>
-                        <Button size="md" color="violet" icon={{ icon: 'Plus', source: 'phosphor' }} disabled>
-                            Create Tag
-                        </Button>
-                    </span>
-                </StructuredPopover>
-            );
-        }
-
-        return (
-            <Button
-                onClick={() => setShowCreateTagModal(true)}
-                size="md"
-                color="violet"
-                icon={{ icon: 'Plus', source: 'phosphor' }}
-                data-testid="add-tag-button"
-            >
-                Create Tag
-            </Button>
-        );
-    };
 
     return (
         <PageContainer $isShowNavBarRedesign={isShowNavBarRedesign}>
             {searchLoading && <LoadingBar />}
 
             <HeaderContainer>
-                <PageTitle title="Manage Tags" subTitle="Create and edit asset & column tags" />
-                {renderCreateTagButton()}
+                <PageTitle title="Manage Tag Groups" subTitle="Create and organize tag groups" />
+                <Button
+                    onClick={() => setShowCreateModal(true)}
+                    size="md"
+                    color="violet"
+                    icon={{ icon: 'Plus', source: 'phosphor' }}
+                    data-testid="add-tag-group-button"
+                    disabled={!canManageTags}
+                >
+                    Create Tag Group
+                </Button>
             </HeaderContainer>
 
             <TabContainer>
-                <TabButton $active variant="text" size="md">
-                    Tags
-                </TabButton>
                 <TabButton
                     $active={false}
-                    onClick={() => history.push(PageRoutes.MANAGE_TAG_GROUPS)}
+                    onClick={() => history.push(PageRoutes.MANAGE_TAGS)}
                     variant="text"
                     size="md"
                 >
+                    Tags
+                </TabButton>
+                <TabButton $active variant="text" size="md">
                     Tag Groups
                 </TabButton>
             </TabContainer>
 
             <SearchContainer>
                 <SearchBar
-                    placeholder="Search tags..."
+                    placeholder="Search tag groups..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e)}
-                    data-testid="tag-search-input"
+                    data-testid="tag-group-search-input"
                     width="280px"
                 />
             </SearchContainer>
 
             {!searchLoading && !hasSearchResults ? (
-                <EmptyTags isEmptySearch={debouncedSearchQuery.length > 0} />
+                <EmptyTagGroups isEmptySearch={debouncedSearchQuery.length > 0 && debouncedSearchQuery !== '*'} />
             ) : (
                 <>
-                    <TagsTable
+                    <TagGroupsTable
                         searchQuery={debouncedSearchQuery}
                         searchData={searchData}
                         loading={searchLoading}
-                        networkStatus={networkStatus}
                         refetch={refetch}
                     />
                     <Pagination
                         currentPage={currentPage}
                         itemsPerPage={pageSize}
-                        total={totalTags}
+                        total={totalTagGroups}
                         loading={searchLoading}
                         onPageChange={(newPage, newPageSize) => {
                             if (newPageSize !== pageSize) {
@@ -236,15 +197,15 @@ const ManageTags = () => {
                 </>
             )}
 
-            <CreateNewTagModal
-                open={showCreateTagModal}
+            <CreateTagGroupModal
+                open={showCreateModal}
                 onClose={() => {
-                    setShowCreateTagModal(false);
-                    setTimeout(() => refetch(), 3000);
+                    setShowCreateModal(false);
+                    setTimeout(() => refetch(), 1000);
                 }}
             />
         </PageContainer>
     );
 };
 
-export { ManageTags };
+export { ManageTagGroups };

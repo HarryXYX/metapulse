@@ -70,6 +70,11 @@ type Query {
   tag(urn: String!): Tag
 
   """
+  Fetch a TagGroup by primary key (urn)
+  """
+  tagGroup(urn: String!): TagGroup
+
+  """
   Fetch a View by primary key (urn)
   """
   view(urn: String!): DataHubView
@@ -503,6 +508,61 @@ type Mutation {
   Delete a Tag
   """
   deleteTag("The urn of the Tag to delete" urn: String!): Boolean
+
+  """
+  Create a new TagGroup
+  """
+  createTagGroup(input: CreateTagGroupInput!): String
+
+  """
+  Update an existing TagGroup
+  """
+  updateTagGroup(urn: String!, input: TagGroupUpdateInput!): TagGroup
+
+  """
+  Delete a TagGroup
+  """
+  deleteTagGroup(urn: String!): Boolean
+
+  """
+  Add a Tag to a TagGroup
+  """
+  addTagToGroup(
+    "The urn of the Tag to add"
+    tagUrn: String!
+    "The urn of the TagGroup"
+    tagGroupUrn: String!
+  ): Boolean
+
+  """
+  Remove a Tag from a TagGroup
+  """
+  removeTagFromGroup(
+    "The urn of the Tag to remove"
+    tagUrn: String!
+    "The urn of the TagGroup"
+    tagGroupUrn: String!
+  ): Boolean
+
+  """
+  Batch add Tags to a TagGroup
+  """
+  batchAddTagsToGroup(
+    "The urns of the Tags to add"
+    tagUrns: [String!]!
+    "The urn of the TagGroup"
+    tagGroupUrn: String!
+  ): Boolean
+
+  """
+  Batch remove Tags from a TagGroup
+  """
+  batchRemoveTagsFromGroup(
+    "The urns of the Tags to remove"
+    tagUrns: [String!]!
+    "The urn of the TagGroup"
+    tagGroupUrn: String!
+  ): Boolean
 
   """
   Set the hex color associated with an existing Tag
@@ -1160,6 +1220,11 @@ enum EntityType {
   The Tag Entity
   """
   TAG
+
+  """
+  The TagGroup Entity
+  """
+  TAG_GROUP
 
   """
   The Glossary Term Entity
@@ -5044,6 +5109,157 @@ type TagAssociation {
   Information about who, why, and how this metadata was applied
   """
   attribution: MetadataAttribution
+}
+
+"""
+A TagGroup Entity, used for categorizing and organizing Tags
+"""
+type TagGroup implements Entity {
+  """
+  The primary key of the TagGroup
+  """
+  urn: String!
+
+  """
+  A standard Entity Type
+  """
+  type: EntityType!
+
+  """
+  A unique identifier for the TagGroup
+  """
+  name: String!
+
+  """
+  Additional properties about the TagGroup
+  """
+  properties: TagGroupProperties
+
+  """
+  Ownership metadata of the TagGroup
+  """
+  ownership: Ownership
+
+  """
+  Granular API for querying edges extending from this entity
+  """
+  relationships(input: RelationshipsInput!): EntityRelationshipsResult
+
+  """
+  Tags associated with this TagGroup
+  """
+  tags: EntityRelationshipsResult
+
+  """
+  Experimental API.
+  For fetching extra entities that do not have custom UI code yet
+  """
+  aspects(input: AspectParams): [RawAspect!]
+}
+
+"""
+Properties for a DataHub TagGroup
+"""
+type TagGroupProperties {
+  """
+  A display name for the TagGroup
+  """
+  name: String!
+
+  """
+  A description of the TagGroup
+  """
+  description: String
+
+  """
+  An optional RGB hex code for a TagGroup color, e.g. #FFFFFF
+  """
+  colorHex: String
+}
+
+"""
+Input for creating a new TagGroup
+"""
+input CreateTagGroupInput {
+  """
+  TagGroup name
+  """
+  name: String!
+
+  """
+  Optional description
+  """
+  description: String
+
+  """
+  Optional color in hex format
+  """
+  colorHex: String
+}
+
+"""
+Input for updating an existing TagGroup
+"""
+input TagGroupUpdateInput {
+  """
+  Updated name
+  """
+  name: String
+
+  """
+  Updated description
+  """
+  description: String
+
+  """
+  Updated color
+  """
+  colorHex: String
+}
+
+"""
+Input for listing TagGroups
+"""
+input ListTagGroupsInput {
+  """
+  Starting offset for pagination
+  """
+  start: Int
+
+  """
+  Number of results to return
+  """
+  count: Int
+
+  """
+  Optional search query
+  """
+  query: String
+}
+
+"""
+Result for listing TagGroups
+"""
+type ListTagGroupsResult {
+  """
+  Starting offset
+  """
+  start: Int!
+
+  """
+  Number of results returned
+  """
+  count: Int!
+
+  """
+  Total number of TagGroups
+  """
+  total: Int!
+
+  """
+  List of TagGroups
+  """
+  tagGroups: [TagGroup!]!
 }
 
 """
