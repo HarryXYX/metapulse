@@ -27,6 +27,7 @@ public class EntityTypeMapper {
           .put(EntityType.DATA_FLOW, Constants.DATA_FLOW_ENTITY_NAME)
           .put(EntityType.DATA_JOB, Constants.DATA_JOB_ENTITY_NAME)
           .put(EntityType.TAG, Constants.TAG_ENTITY_NAME)
+          .put(EntityType.TAG_GROUP, Constants.TAG_GROUP_ENTITY_NAME)
           .put(EntityType.GLOSSARY_TERM, Constants.GLOSSARY_TERM_ENTITY_NAME)
           .put(EntityType.GLOSSARY_NODE, Constants.GLOSSARY_NODE_ENTITY_NAME)
           .put(EntityType.CONTAINER, Constants.CONTAINER_ENTITY_NAME)

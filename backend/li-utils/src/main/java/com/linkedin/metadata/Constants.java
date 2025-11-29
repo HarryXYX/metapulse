@@ -83,6 +83,7 @@ public class Constants {
   public static final String ML_PRIMARY_KEY_ENTITY_NAME = "mlPrimaryKey";
   public static final String POLICY_ENTITY_NAME = "dataHubPolicy";
   public static final String TAG_ENTITY_NAME = "tag";
+  public static final String TAG_GROUP_ENTITY_NAME = "tagGroup";
   public static final String CONTAINER_ENTITY_NAME = "container";
   public static final String DOMAIN_ENTITY_NAME = "domain";
   public static final String ER_MODEL_RELATIONSHIP_ENTITY_NAME = "erModelRelationship";
