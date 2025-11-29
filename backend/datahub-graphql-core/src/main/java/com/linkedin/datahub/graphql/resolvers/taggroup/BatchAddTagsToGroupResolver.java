@@ -17,9 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Resolver for batch adding Tags to a TagGroup.
- */
+/** Resolver for batch adding Tags to a TagGroup. */
 @Slf4j
 public class BatchAddTagsToGroupResolver implements DataFetcher<CompletableFuture<Boolean>> {
 
@@ -86,8 +84,7 @@ public class BatchAddTagsToGroupResolver implements DataFetcher<CompletableFutur
                   false);
             }
 
-            log.info(
-                "Successfully added {} Tags to TagGroup {}", tagUrns.size(), tagGroupUrnStr);
+            log.info("Successfully added {} Tags to TagGroup {}", tagUrns.size(), tagGroupUrnStr);
             return true;
 
           } catch (Exception e) {

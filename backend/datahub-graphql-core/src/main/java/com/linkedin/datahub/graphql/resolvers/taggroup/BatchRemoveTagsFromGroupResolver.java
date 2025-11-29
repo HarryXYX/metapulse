@@ -17,9 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Resolver for batch removing Tags from a TagGroup.
- */
+/** Resolver for batch removing Tags from a TagGroup. */
 @Slf4j
 public class BatchRemoveTagsFromGroupResolver implements DataFetcher<CompletableFuture<Boolean>> {
 
@@ -69,10 +67,7 @@ public class BatchRemoveTagsFromGroupResolver implements DataFetcher<Completable
               proposal.setAspectName("tagGroupAssociation");
               proposal.setChangeType(ChangeType.DELETE);
 
-              _entityClient.ingestProposal(
-                  context.getOperationContext(),
-                  proposal,
-                  false);
+              _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
             }
 
             log.info(

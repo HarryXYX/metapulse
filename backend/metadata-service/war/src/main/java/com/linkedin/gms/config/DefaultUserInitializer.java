@@ -14,80 +14,72 @@ import org.springframework.stereotype.Component;
 /**
  * Initialize default users on application startup
  *
- * Creates a default user based on configuration if it doesn't exist
- * User credentials are configured in application.yml/application-dev.yml
- * under the 'defaultUser' section
+ * <p>Creates a default user based on configuration if it doesn't exist User credentials are
+ * configured in application.yml/application-dev.yml under the 'defaultUser' section
  */
 @Slf4j
 @Component
 public class DefaultUserInitializer implements ApplicationRunner {
 
-    @Value("${defaultUser.enabled:true}")
-    private boolean enabled;
+  @Value("${defaultUser.enabled:true}")
+  private boolean enabled;
 
-    @Value("${defaultUser.username:datahub}")
-    private String username;
+  @Value("${defaultUser.username:datahub}")
+  private String username;
 
-    @Value("${defaultUser.password:datahub}")
-    private String password;
+  @Value("${defaultUser.password:datahub}")
+  private String password;
 
-    @Value("${defaultUser.fullName:DataHub Admin}")
-    private String fullName;
+  @Value("${defaultUser.fullName:DataHub Admin}")
+  private String fullName;
 
-    @Value("${defaultUser.email:admin@example.com}")
-    private String email;
+  @Value("${defaultUser.email:admin@example.com}")
+  private String email;
 
-    @Value("${defaultUser.title:Administrator}")
-    private String title;
+  @Value("${defaultUser.title:Administrator}")
+  private String title;
 
-    @Autowired
-    private NativeUserService nativeUserService;
+  @Autowired private NativeUserService nativeUserService;
 
-    @Autowired
-    @Qualifier("systemOperationContext")
-    private OperationContext systemOperationContext;
+  @Autowired
+  @Qualifier("systemOperationContext")
+  private OperationContext systemOperationContext;
 
-    @Override
-    public void run(ApplicationArguments args) {
-        // Check if default user creation is enabled
-        if (!enabled) {
-            log.info("Default user creation is disabled");
-            return;
-        }
-
-        try {
-            String userUrn = new CorpuserUrn(username).toString();
-
-            log.info("Checking if default user '{}' exists...", username);
-
-            // Check if user already exists - use createNativeUser's built-in existence check
-            try {
-                nativeUserService.createNativeUser(
-                    systemOperationContext,
-                    userUrn,
-                    fullName,
-                    email,
-                    title,
-                    password
-                );
-                log.info("✅ Default user '{}' created successfully!", username);
-                log.info("   Login credentials:");
-                log.info("   Username: {}", username);
-                log.info("   Password: {}", password);
-                log.info("   Email: {}", email);
-            } catch (RuntimeException e) {
-                // User already exists - this is expected and not an error
-                if (e.getMessage() != null && e.getMessage().contains("already exists")) {
-                    log.info("✅ Default user '{}' already exists", username);
-                } else {
-                    // Some other error occurred
-                    throw e;
-                }
-            }
-
-        } catch (Exception e) {
-            log.error("❌ Failed to initialize default user", e);
-            // Don't throw exception - let application continue even if user creation fails
-        }
+  @Override
+  public void run(ApplicationArguments args) {
+    // Check if default user creation is enabled
+    if (!enabled) {
+      log.info("Default user creation is disabled");
+      return;
     }
+
+    try {
+      String userUrn = new CorpuserUrn(username).toString();
+
+      log.info("Checking if default user '{}' exists...", username);
+
+      // Check if user already exists - use createNativeUser's built-in existence check
+      try {
+        nativeUserService.createNativeUser(
+            systemOperationContext, userUrn, fullName, email, title, password);
+        log.info("✅ Default user '{}' created successfully!", username);
+        log.info("   Login credentials:");
+        log.info("   Username: {}", username);
+        log.info("   Password: {}", password);
+        log.info("   Email: {}", email);
+      } catch (RuntimeException e) {
+        // User already exists - this is expected and not an error
+        if (e.getMessage() != null && e.getMessage().contains("already exists")) {
+          log.info("✅ Default user '{}' already exists", username);
+        } else {
+          // Some other error occurred
+          throw e;
+        }
+      }
+
+    } catch (Exception e) {
+      log.error("❌ Failed to initialize default user", e);
+      // Don't throw exception - let application continue even if user creation fails
+    }
+  }
 }

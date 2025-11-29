@@ -22,11 +22,11 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Resolver for the tags field of TagGroup entity.
- * Returns all Tags that belong to this TagGroup.
+ * Resolver for the tags field of TagGroup entity. Returns all Tags that belong to this TagGroup.
  */
 @Slf4j
-public class TagGroupTagsResolver implements DataFetcher<CompletableFuture<EntityRelationshipsResult>> {
+public class TagGroupTagsResolver
+    implements DataFetcher<CompletableFuture<EntityRelationshipsResult>> {
 
   private final GraphClient _graphClient;
 
@@ -70,8 +70,7 @@ public class TagGroupTagsResolver implements DataFetcher<CompletableFuture<Entit
   }
 
   private EntityRelationshipsResult mapEntityRelationships(
-      final QueryContext context,
-      final EntityRelationships entityRelationships) {
+      final QueryContext context, final EntityRelationships entityRelationships) {
     final EntityRelationshipsResult result = new EntityRelationshipsResult();
 
     // Filter to only viewable entities
@@ -93,8 +92,7 @@ public class TagGroupTagsResolver implements DataFetcher<CompletableFuture<Entit
   }
 
   private com.linkedin.datahub.graphql.generated.EntityRelationship mapEntityRelationship(
-      final QueryContext context,
-      final EntityRelationship entityRelationship) {
+      final QueryContext context, final EntityRelationship entityRelationship) {
     final com.linkedin.datahub.graphql.generated.EntityRelationship result =
         new com.linkedin.datahub.graphql.generated.EntityRelationship();
     final Urn urn = entityRelationship.getEntity();

@@ -26,7 +26,6 @@ import io.opentelemetry.api.trace.Span;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -42,7 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Login Controller for handling user authentication.
  *
- * Provides the /logIn endpoint for username/password authentication.
+ * <p>Provides the /logIn endpoint for username/password authentication.
  */
 @Slf4j
 @RestController
@@ -73,8 +72,7 @@ public class LoginController {
    *
    * <p>Example Request:
    *
-   * <p>POST /logIn
-   * { "username": "datahub", "password": "datahub123" }
+   * <p>POST /logIn { "username": "datahub", "password": "datahub123" }
    *
    * <p>Example Response:
    *
@@ -82,9 +80,7 @@ public class LoginController {
    */
   @PostMapping(value = "/logIn", produces = "application/json;charset=utf-8")
   CompletableFuture<ResponseEntity<String>> logIn(
-      @RequestBody String jsonStr,
-      HttpServletRequest request,
-      HttpServletResponse response) {
+      @RequestBody String jsonStr, HttpServletRequest request, HttpServletResponse response) {
 
     JsonNode bodyJson;
     try {
@@ -92,12 +88,14 @@ public class LoginController {
     } catch (JsonProcessingException e) {
       log.error("Failed to parse json while attempting to log in", e);
       return CompletableFuture.completedFuture(
-          new ResponseEntity<>(buildErrorResponse("Invalid request format"), HttpStatus.BAD_REQUEST));
+          new ResponseEntity<>(
+              buildErrorResponse("Invalid request format"), HttpStatus.BAD_REQUEST));
     }
 
     if (bodyJson == null) {
       return CompletableFuture.completedFuture(
-          new ResponseEntity<>(buildErrorResponse("Request body is required"), HttpStatus.BAD_REQUEST));
+          new ResponseEntity<>(
+              buildErrorResponse("Request body is required"), HttpStatus.BAD_REQUEST));
     }
 
     /*
@@ -108,12 +106,14 @@ public class LoginController {
 
     if (username == null || StringUtils.isBlank(username.asText())) {
       return CompletableFuture.completedFuture(
-          new ResponseEntity<>(buildErrorResponse("Username must not be empty"), HttpStatus.BAD_REQUEST));
+          new ResponseEntity<>(
+              buildErrorResponse("Username must not be empty"), HttpStatus.BAD_REQUEST));
     }
 
     if (password == null) {
       return CompletableFuture.completedFuture(
-          new ResponseEntity<>(buildErrorResponse("Password must not be empty"), HttpStatus.BAD_REQUEST));
+          new ResponseEntity<>(
+              buildErrorResponse("Password must not be empty"), HttpStatus.BAD_REQUEST));
     }
 
     String usernameStr = username.asText();
@@ -127,7 +127,8 @@ public class LoginController {
           try {
             // 1. Verify the user's password
             boolean doesPasswordMatch =
-                _nativeUserService.doesPasswordMatch(systemOperationContext, userUrnStr, passwordStr);
+                _nativeUserService.doesPasswordMatch(
+                    systemOperationContext, userUrnStr, passwordStr);
 
             if (!doesPasswordMatch) {
               log.warn("Login failed for user: {} - Invalid credentials", usernameStr);
@@ -187,9 +188,11 @@ public class LoginController {
             Cookie actorCookie = new Cookie(ACTOR_COOKIE_NAME, userUrnStr);
             actorCookie.setPath("/");
             actorCookie.setMaxAge(24 * 60 * 60); // 24 hours
-            actorCookie.setHttpOnly(false); // Allow JavaScript access (needed for frontend auth check)
+            actorCookie.setHttpOnly(
+                false); // Allow JavaScript access (needed for frontend auth check)
             actorCookie.setSecure(false); // Set to true in production with HTTPS
-            // actorCookie.setSameSite("Lax"); // Note: SameSite not available in javax.servlet.http.Cookie
+            // actorCookie.setSameSite("Lax"); // Note: SameSite not available in
+            // javax.servlet.http.Cookie
             response.addCookie(actorCookie);
 
             // 4. Return success response with access token

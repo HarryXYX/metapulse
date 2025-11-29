@@ -15,9 +15,7 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Resolver for removing a Tag from a TagGroup.
- */
+/** Resolver for removing a Tag from a TagGroup. */
 @Slf4j
 public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture<Boolean>> {
 
@@ -63,10 +61,7 @@ public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture
             proposal.setAspectName("tagGroupAssociation");
             proposal.setChangeType(ChangeType.DELETE);
 
-            _entityClient.ingestProposal(
-                context.getOperationContext(),
-                proposal,
-                false);
+            _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
 
             log.info("Successfully removed Tag {} from TagGroup {}", tagUrnStr, tagGroupUrnStr);
             return true;
