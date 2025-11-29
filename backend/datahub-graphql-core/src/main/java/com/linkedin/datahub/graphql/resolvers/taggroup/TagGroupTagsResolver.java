@@ -46,6 +46,9 @@ public class TagGroupTagsResolver
           try {
             final Urn urn = Urn.createFromString(tagGroupUrn);
 
+            log.info(
+                "Querying BelongsToGroup relationships for TagGroup: {}", tagGroupUrn);
+
             // Query incoming "BelongsToGroup" relationships (Tags that belong to this TagGroup)
             final EntityRelationships entityRelationships =
                 _graphClient.getRelatedEntities(
@@ -56,11 +59,18 @@ public class TagGroupTagsResolver
                     1000,
                     context.getActorUrn());
 
+            log.info(
+                "Found {} relationships for TagGroup {}: total={}, count={}",
+                entityRelationships.getRelationships().size(),
+                tagGroupUrn,
+                entityRelationships.getTotal(),
+                entityRelationships.getCount());
+
             // Map to GraphQL result
             return mapEntityRelationships(context, entityRelationships);
 
           } catch (Exception e) {
-            log.error("Failed to resolve tags for TagGroup {}: {}", tagGroupUrn, e.getMessage());
+            log.error("Failed to resolve tags for TagGroup {}: {}", tagGroupUrn, e.getMessage(), e);
             throw new RuntimeException(
                 String.format("Failed to resolve tags for TagGroup %s", tagGroupUrn), e);
           }
