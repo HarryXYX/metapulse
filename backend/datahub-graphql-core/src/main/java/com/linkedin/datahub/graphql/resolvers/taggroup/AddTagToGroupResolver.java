@@ -15,9 +15,7 @@ import graphql.schema.DataFetchingEnvironment;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * Resolver for adding a Tag to a TagGroup.
- */
+/** Resolver for adding a Tag to a TagGroup. */
 @Slf4j
 public class AddTagToGroupResolver implements DataFetcher<CompletableFuture<Boolean>> {
 
@@ -74,8 +72,7 @@ public class AddTagToGroupResolver implements DataFetcher<CompletableFuture<Bool
             // Update the Tag entity with the tagGroupAssociation aspect
             _entityClient.ingestProposal(
                 context.getOperationContext(),
-                AspectUtils.buildMetadataChangeProposal(
-                    tagUrn, "tagGroupAssociation", association),
+                AspectUtils.buildMetadataChangeProposal(tagUrn, "tagGroupAssociation", association),
                 false);
 
             log.info("Successfully added Tag {} to TagGroup {}", tagUrnStr, tagGroupUrnStr);
@@ -88,9 +85,7 @@ public class AddTagToGroupResolver implements DataFetcher<CompletableFuture<Bool
                 tagGroupUrnStr,
                 e.getMessage());
             throw new RuntimeException(
-                String.format(
-                    "Failed to add Tag %s to TagGroup %s", tagUrnStr, tagGroupUrnStr),
-                e);
+                String.format("Failed to add Tag %s to TagGroup %s", tagUrnStr, tagGroupUrnStr), e);
           }
         },
         this.getClass().getSimpleName(),

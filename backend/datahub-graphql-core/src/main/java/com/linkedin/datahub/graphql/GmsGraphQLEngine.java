@@ -232,8 +232,11 @@ import com.linkedin.datahub.graphql.resolvers.tag.SetTagColorResolver;
 import com.linkedin.datahub.graphql.resolvers.taggroup.AddTagToGroupResolver;
 import com.linkedin.datahub.graphql.resolvers.taggroup.BatchAddTagsToGroupResolver;
 import com.linkedin.datahub.graphql.resolvers.taggroup.BatchRemoveTagsFromGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.CreateTagGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.DeleteTagGroupResolver;
 import com.linkedin.datahub.graphql.resolvers.taggroup.RemoveTagFromGroupResolver;
 import com.linkedin.datahub.graphql.resolvers.taggroup.TagGroupTagsResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.UpdateTagGroupResolver;
 import com.linkedin.datahub.graphql.resolvers.template.DeletePageTemplateResolver;
 import com.linkedin.datahub.graphql.resolvers.template.UpsertPageTemplateResolver;
 import com.linkedin.datahub.graphql.resolvers.test.CreateTestResolver;
@@ -1207,6 +1210,11 @@ public class GmsGraphQLEngine {
               .dataFetcher("updateTag", new MutableTypeResolver<>(tagType))
               .dataFetcher("setTagColor", new SetTagColorResolver(entityClient, entityService))
               .dataFetcher("deleteTag", new DeleteTagResolver(entityClient))
+              .dataFetcher(
+                  "createTagGroup",
+                  new CreateTagGroupResolver(this.entityClient, this.entityService))
+              .dataFetcher("updateTagGroup", new UpdateTagGroupResolver(entityClient))
+              .dataFetcher("deleteTagGroup", new DeleteTagGroupResolver(entityClient))
               .dataFetcher("addTagToGroup", new AddTagToGroupResolver(entityClient))
               .dataFetcher("removeTagFromGroup", new RemoveTagFromGroupResolver(entityClient))
               .dataFetcher("batchAddTagsToGroup", new BatchAddTagsToGroupResolver(entityClient))
