@@ -1,0 +1,25 @@
+namespace com.linkedin.tag
+
+import com.linkedin.common.Urn
+
+/**
+ * Association between a Tag and its TagGroup
+ */
+@Aspect = {
+  "name": "tagGroupAssociation"
+}
+record TagGroupAssociation {
+  /**
+   * The TagGroup that this Tag belongs to
+   */
+  @Relationship = {
+    "name": "BelongsToGroup",
+    "entityTypes": [ "tagGroup" ]
+  }
+  @Searchable = {
+    "fieldName": "tagGroup",
+    "fieldType": "URN",
+    "hasValuesFieldName": "hasTagGroup"
+  }
+  tagGroup: optional Urn
+}

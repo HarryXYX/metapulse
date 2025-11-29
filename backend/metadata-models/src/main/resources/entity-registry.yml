@@ -291,10 +291,21 @@ entities:
     searchGroup: primary
     aspects:
       - tagProperties
+      - tagGroupAssociation
       - ownership
       - deprecation
       - status
       - testResults
+  - name: tagGroup
+    doc: TagGroup represents a category or classification for organizing tags
+    category: core
+    keyAspect: tagGroupKey
+    searchGroup: primary
+    aspects:
+      - tagGroupProperties
+      - ownership
+      - deprecation
+      - status
   - name: glossaryTerm
     category: core
     keyAspect: glossaryTermKey

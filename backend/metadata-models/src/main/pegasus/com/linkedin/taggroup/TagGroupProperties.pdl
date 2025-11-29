@@ -1,0 +1,35 @@
+namespace com.linkedin.taggroup
+
+import com.linkedin.common.Urn
+
+/**
+ * Properties associated with a TagGroup
+ */
+@Aspect = {
+  "name": "tagGroupProperties"
+}
+record TagGroupProperties {
+  /**
+   * Display name of the tag group
+   */
+  @Searchable = {
+    "fieldType": "WORD_GRAM",
+    "enableAutocomplete": true,
+    "boostScore": 10.0,
+    "fieldNameAliases": [ "_entityName" ],
+    "searchTier": 1,
+    "searchLabel": "entityName"
+  }
+  name: string
+
+  /**
+   * Documentation of the tag group
+   */
+  @Searchable = {}
+  description: optional string
+
+  /**
+   * The color associated with the TagGroup in Hex. For example #FFFFFF.
+   */
+  colorHex: optional string
+}
