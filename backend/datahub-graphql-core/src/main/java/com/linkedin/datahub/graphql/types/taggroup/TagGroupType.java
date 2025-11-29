@@ -66,8 +66,7 @@ public class TagGroupType implements SearchableEntityType<TagGroup, String> {
   public List<DataFetcherResult<TagGroup>> batchLoad(
       final List<String> urns, final QueryContext context) {
 
-    final List<Urn> tagGroupUrns =
-        urns.stream().map(UrnUtils::getUrn).collect(Collectors.toList());
+    final List<Urn> tagGroupUrns = urns.stream().map(UrnUtils::getUrn).collect(Collectors.toList());
 
     try {
       final Map<Urn, EntityResponse> tagGroupMap =

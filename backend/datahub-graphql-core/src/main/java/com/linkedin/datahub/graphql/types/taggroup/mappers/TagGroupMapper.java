@@ -50,8 +50,7 @@ public class TagGroupMapper implements ModelMapper<EntityResponse, TagGroup> {
     mappingHelper.mapToResult(
         OWNERSHIP_ASPECT_NAME,
         (tagGroup, dataMap) ->
-            tagGroup.setOwnership(
-                OwnershipMapper.map(context, new Ownership(dataMap), entityUrn)));
+            tagGroup.setOwnership(OwnershipMapper.map(context, new Ownership(dataMap), entityUrn)));
 
     return mappingHelper.getResult();
   }
