@@ -280,6 +280,10 @@ public class Constants {
   public static final String TAG_KEY_ASPECT_NAME = "tagKey";
   public static final String TAG_PROPERTIES_ASPECT_NAME = "tagProperties";
 
+  // TagGroup
+  public static final String TAG_GROUP_KEY_ASPECT_NAME = "tagGroupKey";
+  public static final String TAG_GROUP_PROPERTIES_ASPECT_NAME = "tagGroupProperties";
+
   // Container
   public static final String CONTAINER_KEY_ASPECT_NAME = "containerKey";
   public static final String CONTAINER_PROPERTIES_ASPECT_NAME = "containerProperties";

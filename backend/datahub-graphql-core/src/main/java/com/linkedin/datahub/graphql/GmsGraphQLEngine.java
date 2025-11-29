@@ -323,6 +323,7 @@ import com.linkedin.datahub.graphql.types.rolemetadata.RoleType;
 import com.linkedin.datahub.graphql.types.schemafield.SchemaFieldType;
 import com.linkedin.datahub.graphql.types.structuredproperty.StructuredPropertyType;
 import com.linkedin.datahub.graphql.types.tag.TagType;
+import com.linkedin.datahub.graphql.types.taggroup.TagGroupType;
 import com.linkedin.datahub.graphql.types.template.PageTemplateType;
 import com.linkedin.datahub.graphql.types.test.TestType;
 import com.linkedin.datahub.graphql.types.versioning.VersionSetType;
@@ -461,6 +462,7 @@ public class GmsGraphQLEngine {
   private final DashboardType dashboardType;
   private final DataPlatformType dataPlatformType;
   private final TagType tagType;
+  private final TagGroupType tagGroupType;
   private final MLModelType mlModelType;
   private final MLModelGroupType mlModelGroupType;
   private final MLFeatureType mlFeatureType;
@@ -602,6 +604,7 @@ public class GmsGraphQLEngine {
     this.dashboardType = new DashboardType(entityClient);
     this.dataPlatformType = new DataPlatformType(entityClient);
     this.tagType = new TagType(entityClient);
+    this.tagGroupType = new TagGroupType(entityClient);
     this.mlModelType = new MLModelType(entityClient);
     this.mlModelGroupType = new MLModelGroupType(entityClient);
     this.mlFeatureType = new MLFeatureType(entityClient);
@@ -659,6 +662,7 @@ public class GmsGraphQLEngine {
                 chartType,
                 dashboardType,
                 tagType,
+                tagGroupType,
                 mlModelType,
                 mlModelGroupType,
                 mlFeatureType,
