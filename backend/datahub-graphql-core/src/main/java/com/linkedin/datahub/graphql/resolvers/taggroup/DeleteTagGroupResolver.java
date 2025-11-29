@@ -61,8 +61,7 @@ public class DeleteTagGroupResolver implements DataFetcher<CompletableFuture<Boo
 
           } catch (Exception e) {
             log.error("Failed to delete TagGroup {}: {}", urnStr, e.getMessage());
-            throw new RuntimeException(
-                String.format("Failed to delete TagGroup %s", urnStr), e);
+            throw new RuntimeException(String.format("Failed to delete TagGroup %s", urnStr), e);
           }
         },
         this.getClass().getSimpleName(),

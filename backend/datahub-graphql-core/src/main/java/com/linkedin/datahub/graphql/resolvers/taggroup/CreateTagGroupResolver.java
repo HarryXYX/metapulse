@@ -53,7 +53,9 @@ public class CreateTagGroupResolver implements DataFetcher<CompletableFuture<Str
 
             // Generate a unique ID for the TagGroup based on name or UUID
             final String id =
-                input.getName().toLowerCase().replaceAll("\\s+", "-") + "-" + UUID.randomUUID().toString().substring(0, 8);
+                input.getName().toLowerCase().replaceAll("\\s+", "-")
+                    + "-"
+                    + UUID.randomUUID().toString().substring(0, 8);
             key.setName(id);
 
             if (_entityClient.exists(
@@ -65,10 +67,7 @@ public class CreateTagGroupResolver implements DataFetcher<CompletableFuture<Str
             // Create the MCP
             final MetadataChangeProposal proposal =
                 buildMetadataChangeProposalWithKey(
-                    key,
-                    TAG_GROUP_ENTITY_NAME,
-                    "tagGroupProperties",
-                    mapTagGroupProperties(input));
+                    key, TAG_GROUP_ENTITY_NAME, "tagGroupProperties", mapTagGroupProperties(input));
             String tagGroupUrn =
                 _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
 
@@ -78,7 +77,8 @@ public class CreateTagGroupResolver implements DataFetcher<CompletableFuture<Str
             log.info("Successfully created TagGroup with urn: {}", tagGroupUrn);
             return tagGroupUrn;
           } catch (Exception e) {
-            log.error("Failed to create TagGroup with name: {}: {}", input.getName(), e.getMessage());
+            log.error(
+                "Failed to create TagGroup with name: {}: {}", input.getName(), e.getMessage());
             throw new RuntimeException(
                 String.format("Failed to create TagGroup with name: %s", input.getName()), e);
           }

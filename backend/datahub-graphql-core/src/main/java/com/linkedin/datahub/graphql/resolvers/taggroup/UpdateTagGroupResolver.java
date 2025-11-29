@@ -87,8 +87,7 @@ public class UpdateTagGroupResolver implements DataFetcher<CompletableFuture<Tag
 
           } catch (Exception e) {
             log.error("Failed to update TagGroup {}: {}", urnStr, e.getMessage());
-            throw new RuntimeException(
-                String.format("Failed to update TagGroup %s", urnStr), e);
+            throw new RuntimeException(String.format("Failed to update TagGroup %s", urnStr), e);
           }
         },
         this.getClass().getSimpleName(),
