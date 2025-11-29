@@ -64,6 +64,8 @@ task mergeApiComponents(dependsOn: ':metadata-models:generateJsonSchema') {
     combined.text = (components + paths + api).replaceAll("---\n", "\n")
   }
   outputs.file(file("$buildDir/openapi/open-api.yaml"))
+  // Skip to speed up builds
+  enabled = false
 }
 
 // https://github.com/int128/gradle-swagger-generator-plugin#task-type-generateswaggercode
@@ -85,5 +87,8 @@ task openApiGenerate(type: GenerateSwaggerCode, dependsOn: [mergeApiComponents, 
           'apiPackage'         : "io.datahubproject.openapi.v2.generated.controller",
           'delegatePattern'    : "false"
   ]
+  // Skip OpenAPI generation to speed up builds
+  enabled = false
 }
-tasks.getByName("compileJava").dependsOn(openApiGenerate)
+// Commented out to skip OpenAPI generation during build
+// tasks.getByName("compileJava").dependsOn(openApiGenerate)
