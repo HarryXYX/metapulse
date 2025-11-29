@@ -1058,6 +1058,7 @@ public class GmsGraphQLEngine {
                 .dataFetcher("dashboard", getResolver(dashboardType))
                 .dataFetcher("chart", getResolver(chartType))
                 .dataFetcher("tag", getResolver(tagType))
+                .dataFetcher("tagGroup", getResolver(tagGroupType))
                 .dataFetcher("dataFlow", getResolver(dataFlowType))
                 .dataFetcher("dataJob", getResolver(dataJobType))
                 .dataFetcher("dataProcessInstance", getResolver(dataProcessInstanceType))

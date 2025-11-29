@@ -58,7 +58,8 @@ public class TagGroupMapper implements ModelMapper<EntityResponse, TagGroup> {
 
   private static void mapTagGroupKey(@Nonnull TagGroup tagGroup, @Nonnull DataMap dataMap) {
     TagGroupKey tagGroupKey = new TagGroupKey(dataMap);
-    // The key name can be used as a fallback identifier
+    // Set the name from the key as fallback
+    tagGroup.setName(tagGroupKey.getName());
   }
 
   private static void mapTagGroupProperties(@Nonnull TagGroup tagGroup, @Nonnull DataMap dataMap) {
@@ -70,5 +71,9 @@ public class TagGroupMapper implements ModelMapper<EntityResponse, TagGroup> {
             .setColorHex(properties.getColorHex(GetMode.DEFAULT))
             .build();
     tagGroup.setProperties(graphQlProperties);
+    // Override name with the display name from properties if available
+    if (properties.hasName()) {
+      tagGroup.setName(properties.getName());
+    }
   }
 }
