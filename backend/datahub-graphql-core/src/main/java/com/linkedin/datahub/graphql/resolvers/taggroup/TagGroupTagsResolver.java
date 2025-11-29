@@ -46,8 +46,7 @@ public class TagGroupTagsResolver
           try {
             final Urn urn = Urn.createFromString(tagGroupUrn);
 
-            log.info(
-                "Querying BelongsToGroup relationships for TagGroup: {}", tagGroupUrn);
+            log.info("Querying BelongsToGroup relationships for TagGroup: {}", tagGroupUrn);
 
             // Query incoming "BelongsToGroup" relationships (Tags that belong to this TagGroup)
             final EntityRelationships entityRelationships =
