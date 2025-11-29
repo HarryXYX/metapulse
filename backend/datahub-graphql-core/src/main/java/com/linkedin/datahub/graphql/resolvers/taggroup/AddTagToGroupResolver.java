@@ -6,9 +6,9 @@ import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.concurrency.GraphQLConcurrencyUtils;
 import com.linkedin.datahub.graphql.exception.AuthorizationException;
+import com.linkedin.datahub.graphql.resolvers.mutate.MutationUtils;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.metadata.Constants;
-import com.linkedin.metadata.entity.AspectUtils;
 import com.linkedin.tag.TagGroupAssociation;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -70,9 +70,11 @@ public class AddTagToGroupResolver implements DataFetcher<CompletableFuture<Bool
             association.setTagGroup(tagGroupUrn);
 
             // Update the Tag entity with the tagGroupAssociation aspect
+            // Use MutationUtils to set UI source, which enables synchronous Graph index update
             _entityClient.ingestProposal(
                 context.getOperationContext(),
-                AspectUtils.buildMetadataChangeProposal(tagUrn, "tagGroupAssociation", association),
+                MutationUtils.buildMetadataChangeProposalWithUrn(
+                    tagUrn, "tagGroupAssociation", association),
                 false);
 
             log.info("Successfully added Tag {} to TagGroup {}", tagUrnStr, tagGroupUrnStr);

@@ -1,7 +1,12 @@
 package com.linkedin.datahub.graphql.resolvers.taggroup;
 
+import static com.linkedin.metadata.Constants.APP_SOURCE;
+import static com.linkedin.metadata.Constants.UI_SOURCE;
+import static com.linkedin.metadata.utils.SystemMetadataUtils.createDefaultSystemMetadata;
+
 import com.linkedin.common.urn.Urn;
 import com.linkedin.common.urn.UrnUtils;
+import com.linkedin.data.template.StringMap;
 import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.concurrency.GraphQLConcurrencyUtils;
@@ -10,6 +15,7 @@ import com.linkedin.entity.client.EntityClient;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.metadata.Constants;
 import com.linkedin.mxe.MetadataChangeProposal;
+import com.linkedin.mxe.SystemMetadata;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.concurrent.CompletableFuture;
@@ -60,6 +66,13 @@ public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture
             proposal.setEntityType(Constants.TAG_ENTITY_NAME);
             proposal.setAspectName("tagGroupAssociation");
             proposal.setChangeType(ChangeType.DELETE);
+
+            // Set UI source for synchronous Graph index update
+            SystemMetadata systemMetadata = createDefaultSystemMetadata();
+            StringMap properties = new StringMap();
+            properties.put(APP_SOURCE, UI_SOURCE);
+            systemMetadata.setProperties(properties);
+            proposal.setSystemMetadata(systemMetadata);
 
             _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
 
