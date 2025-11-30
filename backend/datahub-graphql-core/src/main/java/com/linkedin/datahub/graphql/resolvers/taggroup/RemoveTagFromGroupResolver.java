@@ -7,23 +7,31 @@ import static com.linkedin.metadata.utils.SystemMetadataUtils.createDefaultSyste
 import com.linkedin.common.urn.Urn;
 import com.linkedin.common.urn.UrnUtils;
 import com.linkedin.data.template.StringMap;
+import com.linkedin.data.template.UrnArray;
 import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
 import com.linkedin.datahub.graphql.concurrency.GraphQLConcurrencyUtils;
 import com.linkedin.datahub.graphql.exception.AuthorizationException;
+import com.linkedin.datahub.graphql.resolvers.mutate.MutationUtils;
+import com.linkedin.entity.EntityResponse;
+import com.linkedin.entity.EnvelopedAspect;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.metadata.Constants;
 import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.mxe.SystemMetadata;
+import com.linkedin.tag.TagGroupAssociation;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import lombok.extern.slf4j.Slf4j;
 
-/** Resolver for removing a Tag from a TagGroup. */
+/** Resolver for removing a Tag from a TagGroup. Supports many-to-many relationship. */
 @Slf4j
 public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture<Boolean>> {
+
+  private static final String TAG_GROUP_ASSOCIATION_ASPECT_NAME = "tagGroupAssociation";
 
   private final EntityClient _entityClient;
 
@@ -60,21 +68,81 @@ public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture
                   String.format("%s is not a valid TagGroup urn", tagGroupUrnStr));
             }
 
-            // Remove the tagGroupAssociation aspect by deleting it
-            MetadataChangeProposal proposal = new MetadataChangeProposal();
-            proposal.setEntityUrn(tagUrn);
-            proposal.setEntityType(Constants.TAG_ENTITY_NAME);
-            proposal.setAspectName("tagGroupAssociation");
-            proposal.setChangeType(ChangeType.DELETE);
+            // Fetch existing TagGroupAssociation aspect
+            UrnArray existingTagGroups = new UrnArray();
+            try {
+              EntityResponse entityResponse =
+                  _entityClient.getV2(
+                      context.getOperationContext(),
+                      Constants.TAG_ENTITY_NAME,
+                      tagUrn,
+                      Set.of(TAG_GROUP_ASSOCIATION_ASPECT_NAME));
 
-            // Set UI source for synchronous Graph index update
-            SystemMetadata systemMetadata = createDefaultSystemMetadata();
-            StringMap properties = new StringMap();
-            properties.put(APP_SOURCE, UI_SOURCE);
-            systemMetadata.setProperties(properties);
-            proposal.setSystemMetadata(systemMetadata);
+              if (entityResponse != null && entityResponse.getAspects() != null) {
+                EnvelopedAspect envelopedAspect =
+                    entityResponse.getAspects().get(TAG_GROUP_ASSOCIATION_ASPECT_NAME);
+                if (envelopedAspect != null) {
+                  TagGroupAssociation existingAssociation =
+                      new TagGroupAssociation(envelopedAspect.getValue().data());
+                  if (existingAssociation.hasTagGroups()) {
+                    existingTagGroups = existingAssociation.getTagGroups();
+                  }
+                }
+              }
+            } catch (Exception e) {
+              log.debug(
+                  "No existing TagGroupAssociation found for Tag {}, nothing to remove",
+                  tagUrnStr);
+              return true; // Nothing to remove
+            }
 
-            _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
+            // Remove the tagGroup from the list
+            UrnArray updatedTagGroups = new UrnArray();
+            boolean found = false;
+            for (Urn urn : existingTagGroups) {
+              if (urn.toString().equals(tagGroupUrn.toString())) {
+                found = true;
+              } else {
+                updatedTagGroups.add(urn);
+              }
+            }
+
+            if (!found) {
+              log.info(
+                  "Tag {} is not associated with TagGroup {}, nothing to remove",
+                  tagUrnStr,
+                  tagGroupUrnStr);
+              return true; // Not associated, return success
+            }
+
+            // If no more tagGroups, delete the aspect entirely
+            if (updatedTagGroups.isEmpty()) {
+              MetadataChangeProposal proposal = new MetadataChangeProposal();
+              proposal.setEntityUrn(tagUrn);
+              proposal.setEntityType(Constants.TAG_ENTITY_NAME);
+              proposal.setAspectName(TAG_GROUP_ASSOCIATION_ASPECT_NAME);
+              proposal.setChangeType(ChangeType.DELETE);
+
+              // Set UI source for synchronous Graph index update
+              SystemMetadata systemMetadata = createDefaultSystemMetadata();
+              StringMap properties = new StringMap();
+              properties.put(APP_SOURCE, UI_SOURCE);
+              systemMetadata.setProperties(properties);
+              proposal.setSystemMetadata(systemMetadata);
+
+              _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
+            } else {
+              // Update with remaining tagGroups
+              TagGroupAssociation association = new TagGroupAssociation();
+              association.setTagGroups(updatedTagGroups);
+
+              // Use MutationUtils to set UI source, which enables synchronous Graph index update
+              _entityClient.ingestProposal(
+                  context.getOperationContext(),
+                  MutationUtils.buildMetadataChangeProposalWithUrn(
+                      tagUrn, TAG_GROUP_ASSOCIATION_ASPECT_NAME, association),
+                  false);
+            }
 
             log.info("Successfully removed Tag {} from TagGroup {}", tagUrnStr, tagGroupUrnStr);
             return true;

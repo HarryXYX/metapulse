@@ -291,7 +291,8 @@ const TagGroupsTable = ({ searchQuery, searchData, loading, refetch }: Props) =>
                                 size="sm"
                                 variant="text"
                                 color="violet"
-                                onClick={() => {
+                                onClick={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
                                     setAddTagsToGroupUrn(tagGroup.urn);
                                     setShowAddTagsModal(true);
                                 }}
@@ -303,7 +304,8 @@ const TagGroupsTable = ({ searchQuery, searchData, loading, refetch }: Props) =>
                                 size="sm"
                                 variant="text"
                                 color="violet"
-                                onClick={() => {
+                                onClick={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
                                     setEditingTagGroupUrn(tagGroup.urn);
                                     setShowEditModal(true);
                                 }}
@@ -316,7 +318,8 @@ const TagGroupsTable = ({ searchQuery, searchData, loading, refetch }: Props) =>
                                 variant="text"
                                 color="red"
                                 disabled={!canManageTags}
-                                onClick={() => {
+                                onClick={(e: React.MouseEvent) => {
+                                    e.stopPropagation();
                                     if (
                                         window.confirm(
                                             `Delete tag group "${name}"?\n\nThis action cannot be undone.`,
@@ -331,6 +334,13 @@ const TagGroupsTable = ({ searchQuery, searchData, loading, refetch }: Props) =>
                         </ActionButtons>
                     );
                 },
+            },
+            // Empty placeholder column to prevent Table component from replacing actions column with expand icon
+            {
+                title: '',
+                key: 'expand-placeholder',
+                width: '48px',
+                render: () => null,
             },
         ],
         [canManageTags, handleDelete, handleTagClick],

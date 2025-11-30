@@ -3,23 +3,23 @@ namespace com.linkedin.tag
 import com.linkedin.common.Urn
 
 /**
- * Association between a Tag and its TagGroup
+ * Association between a Tag and its TagGroups (many-to-many relationship)
  */
 @Aspect = {
   "name": "tagGroupAssociation"
 }
 record TagGroupAssociation {
   /**
-   * The TagGroup that this Tag belongs to
+   * The TagGroups that this Tag belongs to (a Tag can belong to multiple TagGroups)
    */
   @Relationship = {
     "name": "BelongsToGroup",
     "entityTypes": [ "tagGroup" ]
   }
   @Searchable = {
-    "fieldName": "tagGroup",
-    "fieldType": "URN",
+    "fieldName": "tagGroups",
+    "fieldType": "URN_ARRAY",
     "hasValuesFieldName": "hasTagGroup"
   }
-  tagGroup: optional Urn
+  tagGroups: array[Urn] = []
 }
