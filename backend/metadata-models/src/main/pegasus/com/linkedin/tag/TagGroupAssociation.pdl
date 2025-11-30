@@ -13,8 +13,10 @@ record TagGroupAssociation {
    * The TagGroups that this Tag belongs to (a Tag can belong to multiple TagGroups)
    */
   @Relationship = {
-    "name": "BelongsToGroup",
-    "entityTypes": [ "tagGroup" ]
+    "/*": {
+      "name": "BelongsToGroup",
+      "entityTypes": [ "tagGroup" ]
+    }
   }
   @Searchable = {
     "/*": {
