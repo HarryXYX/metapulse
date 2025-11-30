@@ -1,12 +1,7 @@
 package com.linkedin.datahub.graphql.resolvers.taggroup;
 
-import static com.linkedin.metadata.Constants.APP_SOURCE;
-import static com.linkedin.metadata.Constants.UI_SOURCE;
-import static com.linkedin.metadata.utils.SystemMetadataUtils.createDefaultSystemMetadata;
-
 import com.linkedin.common.urn.Urn;
 import com.linkedin.common.urn.UrnUtils;
-import com.linkedin.data.template.StringMap;
 import com.linkedin.common.UrnArray;
 import com.linkedin.datahub.graphql.QueryContext;
 import com.linkedin.datahub.graphql.authorization.AuthorizationUtils;
@@ -16,10 +11,7 @@ import com.linkedin.datahub.graphql.resolvers.mutate.MutationUtils;
 import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.EnvelopedAspect;
 import com.linkedin.entity.client.EntityClient;
-import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.metadata.Constants;
-import com.linkedin.mxe.MetadataChangeProposal;
-import com.linkedin.mxe.SystemMetadata;
 import com.linkedin.tag.TagGroupAssociation;
 import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
@@ -115,34 +107,16 @@ public class RemoveTagFromGroupResolver implements DataFetcher<CompletableFuture
               return true; // Not associated, return success
             }
 
-            // If no more tagGroups, delete the aspect entirely
-            if (updatedTagGroups.isEmpty()) {
-              MetadataChangeProposal proposal = new MetadataChangeProposal();
-              proposal.setEntityUrn(tagUrn);
-              proposal.setEntityType(Constants.TAG_ENTITY_NAME);
-              proposal.setAspectName(TAG_GROUP_ASSOCIATION_ASPECT_NAME);
-              proposal.setChangeType(ChangeType.DELETE);
+            // Update with remaining tagGroups (can be empty array)
+            TagGroupAssociation association = new TagGroupAssociation();
+            association.setTagGroups(updatedTagGroups);
 
-              // Set UI source for synchronous Graph index update
-              SystemMetadata systemMetadata = createDefaultSystemMetadata();
-              StringMap properties = new StringMap();
-              properties.put(APP_SOURCE, UI_SOURCE);
-              systemMetadata.setProperties(properties);
-              proposal.setSystemMetadata(systemMetadata);
-
-              _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
-            } else {
-              // Update with remaining tagGroups
-              TagGroupAssociation association = new TagGroupAssociation();
-              association.setTagGroups(updatedTagGroups);
-
-              // Use MutationUtils to set UI source, which enables synchronous Graph index update
-              _entityClient.ingestProposal(
-                  context.getOperationContext(),
-                  MutationUtils.buildMetadataChangeProposalWithUrn(
-                      tagUrn, TAG_GROUP_ASSOCIATION_ASPECT_NAME, association),
-                  false);
-            }
+            // Use MutationUtils to set UI source, which enables synchronous Graph index update
+            _entityClient.ingestProposal(
+                context.getOperationContext(),
+                MutationUtils.buildMetadataChangeProposalWithUrn(
+                    tagUrn, TAG_GROUP_ASSOCIATION_ASPECT_NAME, association),
+                false);
 
             log.info("Successfully removed Tag {} from TagGroup {}", tagUrnStr, tagGroupUrnStr);
             return true;
