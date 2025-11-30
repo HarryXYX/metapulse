@@ -62,7 +62,9 @@ public class TagUpdateInputMapper
     if (tagUpdate.getName() != null || tagUpdate.getDescription() != null) {
       TagProperties tagProperties = new TagProperties();
       tagProperties.setName(tagUpdate.getName());
-      tagProperties.setDescription(tagUpdate.getDescription());
+      if (tagUpdate.getDescription() != null) {
+        tagProperties.setDescription(tagUpdate.getDescription());
+      }
       proposals.add(
           updateMappingHelper.aspectToProposal(tagProperties, TAG_PROPERTIES_ASPECT_NAME));
     }
