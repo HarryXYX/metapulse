@@ -17,9 +17,11 @@ record TagGroupAssociation {
     "entityTypes": [ "tagGroup" ]
   }
   @Searchable = {
-    "fieldName": "tagGroups",
-    "fieldType": "URN_ARRAY",
-    "hasValuesFieldName": "hasTagGroup"
+    "/*": {
+      "fieldName": "tagGroups",
+      "fieldType": "URN",
+      "hasValuesFieldName": "hasTagGroup"
+    }
   }
   tagGroups: array[Urn] = []
 }
