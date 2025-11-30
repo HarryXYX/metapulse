@@ -25,7 +25,7 @@ import { getRuntimeBasePath, removeRuntimePath, resolveRuntimePath } from '@util
     Construct Apollo Client
 */
 const httpLink = createHttpLink({
-    uri: resolveRuntimePath(`/api/v2/graphql`),
+    uri: resolveRuntimePath(`/api/graphql`),
 });
 
 const errorLink = onError((error) => {
