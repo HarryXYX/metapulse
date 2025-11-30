@@ -1,5 +1,6 @@
 import { Button, PageTitle, Pagination, SearchBar } from '@components';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useApolloClient } from '@apollo/client';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -10,7 +11,7 @@ import EmptyTagGroups from '@app/tags/EmptyTagGroups';
 import TagGroupsTable from '@app/tags/TagGroupsTable';
 import { Message } from '@src/app/shared/Message';
 import { useShowNavBarRedesign } from '@src/app/useShowNavBarRedesign';
-import { useListTagGroupsQuery } from '@src/graphql/tagGroup.generated';
+import { ListTagGroupsDocument, ListTagGroupsQuery } from '@src/graphql/tagGroup.generated';
 import { EntityType } from '@src/types.generated';
 import { PageRoutes } from '@src/conf/Global';
 
@@ -94,6 +95,8 @@ const ManageTagGroups = () => {
         return () => clearTimeout(timer);
     }, [searchQuery]);
 
+    const apolloClient = useApolloClient();
+
     // Search query configuration
     const searchInputs = useMemo(
         () => ({
@@ -105,16 +108,97 @@ const ManageTagGroups = () => {
         [currentPage, debouncedSearchQuery, pageSize],
     );
 
-    const {
-        data: searchData,
-        loading: searchLoading,
-        error: searchError,
-        refetch,
-    } = useListTagGroupsQuery({
-        variables: { input: searchInputs },
-        fetchPolicy: 'cache-first',
-        notifyOnNetworkStatusChange: false,
-    });
+    // Manual state management for query data
+    const [searchData, setSearchData] = useState<ListTagGroupsQuery | undefined>(undefined);
+    const [searchLoading, setSearchLoading] = useState(true);
+    const [searchError, setSearchError] = useState<Error | undefined>(undefined);
+
+    // Function to execute the query
+    const executeQuery = useCallback(async () => {
+        setSearchLoading(true);
+        try {
+            const result = await apolloClient.query<ListTagGroupsQuery>({
+                query: ListTagGroupsDocument,
+                variables: { input: searchInputs },
+                fetchPolicy: 'network-only',
+            });
+            setSearchData(result.data);
+            setSearchError(undefined);
+        } catch (err: any) {
+            setSearchError(err);
+        } finally {
+            setSearchLoading(false);
+        }
+    }, [apolloClient, searchInputs]);
+
+    // Initial query and re-query when searchInputs changes
+    useEffect(() => {
+        executeQuery();
+    }, [executeQuery]);
+
+    // Callback to trigger refresh - wait for Graph database to sync
+    // Similar to ManageTags which uses setTimeout(() => refetch(), 3000)
+    const handleRefresh = useCallback(async () => {
+        // Wait 1 second for Graph database to sync before querying
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await executeQuery();
+    }, [executeQuery]);
+
+    // Optimistic update: directly modify local state without waiting for backend
+    const updateTagGroupTagsLocally = useCallback(
+        (tagGroupUrn: string, tagUrn: string, action: 'add' | 'remove', tagData?: any) => {
+            setSearchData((prevData) => {
+                if (!prevData) return prevData;
+
+                const updatedResults = prevData.search?.searchResults?.map((result) => {
+                    const entity = result.entity;
+                    if (entity.__typename !== 'TagGroup' || entity.urn !== tagGroupUrn) {
+                        return result;
+                    }
+
+                    const currentTags = entity.tags?.relationships || [];
+
+                    let updatedRelationships;
+                    if (action === 'remove') {
+                        updatedRelationships = currentTags.filter(
+                            (rel: any) => rel.entity?.urn !== tagUrn,
+                        );
+                    } else {
+                        // For add, we need the tag data
+                        const newRelationship = {
+                            entity: tagData,
+                            type: 'BelongsToGroup',
+                            direction: 'INCOMING',
+                            __typename: 'EntityRelationship',
+                        };
+                        updatedRelationships = [...currentTags, newRelationship];
+                    }
+
+                    return {
+                        ...result,
+                        entity: {
+                            ...entity,
+                            tags: {
+                                ...entity.tags,
+                                total: updatedRelationships.length,
+                                count: updatedRelationships.length,
+                                relationships: updatedRelationships,
+                            },
+                        },
+                    };
+                });
+
+                return {
+                    ...prevData,
+                    search: {
+                        ...prevData.search,
+                        searchResults: updatedResults,
+                    },
+                } as ListTagGroupsQuery;
+            });
+        },
+        [],
+    );
 
     const totalTagGroups = searchData?.search?.total || 0;
 
@@ -178,7 +262,8 @@ const ManageTagGroups = () => {
                         searchQuery={debouncedSearchQuery}
                         searchData={searchData}
                         loading={searchLoading}
-                        refetch={refetch}
+                        refetch={handleRefresh}
+                        updateTagGroupTagsLocally={updateTagGroupTagsLocally}
                     />
                     <Pagination
                         currentPage={currentPage}
@@ -201,7 +286,7 @@ const ManageTagGroups = () => {
                 open={showCreateModal}
                 onClose={() => {
                     setShowCreateModal(false);
-                    setTimeout(() => refetch(), 1000);
+                    handleRefresh();
                 }}
             />
         </PageContainer>

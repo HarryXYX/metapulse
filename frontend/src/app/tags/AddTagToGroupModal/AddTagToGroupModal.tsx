@@ -1,6 +1,7 @@
 import { Modal, SearchBar } from '@components';
+import { useApolloClient } from '@apollo/client';
 import { Checkbox, message } from 'antd';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { ModalButton } from '@components/components/Modal/Modal';
@@ -14,6 +15,7 @@ type AddTagToGroupModalProps = {
     open: boolean;
     tagGroupUrn: string;
     onClose: () => void;
+    onSuccess?: (addedTags: Array<{ urn: string; name: string; colorHex: string; description?: string }>) => void;
 };
 
 const SectionContainer = styled.div`
@@ -89,7 +91,8 @@ const LoadingMessage = styled.div`
 /**
  * Modal for adding tags to a tag group
  */
-const AddTagToGroupModal: React.FC<AddTagToGroupModalProps> = ({ onClose, open, tagGroupUrn }) => {
+const AddTagToGroupModal: React.FC<AddTagToGroupModalProps> = ({ onClose, open, tagGroupUrn, onSuccess }) => {
+    const apolloClient = useApolloClient();
     const [searchQuery, setSearchQuery] = useState('*');
     const [selectedTagUrns, setSelectedTagUrns] = useState<string[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -100,6 +103,7 @@ const AddTagToGroupModal: React.FC<AddTagToGroupModalProps> = ({ onClose, open, 
     const { data: tagGroupData } = useGetTagGroupQuery({
         variables: { urn: tagGroupUrn },
         skip: !tagGroupUrn,
+        fetchPolicy: 'network-only',
     });
 
     // Get all available tags
@@ -164,12 +168,31 @@ const AddTagToGroupModal: React.FC<AddTagToGroupModalProps> = ({ onClose, open, 
             });
 
             message.success(`Successfully added ${selectedTagUrns.length} tag(s) to the group`);
-            onClose();
+
+            // Collect added tags info for optimistic update
+            if (onSuccess) {
+                const addedTags = availableTags
+                    .filter((result) => selectedTagUrns.includes(result.entity.urn))
+                    .map((result) => {
+                        const tag = result.entity;
+                        if (tag.__typename !== 'Tag') return null;
+                        return {
+                            urn: tag.urn,
+                            name: entityRegistry.getDisplayName(EntityType.Tag, tag),
+                            colorHex: tag.properties?.colorHex ?? '#1890ff',
+                            description: (tag.properties as any)?.description,
+                        };
+                    })
+                    .filter((t): t is NonNullable<typeof t> => t !== null);
+                onSuccess(addedTags);
+            }
+
             setSelectedTagUrns([]);
+            setIsLoading(false);
+            onClose();
         } catch (e: any) {
             message.destroy();
             message.error(`Failed to add tags. ${e.message}`);
-        } finally {
             setIsLoading(false);
         }
     };
