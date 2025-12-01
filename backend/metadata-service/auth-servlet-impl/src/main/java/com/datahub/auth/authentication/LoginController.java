@@ -27,6 +27,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONObject;
@@ -66,6 +67,10 @@ public class LoginController {
   @Autowired
   @Qualifier("systemOperationContext")
   private OperationContext systemOperationContext;
+
+  @Autowired
+  @Qualifier("loginExecutor")
+  private Executor loginExecutor;
 
   /**
    * Log in a user based on username + password.
@@ -122,6 +127,8 @@ public class LoginController {
 
     log.info("Attempting to log in user: {}", usernameStr);
 
+    // 使用独立的 loginExecutor 而不是 ForkJoinPool.commonPool()
+    // 避免与 GraphQL 查询竞争线程资源
     return CompletableFuture.supplyAsync(
         () -> {
           try {
@@ -203,7 +210,8 @@ public class LoginController {
             return new ResponseEntity<>(
                 buildErrorResponse("Internal server error"), HttpStatus.INTERNAL_SERVER_ERROR);
           }
-        });
+        },
+        loginExecutor); // 使用独立线程池
   }
 
   private String buildTokenResponse(final String token) {
