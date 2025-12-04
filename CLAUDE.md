@@ -333,3 +333,86 @@ yarn build
 - **Monorepo 优势**：统一版本控制，更容易跨栈重构
 - 根目录里的 datahub 项目就是 datahub 的源码，具体路径是 `/project/datahub`，所有问到的 datahub 问题都通过本地源码解答
 - 后台日志都从/tmp/datahub/logs/gms文件夹下读取
+- 生成的文档都以.md格式存储
+
+## 开发环境中间件配置
+
+开发环境使用远程服务器上的中间件服务，配置文件位于：
+`backend/metadata-service/war/src/main/resources/application-dev.yml`
+
+### 中间件连接信息
+
+| 中间件 | 地址 | 端口 | 用户名 | 密码 |
+|--------|------|------|--------|------|
+| **MySQL** | 47.80.65.112 | 3306 | metapulse | metapulse |
+| **Kafka** | 47.80.65.112 | 9092 | - | - |
+| **Elasticsearch** | 47.80.65.112 | 9200 | - | - |
+
+### 中间件状态检查命令
+
+查看中间件状态时，请使用以下命令从服务器检查：
+
+```bash
+# ===== MySQL 状态检查 =====
+# 测试连接
+mysql -h 47.80.65.112 -P 3306 -u metapulse -pmetapulse -e "SELECT 1"
+
+# 查看数据库列表
+mysql -h 47.80.65.112 -P 3306 -u metapulse -pmetapulse -e "SHOW DATABASES"
+
+# 查看 metapulse 数据库表
+mysql -h 47.80.65.112 -P 3306 -u metapulse -pmetapulse metapulse -e "SHOW TABLES"
+
+# 查看连接状态
+mysql -h 47.80.65.112 -P 3306 -u metapulse -pmetapulse -e "SHOW STATUS LIKE 'Threads_connected'"
+
+# ===== Kafka 状态检查 =====
+# 测试连接（需要本地安装 kafka 客户端或使用 nc）
+nc -zv 47.80.65.112 9092
+
+# 列出所有 topics（需要 kafka 客户端）
+# kafka-topics.sh --bootstrap-server 47.80.65.112:9092 --list
+
+# ===== Elasticsearch 状态检查 =====
+# 检查集群健康状态
+curl -s http://47.80.65.112:9200/_cluster/health | python3 -m json.tool
+
+# 检查节点信息
+curl -s http://47.80.65.112:9200/_cat/nodes?v
+
+# 查看所有索引
+curl -s http://47.80.65.112:9200/_cat/indices?v
+
+# 查看集群状态
+curl -s http://47.80.65.112:9200
+```
+
+### 数据库连接池配置
+
+```yaml
+hikari:
+  maximum-pool-size: 30      # 最大连接数
+  minimum-idle: 10           # 最小空闲连接
+  connection-timeout: 30000  # 连接超时：30秒
+  idle-timeout: 600000       # 空闲超时：10分钟
+  max-lifetime: 1800000      # 最大生命周期：30分钟
+```
+
+### Kafka Producer/Consumer 配置
+
+```yaml
+producer:
+  requestTimeoutMs: 120000   # 请求超时：120秒
+  deliveryTimeoutMs: 180000  # 投递超时：180秒
+  maxBlockMs: 180000         # 最大阻塞：180秒
+
+consumer:
+  groupId: metapulse-dev-consumers
+  autoOffsetReset: earliest
+```
+
+### 默认登录账号（开发环境）
+
+| 用户名 | 密码 | 说明 |
+|--------|------|------|
+| metapulse-admin | metapulse-admin | 开发环境默认管理员 |

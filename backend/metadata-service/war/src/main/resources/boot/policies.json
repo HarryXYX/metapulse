@@ -7,7 +7,7 @@
         "allUsers": false,
         "allGroups": false,
         "users": [
-          "urn:li:corpuser:datahub"
+          "urn:li:corpuser:metapulse-admin"
         ]
       },
       "privileges": [
@@ -59,7 +59,7 @@
         "allUsers": false,
         "allGroups": false,
         "users": [
-          "urn:li:corpuser:datahub"
+          "urn:li:corpuser:metapulse-admin"
         ]
       },
       "privileges": [

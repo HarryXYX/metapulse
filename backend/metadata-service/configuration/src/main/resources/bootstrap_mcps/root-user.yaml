@@ -1,13 +1,13 @@
-- entityUrn: urn:li:corpuser:datahub
+- entityUrn: urn:li:corpuser:metapulse-admin
   entityType: corpuser
   aspectName: corpUserInfo
   changeType: UPSERT
   aspect:
     active: true
-    displayName: DataHub
-    title: DataHub
+    displayName: MetaPulse Admin
+    title: Administrator
     system: true
-- entityUrn: urn:li:corpuser:datahub
+- entityUrn: urn:li:corpuser:metapulse-admin
   entityType: corpuser
   aspectName: corpUserEditableInfo
   changeType: CREATE

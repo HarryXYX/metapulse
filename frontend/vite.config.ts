@@ -63,6 +63,8 @@ export default defineConfig(async ({ mode }) => {
     };
     const proxyOptions = {
         '/logIn': frontendProxy,
+        '/logOut': frontendProxy, // 用户登出
+        '/signUp': frontendProxy, // 用户注册
         '/authenticate': frontendProxy,
         '/api': frontendProxy, // 代理所有 /api/* 请求
         '/openapi': frontendProxy, // 代理所有 /openapi/* 请求

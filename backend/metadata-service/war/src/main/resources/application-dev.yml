@@ -16,11 +16,11 @@ server:
 spring.mvc.async.request-timeout: 120000  # 120 秒
 
 # ===== Consumer 启用开关（开发环境全部启用） =====
-environment:
-  MAE_CONSUMER_ENABLED: "true"
-  MCE_CONSUMER_ENABLED: "true"
-  MCP_CONSUMER_ENABLED: "true"
-  PE_CONSUMER_ENABLED: "true"
+# 必须是顶级属性才能被Spring正确读取
+MAE_CONSUMER_ENABLED: true
+MCE_CONSUMER_ENABLED: true
+MCP_CONSUMER_ENABLED: true
+PE_CONSUMER_ENABLED: true
 
 # ===== Entity Client配置 =====
 entityClient:
@@ -111,11 +111,12 @@ elasticsearch:
 # ===== 认证配置（开发环境） =====
 authentication:
   enabled: true  # 启用认证，使用 metapulse-admin/metapulse-admin 登录
-  excludedPaths: /logIn,/schema-registry/*,/health,/health/live,/config,/config/search/export,/public-iceberg/*,/actuator/prometheus
+  excludedPaths: /logIn,/logOut,/signUp,/schema-registry/*,/health,/health/live,/config,/config/search/export,/public-iceberg/*,/actuator/prometheus
   systemClientId: __datahub_system
   systemClientSecret: JohnSnowKnowsNothing
   tokenService:
     signingKey: +8Qx7hZjcZq21cdr9f0paEceHRw47YU5pRt4P7fWpSc=  # 256-bit key for HS256
+  openRegistrationEnabled: true  # 开发环境启用开放注册（无需邀请链接）
 
 # ===== 日志配置（开发环境更详细） =====
 logging:
@@ -148,6 +149,8 @@ datahub:
     host: 0.0.0.0
     port: 8080
     useSSL: false
+    async:
+      request-timeout-ms: 120000  # 异步请求超时：120秒（默认30秒太短）
 
 # ===== 缓存配置 =====
 cache:
@@ -169,9 +172,14 @@ telemetry:
 ebean:
   username: metapulse
   password: metapulse
-  url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+  url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true
   driver: com.mysql.cj.jdbc.Driver
   autoCreateDdl: false  # 关闭自动建表，保留数据库数据
+  # 连接池健康检查配置（避免远程MySQL连接过期问题）
+  maxInactiveTimeSeconds: 180        # 连接最大空闲时间：3分钟
+  heartbeatFreqSecs: 30              # 心跳检测频率：30秒
+  leakTimeMinutes: 5                 # 连接泄漏检测：5分钟
+  trimPoolFreqSecs: 60               # 连接池修剪频率：60秒
 
 # ===== Entity Registry 配置 =====
 # 使用 classpath 方式加载（文件在 metadata-models 模块中）

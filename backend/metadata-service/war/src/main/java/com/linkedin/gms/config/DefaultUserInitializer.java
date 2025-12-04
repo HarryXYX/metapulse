@@ -22,22 +22,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class DefaultUserInitializer implements ApplicationRunner {
 
-    @Value("${defaultUser.enabled:true}")
+    @Value("${defaultUser.enabled}")
     private boolean enabled;
 
-    @Value("${defaultUser.username:datahub}")
+    @Value("${defaultUser.username}")
     private String username;
 
-    @Value("${defaultUser.password:datahub}")
+    @Value("${defaultUser.password}")
     private String password;
 
-    @Value("${defaultUser.fullName:DataHub Admin}")
+    @Value("${defaultUser.fullName}")
     private String fullName;
 
-    @Value("${defaultUser.email:admin@example.com}")
+    @Value("${defaultUser.email}")
     private String email;
 
-    @Value("${defaultUser.title:Administrator}")
+    @Value("${defaultUser.title}")
     private String title;
 
     @Autowired

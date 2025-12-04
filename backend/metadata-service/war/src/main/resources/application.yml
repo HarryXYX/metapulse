@@ -11,12 +11,11 @@ server:
     max-threads: ${MAX_THREADS:200}
 
 # ===== 关键配置：启用所有Consumer（All-in-One模式） =====
-# 这些环境变量控制Consumer是否启动
-environment:
-  MAE_CONSUMER_ENABLED: "${MAE_CONSUMER_ENABLED:true}"
-  MCE_CONSUMER_ENABLED: "${MCE_CONSUMER_ENABLED:true}"
-  MCP_CONSUMER_ENABLED: "${MCP_CONSUMER_ENABLED:true}"
-  PE_CONSUMER_ENABLED: "${PE_CONSUMER_ENABLED:true}"
+# 这些配置控制Consumer是否启动（必须是顶级属性才能被Spring正确读取）
+MAE_CONSUMER_ENABLED: ${MAE_CONSUMER_ENABLED:true}
+MCE_CONSUMER_ENABLED: ${MCE_CONSUMER_ENABLED:true}
+MCP_CONSUMER_ENABLED: ${MCP_CONSUMER_ENABLED:true}
+PE_CONSUMER_ENABLED: ${PE_CONSUMER_ENABLED:true}
 
 # ===== Entity Client配置（使用本地Java模式，无HTTP调用） =====
 entityClient:

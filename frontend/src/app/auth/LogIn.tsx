@@ -3,7 +3,8 @@ import { useReactiveVar } from '@apollo/client';
 import { Button, Divider, Form, Image, Input, message } from 'antd';
 import * as QueryString from 'query-string';
 import React, { useCallback, useState } from 'react';
-import { Redirect, useLocation } from 'react-router';
+import { Redirect, useLocation, useHistory } from 'react-router';
+import { PageRoutes } from '@conf/Global';
 import styled, { useTheme } from 'styled-components/macro';
 
 import analytics, { EventType } from '@app/analytics';
@@ -64,11 +65,23 @@ const SsoTextSpan = styled.span`
     padding-top: 6px;
 `;
 
+const RegisterLink = styled.div`
+    text-align: center;
+    margin-top: 16px;
+    color: white;
+`;
+
+const RegisterButton = styled(Button)`
+    color: #1890ff;
+    padding: 0;
+`;
+
 export type LogInProps = Record<string, never>;
 
 export const LogIn: React.VFC<LogInProps> = () => {
     const isLoggedIn = useReactiveVar(isLoggedInVar);
     const location = useLocation();
+    const history = useHistory();
     const params = QueryString.parse(location.search, { decode: true });
     const maybeRedirectError = params.error_msg;
 
@@ -172,6 +185,12 @@ export const LogIn: React.VFC<LogInProps> = () => {
                         <SsoTextSpan>Sign in with SSO</SsoTextSpan>
                         <span />
                     </SsoButton>
+                    <RegisterLink>
+                        还没有账号？
+                        <RegisterButton type="link" onClick={() => history.push(PageRoutes.SIGN_UP)}>
+                            新用户注册
+                        </RegisterButton>
+                    </RegisterLink>
                 </div>
             </div>
         </div>

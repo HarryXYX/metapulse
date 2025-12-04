@@ -31,4 +31,7 @@ public class AuthenticationConfiguration {
   private long sessionTokenDurationMs;
 
   private TokenServiceConfiguration tokenService;
+
+  /** Whether open registration (without invite token) is allowed */
+  private boolean openRegistrationEnabled;
 }

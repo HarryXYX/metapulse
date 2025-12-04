@@ -243,12 +243,19 @@ public class AuthServiceController {
     JsonNode title = bodyJson.get(TITLE_FIELD_NAME);
     JsonNode password = bodyJson.get(PASSWORD_FIELD_NAME);
     JsonNode inviteToken = bodyJson.get(INVITE_TOKEN_FIELD_NAME);
-    if (fullName == null
-        || userUrn == null
-        || email == null
-        || title == null
-        || password == null
-        || inviteToken == null) {
+
+    // Check if open registration is enabled
+    boolean openRegistrationEnabled =
+        _configProvider.getAuthentication().isOpenRegistrationEnabled();
+
+    // Basic required fields validation
+    if (fullName == null || userUrn == null || email == null || title == null || password == null) {
+      return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    // Invite token is required only when open registration is disabled
+    if (!openRegistrationEnabled && inviteToken == null) {
+      log.debug("Open registration is disabled and no invite token provided");
       return CompletableFuture.completedFuture(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
@@ -265,16 +272,20 @@ public class AuthServiceController {
     String emailString = email.asText();
     String titleString = title.asText();
     String passwordString = password.asText();
-    String inviteTokenString = inviteToken.asText();
+    // inviteToken may be null when open registration is enabled
+    String inviteTokenString = inviteToken != null ? inviteToken.asText() : null;
     Authentication auth = AuthenticationContext.getAuthentication();
     log.info("Attempting to create native user {}", userUrnString);
     return CompletableFuture.supplyAsync(
         () -> {
           try {
-            Urn inviteTokenUrn = _inviteTokenService.getInviteTokenUrn(inviteTokenString);
-            if (!_inviteTokenService.isInviteTokenValid(systemOperationContext, inviteTokenUrn)) {
-              log.error("Invalid invite token");
-              return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            // Only validate invite token if provided
+            if (inviteTokenString != null && !inviteTokenString.isEmpty()) {
+              Urn inviteTokenUrn = _inviteTokenService.getInviteTokenUrn(inviteTokenString);
+              if (!_inviteTokenService.isInviteTokenValid(systemOperationContext, inviteTokenUrn)) {
+                log.error("Invalid invite token");
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+              }
             }
 
             _nativeUserService.createNativeUser(

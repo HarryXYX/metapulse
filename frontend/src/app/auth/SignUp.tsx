@@ -106,16 +106,23 @@ export const SignUp: React.VFC<SignUpProps> = () => {
     const handleSignUp = useCallback(
         (values: FormValues) => {
             setLoading(true);
+            // Build userUrn from email
+            const userUrn = `urn:li:corpuser:${values.email}`;
+            // Build request body, only include inviteToken if present
+            const requestBody: Record<string, string> = {
+                userUrn,
+                fullName: values.fullName,
+                email: values.email,
+                password: values.password,
+                title: values.title,
+            };
+            if (inviteToken) {
+                requestBody.inviteToken = inviteToken;
+            }
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    fullName: values.fullName,
-                    email: values.email,
-                    password: values.password,
-                    title: values.title,
-                    inviteToken,
-                }),
+                body: JSON.stringify(requestBody),
             };
             fetch(resolveRuntimePath('/signUp'), requestOptions)
                 .then(async (response) => {
@@ -139,7 +146,10 @@ export const SignUp: React.VFC<SignUpProps> = () => {
 
     useEffect(() => {
         if (isLoggedIn && !loading) {
-            acceptRole();
+            // Only accept role if we have an invite token
+            if (inviteToken) {
+                acceptRole();
+            }
             history.push(PageRoutes.ROOT);
         }
     });
