@@ -303,6 +303,13 @@ public class DataConnectionService {
       return typeName;
     }
 
+    // ENUM and SET types: convert to VARCHAR since we can't get the actual values from JDBC metadata
+    if (upperType.contains("ENUM") || upperType.contains("SET")) {
+      // Use a reasonable size for ENUM/SET values (max 255 characters)
+      int enumSize = size > 0 ? Math.min(size, 255) : 100;
+      return String.format("VARCHAR(%d)", enumSize);
+    }
+
     if (upperType.contains("DECIMAL") || upperType.contains("NUMERIC")) {
       return String.format("%s(%d,%d)", typeName, size, decimalDigits);
     }
