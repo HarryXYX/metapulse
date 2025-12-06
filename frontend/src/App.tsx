@@ -25,7 +25,7 @@ import { getRuntimeBasePath, removeRuntimePath, resolveRuntimePath } from '@util
     Construct Apollo Client
 */
 const httpLink = createHttpLink({
-    uri: resolveRuntimePath(`/api/graphql`),
+    uri: resolveRuntimePath(import.meta.env.VITE_GRAPHQL_ENDPOINT || '/api/graphql'),
 });
 
 const errorLink = onError((error) => {

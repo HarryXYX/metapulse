@@ -5,6 +5,7 @@ import analytics, { EventType } from '@app/analytics';
 import { isLoggedInVar } from '@app/auth/checkAuthStatus';
 import { useUserContext } from '@app/context/useUserContext';
 import { GlobalCfg } from '@src/conf';
+import { clearAccessToken } from '@utils/authFetch';
 
 export default function useGetLogoutHandler() {
     const me = useUserContext();
@@ -13,6 +14,7 @@ export default function useGetLogoutHandler() {
         analytics.event({ type: EventType.LogOutEvent });
         isLoggedInVar(false);
         Cookies.remove(GlobalCfg.CLIENT_AUTH_COOKIE);
+        clearAccessToken(); // 清除 localStorage 中的 accessToken
         me.updateLocalState({ selectedViewUrn: undefined });
     }, [me]);
 }

@@ -1,11 +1,13 @@
 import analyticsConfig from '@conf/analytics';
+import { authFetch } from '@utils/authFetch';
 import { resolveRuntimePath } from '@utils/runtimeBasePath';
 
 const { datahub } = analyticsConfig;
 const isEnabled: boolean = (datahub && datahub.enabled) || false;
 
 const track = (payload) => {
-    fetch(resolveRuntimePath('/openapi/v1/tracking/track'), {
+    // 使用 authFetch 自动添加 Authorization header
+    authFetch(resolveRuntimePath('/openapi/v1/tracking/track'), {
         method: 'POST',
         cache: 'no-cache',
         credentials: 'same-origin',
@@ -14,6 +16,9 @@ const track = (payload) => {
         },
         referrerPolicy: 'no-referrer',
         body: JSON.stringify(payload),
+    }).catch((error) => {
+        // 静默处理 tracking 错误，避免影响用户体验
+        console.debug('Analytics tracking failed:', error);
     });
 };
 

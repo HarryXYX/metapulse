@@ -11,6 +11,7 @@ import { isLoggedInVar } from '@app/auth/checkAuthStatus';
 import styles from '@app/auth/login.module.css';
 import { Message } from '@app/shared/Message';
 import { useAppConfig } from '@app/useAppConfig';
+import { setAccessToken } from '@utils/authFetch';
 import { resolveRuntimePath } from '@utils/runtimeBasePath';
 
 type FormValues = {
@@ -94,7 +95,7 @@ export const LogIn: React.VFC<LogInProps> = () => {
                     // Extract and save access token
                     const data = await response.json();
                     if (data.accessToken) {
-                        localStorage.setItem('accessToken', data.accessToken);
+                        setAccessToken(data.accessToken);
                     }
                     isLoggedInVar(true);
                     refreshContext();

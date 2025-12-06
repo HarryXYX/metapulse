@@ -4,6 +4,16 @@
 
 server:
   port: 8080
+  # 增加 Jetty 异步请求超时（从默认 30 秒增加到 120 秒）
+  jetty:
+    threads:
+      max: 200  # 最大线程数
+      min: 8    # 最小线程数
+    connection:
+      idle-timeout: 120000  # 连接空闲超时：120 秒
+
+# Spring MVC 异步请求配置
+spring.mvc.async.request-timeout: 120000  # 120 秒
 
 # ===== Consumer 启用开关（开发环境全部启用） =====
 environment:
@@ -19,15 +29,21 @@ entityClient:
 # ===== 数据库配置 =====
 spring:
   datasource:
-    url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://47.80.65.112:3306/metapulse?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&autoReconnect=true&failOverReadOnly=false&maxReconnects=10
     username: metapulse
     password: metapulse
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     hikari:
-      maximum-pool-size: 20  # 开发环境减少连接池
-      minimum-idle: 5
-      connection-timeout: 30000
+      maximum-pool-size: 30              # 增加连接池大小以支持并发查询
+      minimum-idle: 10                   # 增加最小空闲连接
+      connection-timeout: 30000          # 连接获取超时：30秒
+      idle-timeout: 600000               # 空闲连接存活时间：10分钟
+      max-lifetime: 1800000              # 连接最大生命周期：30分钟
+      connection-test-query: SELECT 1    # 连接测试查询
+      validation-timeout: 3000           # 验证超时：3秒
+      leak-detection-threshold: 60000    # 连接泄漏检测：60秒
+      pool-name: HikariPool-MetaPulse    # 连接池名称（便于日志追踪）
 
   jpa:
     show-sql: true  # 开发环境显示 SQL
@@ -60,9 +76,20 @@ kafka:
     retries: 3
     compressionType: snappy
     maxRequestSize: 1048576
-    requestTimeoutMs: 120000      # 请求超时：120秒（默认30秒）
-    deliveryTimeoutMs: 180000     # 投递超时：180秒（默认120秒）
-    maxBlockMs: 180000            # 最大阻塞时间：180秒（默认60秒）
+    requestTimeoutMs: 120000          # 请求超时：120秒（默认30秒）
+    deliveryTimeoutMs: 180000         # 投递超时：180秒（默认120秒）
+    maxBlockMs: 180000                # 最大阻塞时间：180秒（默认60秒）
+    # 额外的网络和超时配置
+    metadataMaxAgeMs: 300000          # 元数据最大缓存时间：5分钟
+    reconnectBackoffMs: 50            # 重连退避时间：50毫秒
+    reconnectBackoffMaxMs: 1000       # 最大重连退避时间：1秒
+    # Spring Kafka 特定配置（确保覆盖默认值）
+    properties:
+      request.timeout.ms: 120000      # 再次明确设置请求超时
+      delivery.timeout.ms: 180000     # 再次明确设置投递超时
+      max.block.ms: 180000            # 再次明确设置最大阻塞时间
+      metadata.max.age.ms: 300000     # 元数据过期时间
+      connections.max.idle.ms: 540000 # 连接最大空闲时间：9分钟
 
   consumer:
     groupId: metapulse-dev-consumers
