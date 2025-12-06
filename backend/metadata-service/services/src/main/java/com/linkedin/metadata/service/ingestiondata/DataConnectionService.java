@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -88,7 +87,7 @@ public class DataConnectionService {
         connection.getPort(),
         connection.getDatabaseName());
 
-    try (DataSource ds = createDataSource(connection);
+    try (HikariDataSource ds = createDataSource(connection);
         Connection conn = ds.getConnection()) {
 
       DatabaseMetaData metaData = conn.getMetaData();
@@ -144,7 +143,7 @@ public class DataConnectionService {
 
     List<TableInfo> tables = new ArrayList<>();
 
-    try (DataSource ds = createDataSource(connection);
+    try (HikariDataSource ds = createDataSource(connection);
         Connection conn = ds.getConnection()) {
 
       DatabaseMetaData metaData = conn.getMetaData();
@@ -194,7 +193,7 @@ public class DataConnectionService {
    */
   public Optional<TableInfo> getTableInfo(
       @Nonnull DataConnection connection, @Nonnull String tableName) {
-    try (DataSource ds = createDataSource(connection);
+    try (HikariDataSource ds = createDataSource(connection);
         Connection conn = ds.getConnection()) {
 
       DatabaseMetaData metaData = conn.getMetaData();
@@ -318,7 +317,7 @@ public class DataConnectionService {
   /**
    * 创建数据源
    */
-  public DataSource createDataSource(@Nonnull DataConnection connection) {
+  public HikariDataSource createDataSource(@Nonnull DataConnection connection) {
     HikariConfig config = new HikariConfig();
 
     String jdbcUrl = buildJdbcUrl(connection);

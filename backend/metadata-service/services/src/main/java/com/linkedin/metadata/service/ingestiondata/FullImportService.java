@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
-import javax.sql.DataSource;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -238,7 +238,7 @@ public class FullImportService {
 
     AtomicLong totalRows = new AtomicLong(0);
 
-    try (DataSource sourceDs = connectionService.createDataSource(connection);
+    try (HikariDataSource sourceDs = connectionService.createDataSource(connection);
         Connection sourceConn = sourceDs.getConnection();
         Statement sourceStmt = sourceConn.createStatement()) {
 
