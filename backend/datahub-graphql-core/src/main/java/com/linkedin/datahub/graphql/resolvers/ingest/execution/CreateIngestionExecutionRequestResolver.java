@@ -24,6 +24,9 @@ import com.linkedin.execution.ExecutionRequestSource;
 import com.linkedin.ingestion.DataHubIngestionSourceInfo;
 import com.linkedin.metadata.config.IngestionConfiguration;
 import com.linkedin.metadata.key.ExecutionRequestKey;
+import com.linkedin.metadata.service.ingestiondata.DataConnectionService;
+import com.linkedin.metadata.service.ingestiondata.FullImportService;
+import com.linkedin.metadata.service.ingestiondata.model.DataConnection;
 import com.linkedin.metadata.utils.EntityKeyUtils;
 import com.linkedin.metadata.utils.IngestionUtils;
 import com.linkedin.mxe.MetadataChangeProposal;
@@ -31,12 +34,23 @@ import graphql.schema.DataFetcher;
 import graphql.schema.DataFetchingEnvironment;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import javax.annotation.Nullable;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/** Creates an on-demand ingestion execution request. */
+/**
+ * Creates an on-demand ingestion execution request.
+ *
+ * For supported database sources (MySQL, PostgreSQL, etc.), this resolver will use the
+ * FullImportService to directly import data into the master_data database instead of
+ * creating an ExecutionRequest for the Python executor.
+ */
+@Slf4j
 public class CreateIngestionExecutionRequestResolver
     implements DataFetcher<CompletableFuture<String>> {
 
@@ -46,13 +60,28 @@ public class CreateIngestionExecutionRequestResolver
   private static final String VERSION_ARG_NAME = "version";
   private static final String DEBUG_MODE_ARG_NAME = "debug_mode";
 
+  /** Supported database source types for direct import */
+  private static final Set<String> SUPPORTED_DB_SOURCES = Set.of("mysql", "postgres", "postgresql");
+
   private final EntityClient _entityClient;
   private final IngestionConfiguration _ingestionConfiguration;
+  private final DataConnectionService _dataConnectionService;
+  private final FullImportService _fullImportService;
 
   public CreateIngestionExecutionRequestResolver(
       final EntityClient entityClient, final IngestionConfiguration ingestionConfiguration) {
+    this(entityClient, ingestionConfiguration, null, null);
+  }
+
+  public CreateIngestionExecutionRequestResolver(
+      final EntityClient entityClient,
+      final IngestionConfiguration ingestionConfiguration,
+      @Nullable final DataConnectionService dataConnectionService,
+      @Nullable final FullImportService fullImportService) {
     _entityClient = entityClient;
     _ingestionConfiguration = ingestionConfiguration;
+    _dataConnectionService = dataConnectionService;
+    _fullImportService = fullImportService;
   }
 
   @Override
@@ -68,13 +97,6 @@ public class CreateIngestionExecutionRequestResolver
                     environment.getArgument("input"), CreateIngestionExecutionRequestInput.class);
 
             try {
-              final ExecutionRequestKey key = new ExecutionRequestKey();
-              final UUID uuid = UUID.randomUUID();
-              final String uuidStr = uuid.toString();
-              key.setId(uuidStr);
-              final Urn executionRequestUrn =
-                  EntityKeyUtils.convertEntityKeyToUrn(key, EXECUTION_REQUEST_ENTITY_NAME);
-
               // Fetch the original ingestion source
               final Urn ingestionSourceUrn = Urn.createFromString(input.getIngestionSourceUrn());
               final Map<Urn, EntityResponse> response =
@@ -105,48 +127,21 @@ public class CreateIngestionExecutionRequestResolver
                     DataHubGraphQLErrorCode.BAD_REQUEST);
               }
 
-              // Build the arguments map.
-              final ExecutionRequestInput execInput = new ExecutionRequestInput();
-              execInput.setTask(RUN_INGEST_TASK_NAME); // Set the RUN_INGEST task
-              execInput.setSource(
-                  new ExecutionRequestSource()
-                      .setType(MANUAL_EXECUTION_SOURCE_NAME)
-                      .setIngestionSource(ingestionSourceUrn));
-              execInput.setExecutorId(
-                  ingestionSourceInfo.getConfig().getExecutorId(), SetMode.IGNORE_NULL);
-              execInput.setRequestedAt(System.currentTimeMillis());
-              execInput.setActorUrn(UrnUtils.getUrn(context.getActorUrn()));
-
-              Map<String, String> arguments = new HashMap<>();
               String recipe = ingestionSourceInfo.getConfig().getRecipe();
-              recipe = injectRunId(recipe, executionRequestUrn.toString());
-              recipe = IngestionUtils.injectPipelineName(recipe, ingestionSourceUrn.toString());
-              arguments.put(RECIPE_ARG_NAME, recipe);
-              arguments.put(
-                  VERSION_ARG_NAME,
-                  ingestionSourceInfo.getConfig().hasVersion()
-                      ? ingestionSourceInfo.getConfig().getVersion()
-                      : _ingestionConfiguration.getDefaultCliVersion());
-              if (ingestionSourceInfo.getConfig().hasVersion()) {
-                arguments.put(VERSION_ARG_NAME, ingestionSourceInfo.getConfig().getVersion());
-              }
-              String debugMode = "false";
-              if (ingestionSourceInfo.getConfig().hasDebugMode()) {
-                debugMode = ingestionSourceInfo.getConfig().isDebugMode() ? "true" : "false";
-              }
-              if (ingestionSourceInfo.getConfig().hasExtraArgs()) {
-                arguments.putAll(ingestionSourceInfo.getConfig().getExtraArgs());
-              }
-              arguments.put(DEBUG_MODE_ARG_NAME, debugMode);
-              execInput.setArgs(new StringMap(arguments));
 
-              final MetadataChangeProposal proposal =
-                  buildMetadataChangeProposalWithKey(
-                      key,
-                      EXECUTION_REQUEST_ENTITY_NAME,
-                      EXECUTION_REQUEST_INPUT_ASPECT_NAME,
-                      execInput);
-              return _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
+              // Check if this is a supported database source for direct import
+              if (_fullImportService != null && _dataConnectionService != null) {
+                String sourceType = getSourceType(recipe);
+                if (sourceType != null && SUPPORTED_DB_SOURCES.contains(sourceType.toLowerCase())) {
+                  log.info("Using FullImportService for source type: {}, urn: {}", sourceType, ingestionSourceUrn);
+                  return executeDirectImport(context, ingestionSourceUrn.toString(), recipe);
+                }
+              }
+
+              // Fall back to original behavior - create ExecutionRequest
+              log.info("Creating ExecutionRequest for ingestion source: {}", ingestionSourceUrn);
+              return createExecutionRequest(context, ingestionSourceUrn, ingestionSourceInfo, recipe);
+
             } catch (Exception e) {
               throw new RuntimeException(
                   String.format("Failed to create new ingestion execution request %s", input), e);
@@ -157,6 +152,174 @@ public class CreateIngestionExecutionRequestResolver
         },
         this.getClass().getSimpleName(),
         "get");
+  }
+
+  /**
+   * Execute direct import using FullImportService for supported database sources.
+   */
+  private String executeDirectImport(
+      QueryContext context, String ingestionSourceUrn, String recipe) {
+
+    log.info("Executing direct import for ingestion source: {}", ingestionSourceUrn);
+
+    // Parse recipe to extract connection info
+    JSONObject recipeJson = new JSONObject(recipe);
+    JSONObject source = recipeJson.getJSONObject("source");
+    String sourceType = source.getString("type");
+    JSONObject config = source.getJSONObject("config");
+
+    // Extract connection details
+    String hostPort = config.optString("host_port", "");
+    String[] hostParts = hostPort.split(":");
+    String host = hostParts.length > 0 ? hostParts[0] : "";
+    int port = hostParts.length > 1 ? Integer.parseInt(hostParts[1]) : getDefaultPort(sourceType);
+    String database = config.optString("database", "");
+    String username = config.optString("username", "");
+    String password = config.optString("password", "");
+
+    log.info("Connection details - type: {}, host: {}, port: {}, database: {}",
+        sourceType, host, port, database);
+
+    // Find or create DataConnection
+    Optional<DataConnection> existingConnection =
+        _dataConnectionService.getConnectionByIngestionSourceUrn(ingestionSourceUrn);
+
+    DataConnection connection;
+    if (existingConnection.isPresent()) {
+      connection = existingConnection.get();
+      log.info("Using existing DataConnection: id={}", connection.getId());
+    } else {
+      // Create new connection
+      connection = DataConnection.builder()
+          .ingestionSourceUrn(ingestionSourceUrn)
+          .connectionName("Auto-" + database)
+          .connectionType(sourceType.toLowerCase())
+          .host(host)
+          .port(port)
+          .databaseName(database)
+          .username(username)
+          .passwordEncrypted(password) // Note: should encrypt in production
+          .useSsl(config.optBoolean("use_ssl", false))
+          .status(DataConnection.Status.ACTIVE.name())
+          .createdBy(context.getActorUrn())
+          .build();
+      connection = _dataConnectionService.createConnection(connection);
+      log.info("Created new DataConnection: id={}", connection.getId());
+    }
+
+    // Execute full import
+    FullImportService.ImportResult importResult =
+        _fullImportService.fullImport(context.getOperationContext(), connection.getId(), null);
+
+    log.info("Import completed: success={}, message={}, tables={}/{}",
+        importResult.isSuccess(), importResult.getMessage(),
+        importResult.getSuccessTables(), importResult.getTotalTables());
+
+    // Return a result URN indicating this was a direct import
+    String resultUrn = String.format(
+        "urn:li:directImport:%s-%d",
+        connection.getId(),
+        System.currentTimeMillis());
+
+    if (!importResult.isSuccess()) {
+      throw new RuntimeException("Import failed: " + importResult.getMessage());
+    }
+
+    return resultUrn;
+  }
+
+  /**
+   * Create ExecutionRequest for sources that don't support direct import.
+   */
+  private String createExecutionRequest(
+      QueryContext context,
+      Urn ingestionSourceUrn,
+      DataHubIngestionSourceInfo ingestionSourceInfo,
+      String recipe) throws Exception {
+
+    final ExecutionRequestKey key = new ExecutionRequestKey();
+    final UUID uuid = UUID.randomUUID();
+    final String uuidStr = uuid.toString();
+    key.setId(uuidStr);
+    final Urn executionRequestUrn =
+        EntityKeyUtils.convertEntityKeyToUrn(key, EXECUTION_REQUEST_ENTITY_NAME);
+
+    // Build the arguments map.
+    final ExecutionRequestInput execInput = new ExecutionRequestInput();
+    execInput.setTask(RUN_INGEST_TASK_NAME); // Set the RUN_INGEST task
+    execInput.setSource(
+        new ExecutionRequestSource()
+            .setType(MANUAL_EXECUTION_SOURCE_NAME)
+            .setIngestionSource(ingestionSourceUrn));
+    execInput.setExecutorId(
+        ingestionSourceInfo.getConfig().getExecutorId(), SetMode.IGNORE_NULL);
+    execInput.setRequestedAt(System.currentTimeMillis());
+    execInput.setActorUrn(UrnUtils.getUrn(context.getActorUrn()));
+
+    Map<String, String> arguments = new HashMap<>();
+    String recipeWithRunId = injectRunId(recipe, executionRequestUrn.toString());
+    recipeWithRunId = IngestionUtils.injectPipelineName(recipeWithRunId, ingestionSourceUrn.toString());
+    arguments.put(RECIPE_ARG_NAME, recipeWithRunId);
+    arguments.put(
+        VERSION_ARG_NAME,
+        ingestionSourceInfo.getConfig().hasVersion()
+            ? ingestionSourceInfo.getConfig().getVersion()
+            : _ingestionConfiguration.getDefaultCliVersion());
+    if (ingestionSourceInfo.getConfig().hasVersion()) {
+      arguments.put(VERSION_ARG_NAME, ingestionSourceInfo.getConfig().getVersion());
+    }
+    String debugMode = "false";
+    if (ingestionSourceInfo.getConfig().hasDebugMode()) {
+      debugMode = ingestionSourceInfo.getConfig().isDebugMode() ? "true" : "false";
+    }
+    if (ingestionSourceInfo.getConfig().hasExtraArgs()) {
+      arguments.putAll(ingestionSourceInfo.getConfig().getExtraArgs());
+    }
+    arguments.put(DEBUG_MODE_ARG_NAME, debugMode);
+    execInput.setArgs(new StringMap(arguments));
+
+    final MetadataChangeProposal proposal =
+        buildMetadataChangeProposalWithKey(
+            key,
+            EXECUTION_REQUEST_ENTITY_NAME,
+            EXECUTION_REQUEST_INPUT_ASPECT_NAME,
+            execInput);
+    return _entityClient.ingestProposal(context.getOperationContext(), proposal, false);
+  }
+
+  /**
+   * Extract source type from recipe JSON.
+   */
+  private String getSourceType(String recipe) {
+    try {
+      JSONObject obj = new JSONObject(recipe);
+      if (obj.has("source") && obj.getJSONObject("source").has("type")) {
+        return obj.getJSONObject("source").getString("type");
+      }
+    } catch (JSONException e) {
+      log.warn("Failed to parse recipe to get source type", e);
+    }
+    return null;
+  }
+
+  /**
+   * Get default port for database type.
+   */
+  private int getDefaultPort(String sourceType) {
+    switch (sourceType.toLowerCase()) {
+      case "mysql":
+        return 3306;
+      case "postgres":
+      case "postgresql":
+        return 5432;
+      case "oracle":
+        return 1521;
+      case "sqlserver":
+      case "mssql":
+        return 1433;
+      default:
+        return 3306;
+    }
   }
 
   /**

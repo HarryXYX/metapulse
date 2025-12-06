@@ -1329,7 +1329,10 @@ public class GmsGraphQLEngine {
               .dataFetcher(
                   "createIngestionExecutionRequest",
                   new CreateIngestionExecutionRequestResolver(
-                      this.entityClient, this.ingestionConfiguration))
+                      this.entityClient,
+                      this.ingestionConfiguration,
+                      this.dataConnectionService,
+                      this.fullImportService))
               .dataFetcher(
                   "cancelIngestionExecutionRequest",
                   new CancelIngestionExecutionRequestResolver(this.entityClient))
