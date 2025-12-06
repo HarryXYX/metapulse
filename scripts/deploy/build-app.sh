@@ -91,8 +91,8 @@ build_backend() {
 
     # 执行构建
     if [ "$SKIP_TESTS" = "skip-tests" ] || [ "$SKIP_TESTS" = "true" ]; then
-        echo "   ⚠️  跳过测试"
-        ./gradlew build -x test
+        echo "   ⚠️  跳过测试和spotless"
+        ./gradlew build -x test -x spotlessCheck
     else
         echo "   🧪 运行测试并构建..."
         ./gradlew build
