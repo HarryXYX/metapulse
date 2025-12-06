@@ -124,7 +124,7 @@ import {
     MSSQL_PASSWORD,
     MSSQL_USERNAME,
 } from '@app/ingest/source/builder/RecipeForm/mssql';
-import { MYSQL_HOST_PORT, MYSQL_PASSWORD, MYSQL_USERNAME } from '@app/ingest/source/builder/RecipeForm/mysql';
+import { MYSQL_DATABASE, MYSQL_HOST_PORT, MYSQL_PASSWORD, MYSQL_USERNAME } from '@app/ingest/source/builder/RecipeForm/mysql';
 import {
     INCLUDE_DEPROVISIONED_USERS,
     INCLUDE_SUSPENDED_USERS,
@@ -425,7 +425,7 @@ export const RECIPE_FIELDS: RecipeFields = {
         filterSectionTooltip: 'Include or exclude specific Schemas, Tables and Views from ingestion.',
     },
     [MYSQL]: {
-        fields: [MYSQL_HOST_PORT, MYSQL_USERNAME, MYSQL_PASSWORD],
+        fields: [MYSQL_HOST_PORT, MYSQL_DATABASE, MYSQL_USERNAME, MYSQL_PASSWORD],
         filterFields: [
             DATABASE_ALLOW,
             DATABASE_DENY,

@@ -33,3 +33,14 @@ export const MYSQL_PASSWORD: RecipeField = {
     required: true,
     rules: null,
 };
+
+export const MYSQL_DATABASE: RecipeField = {
+    name: 'database',
+    label: 'Database',
+    tooltip: 'The MySQL database to ingest metadata from. This is the database that will be imported into master_data.',
+    type: FieldType.TEXT,
+    fieldPath: 'source.config.database',
+    placeholder: 'demo_business',
+    required: true,
+    rules: null,
+};
