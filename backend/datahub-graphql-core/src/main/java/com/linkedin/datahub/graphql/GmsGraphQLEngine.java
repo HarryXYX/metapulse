@@ -1325,7 +1325,7 @@ public class GmsGraphQLEngine {
                   "updateIngestionSource",
                   new UpsertIngestionSourceResolver(this.entityClient, this.entityService))
               .dataFetcher(
-                  "deleteIngestionSource", new DeleteIngestionSourceResolver(this.entityClient))
+                  "deleteIngestionSource", new DeleteIngestionSourceResolver(this.entityClient, this.dataConnectionService))
               .dataFetcher(
                   "createIngestionExecutionRequest",
                   new CreateIngestionExecutionRequestResolver(
