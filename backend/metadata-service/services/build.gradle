@@ -30,8 +30,9 @@ dependencies {
     implementation externalDependency.slf4jApi
     implementation externalDependency.swaggerAnnotations
 
-    // Spring JDBC for master data ingestion
-    implementation externalDependency.springBootStarterJdbc
+    // Spring JDBC for master data ingestion (using Java 11 compatible versions)
+    implementation externalDependency.springJdbcJdk11
+    implementation externalDependency.hikariCPJdk11
     runtimeOnly externalDependency.logbackClassic
     compileOnly externalDependency.lombok
     implementation externalDependency.javatuples
