@@ -177,7 +177,7 @@ public class CreateIngestionExecutionRequestResolver
     String[] hostParts = hostPort.split(":");
     String host = hostParts.length > 0 ? hostParts[0] : "";
     int port = hostParts.length > 1 ? Integer.parseInt(hostParts[1]) : getDefaultPort(sourceType);
-    String database = config.optString("database", "");
+    String database = extractDatabaseName(config);
     String username = config.optString("username", "");
     String password = config.optString("password", "");
 
@@ -408,6 +408,52 @@ public class CreateIngestionExecutionRequestResolver
       default:
         return 3306;
     }
+  }
+
+  /**
+   * Extract database name from recipe config.
+   * DataHub recipes use different field names:
+   * - MySQL/PostgreSQL: database_pattern.allow (array of database names)
+   * - Some sources: database (single database name)
+   */
+  private String extractDatabaseName(JSONObject config) {
+    // First try direct "database" field
+    String database = config.optString("database", "");
+    if (!database.isEmpty()) {
+      return database;
+    }
+
+    // Try database_pattern.allow (array)
+    try {
+      if (config.has("database_pattern")) {
+        JSONObject dbPattern = config.getJSONObject("database_pattern");
+        if (dbPattern.has("allow")) {
+          org.json.JSONArray allowList = dbPattern.getJSONArray("allow");
+          if (allowList.length() > 0) {
+            return allowList.getString(0);
+          }
+        }
+      }
+    } catch (JSONException e) {
+      log.warn("Failed to parse database_pattern from config", e);
+    }
+
+    // Try schema_pattern.allow for databases that use schema (like PostgreSQL)
+    try {
+      if (config.has("schema_pattern")) {
+        JSONObject schemaPattern = config.getJSONObject("schema_pattern");
+        if (schemaPattern.has("allow")) {
+          org.json.JSONArray allowList = schemaPattern.getJSONArray("allow");
+          if (allowList.length() > 0) {
+            return allowList.getString(0);
+          }
+        }
+      }
+    } catch (JSONException e) {
+      log.warn("Failed to parse schema_pattern from config", e);
+    }
+
+    return "";
   }
 
   /**
