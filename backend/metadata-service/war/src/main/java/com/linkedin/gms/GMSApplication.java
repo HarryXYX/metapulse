@@ -4,12 +4,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.cassandra.CassandraAutoConfiguration;
 import org.springframework.boot.autoconfigure.elasticsearch.ElasticsearchRestClientAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.JdbcClientAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication(
-    exclude = {ElasticsearchRestClientAutoConfiguration.class, CassandraAutoConfiguration.class})
+    exclude = {
+        ElasticsearchRestClientAutoConfiguration.class,
+        CassandraAutoConfiguration.class,
+        JdbcClientAutoConfiguration.class  // Spring 6.1+ 的 JdbcClient 与 Spring 5.3.x 不兼容
+    })
 @Import({CommonApplicationConfig.class, ServletConfig.class})
 public class GMSApplication extends SpringBootServletInitializer {
 
