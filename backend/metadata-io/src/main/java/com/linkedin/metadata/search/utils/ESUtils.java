@@ -1407,10 +1407,12 @@ public class ESUtils {
     }
     switch (client.getEngineType()) {
       case ELASTICSEARCH_7:
-        return createPointInTimeElasticSearch(client, indexArray, keepAlive);
       case ELASTICSEARCH_8:
-      case OPENSEARCH_2:
       case ELASTICSEARCH_9:
+        // Elasticsearch 7/8/9 use the same PIT API (no request body)
+        return createPointInTimeElasticSearch(client, indexArray, keepAlive);
+      case OPENSEARCH_2:
+        // OpenSearch uses CreatePitRequest with request body
         return createPointInTimeOpenSearch(client, indexArray, keepAlive);
       default:
         log.warn("Unsupported elasticsearch implementation: {}", client.getEngineType());
