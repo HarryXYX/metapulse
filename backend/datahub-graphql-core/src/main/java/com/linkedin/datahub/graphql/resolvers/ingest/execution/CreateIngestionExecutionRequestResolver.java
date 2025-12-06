@@ -266,6 +266,7 @@ public class CreateIngestionExecutionRequestResolver
         new ExecutionRequestSource()
             .setType("DIRECT_IMPORT")
             .setIngestionSource(sourceUrn));
+    execInput.setExecutorId("default"); // Direct import uses built-in executor
     execInput.setRequestedAt(startTimeMs);
     execInput.setActorUrn(UrnUtils.getUrn(context.getActorUrn()));
 
