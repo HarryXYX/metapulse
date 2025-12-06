@@ -42,6 +42,10 @@ dependencies {
   implementation externalDependency.springActuator
   implementation externalDependency.micrometerObserve
 
+  // Spring JDBC for master data ingestion (using Java 11 compatible versions)
+  implementation externalDependency.springJdbcJdk11
+  implementation externalDependency.hikariCPJdk11
+
   implementation(externalDependency.mixpanel) {
     exclude group: 'org.json', module: 'json'
   }
