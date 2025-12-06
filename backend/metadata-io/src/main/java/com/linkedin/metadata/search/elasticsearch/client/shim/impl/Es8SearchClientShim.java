@@ -201,6 +201,7 @@ import org.opensearch.core.common.bytes.BytesReference;
 import org.opensearch.core.index.Index;
 import org.opensearch.core.index.shard.ShardId;
 import org.opensearch.core.xcontent.ToXContent;
+import org.opensearch.core.xcontent.XContentBuilder;
 import org.opensearch.index.reindex.BulkByScrollResponse;
 import org.opensearch.index.reindex.BulkByScrollTask;
 import org.opensearch.index.reindex.DeleteByQueryRequest;
@@ -1756,8 +1757,11 @@ public class Es8SearchClientShim extends AbstractBulkProcessorShim<BulkIngester<
 
   private FieldSuggester convertSuggestion(SuggestionBuilder<?> suggestionBuilder) {
     try {
-      String jsonString =
-          suggestionBuilder.toXContent(XContentFactory.jsonBuilder(), ToXContent.EMPTY_PARAMS).toString();
+      XContentBuilder builder = XContentFactory.jsonBuilder();
+      builder.startObject();
+      suggestionBuilder.toXContent(builder, ToXContent.EMPTY_PARAMS);
+      builder.endObject();
+      String jsonString = builder.toString();
       return FieldSuggester.of(
           q ->
               q.withJson(
