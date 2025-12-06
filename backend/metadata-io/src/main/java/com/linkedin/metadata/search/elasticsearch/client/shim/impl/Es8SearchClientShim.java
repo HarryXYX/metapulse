@@ -1741,21 +1741,31 @@ public class Es8SearchClientShim extends AbstractBulkProcessorShim<BulkIngester<
   }
 
   private Rescore convertRescore(RescorerBuilder<?> rescorerBuilder) {
-    String jsonString = rescorerBuilder.toString();
-    return Rescore.of(
-        q ->
-            q.withJson(
-                jacksonJsonpMapper.jsonProvider().createParser(new StringReader(jsonString)),
-                jacksonJsonpMapper));
+    try {
+      String jsonString =
+          rescorerBuilder.toXContent(XContentFactory.jsonBuilder(), ToXContent.EMPTY_PARAMS).toString();
+      return Rescore.of(
+          q ->
+              q.withJson(
+                  jacksonJsonpMapper.jsonProvider().createParser(new StringReader(jsonString)),
+                  jacksonJsonpMapper));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to convert RescorerBuilder to JSON", e);
+    }
   }
 
   private FieldSuggester convertSuggestion(SuggestionBuilder<?> suggestionBuilder) {
-    String jsonString = suggestionBuilder.toString();
-    return FieldSuggester.of(
-        q ->
-            q.withJson(
-                jacksonJsonpMapper.jsonProvider().createParser(new StringReader(jsonString)),
-                jacksonJsonpMapper));
+    try {
+      String jsonString =
+          suggestionBuilder.toXContent(XContentFactory.jsonBuilder(), ToXContent.EMPTY_PARAMS).toString();
+      return FieldSuggester.of(
+          q ->
+              q.withJson(
+                  jacksonJsonpMapper.jsonProvider().createParser(new StringReader(jsonString)),
+                  jacksonJsonpMapper));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to convert SuggestionBuilder to JSON", e);
+    }
   }
 
   private TypeMapping convertTypeMapping(BytesReference mappings) {
@@ -1768,11 +1778,16 @@ public class Es8SearchClientShim extends AbstractBulkProcessorShim<BulkIngester<
   }
 
   private IndexSettings convertIndexSettings(Settings settings) {
-    String jsonString = settings.toString();
-    return IndexSettings.of(
-        q ->
-            q.withJson(
-                jacksonJsonpMapper.jsonProvider().createParser(new StringReader(jsonString)),
-                jacksonJsonpMapper));
+    try {
+      String jsonString =
+          settings.toXContent(XContentFactory.jsonBuilder(), ToXContent.EMPTY_PARAMS).toString();
+      return IndexSettings.of(
+          q ->
+              q.withJson(
+                  jacksonJsonpMapper.jsonProvider().createParser(new StringReader(jsonString)),
+                  jacksonJsonpMapper));
+    } catch (IOException e) {
+      throw new RuntimeException("Failed to convert Settings to JSON", e);
+    }
   }
 }
