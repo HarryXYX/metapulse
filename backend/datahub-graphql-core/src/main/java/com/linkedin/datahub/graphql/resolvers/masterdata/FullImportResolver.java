@@ -43,7 +43,10 @@ public class FullImportResolver implements DataFetcher<CompletableFuture<FullImp
                 input.getTableNames());
 
             FullImportService.ImportResult result =
-                fullImportService.fullImport(input.getConnectionId(), input.getTableNames());
+                fullImportService.fullImport(
+                    context.getOperationContext(),
+                    input.getConnectionId(),
+                    input.getTableNames());
 
             return mapToGraphQL(result);
 

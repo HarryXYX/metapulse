@@ -19,7 +19,10 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import com.linkedin.entity.client.SystemEntityClient;
 import com.zaxxer.hikari.HikariDataSource;
+import io.datahubproject.metadata.context.OperationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,6 +41,7 @@ public class FullImportService {
   private final MirrorTableRepository mirrorTableRepository;
   private final JdbcTemplate masterDataJdbcTemplate;
   private final ObjectMapper objectMapper;
+  private final DatasetMetadataPublisher metadataPublisher;
 
   /** 批量插入大小 */
   private static final int BATCH_SIZE = 1000;
@@ -46,21 +50,28 @@ public class FullImportService {
       DataConnectionService connectionService,
       MirrorTableRepository mirrorTableRepository,
       @Qualifier("masterDataJdbcTemplate") JdbcTemplate masterDataJdbcTemplate,
-      ObjectMapper objectMapper) {
+      ObjectMapper objectMapper,
+      @Nullable SystemEntityClient systemEntityClient) {
     this.connectionService = connectionService;
     this.mirrorTableRepository = mirrorTableRepository;
     this.masterDataJdbcTemplate = masterDataJdbcTemplate;
     this.objectMapper = objectMapper;
+    this.metadataPublisher = systemEntityClient != null ?
+        new DatasetMetadataPublisher(systemEntityClient) : null;
   }
 
   /**
    * 执行全量导入
    *
+   * @param opContext 操作上下文（用于发布元数据到 DataHub）
    * @param connectionId 连接 ID
    * @param tableNames 要导入的表名列表，如果为空则导入所有表
    * @return 导入结果
    */
-  public ImportResult fullImport(@Nonnull Long connectionId, List<String> tableNames) {
+  public ImportResult fullImport(
+      @Nullable OperationContext opContext,
+      @Nonnull Long connectionId,
+      List<String> tableNames) {
     log.info("Starting full import for connection: {}, tables: {}", connectionId, tableNames);
 
     Optional<DataConnection> connectionOpt = connectionService.getConnection(connectionId);
@@ -89,7 +100,7 @@ public class FullImportService {
       // 逐表导入
       for (TableInfo tableInfo : tables) {
         try {
-          TableImportResult tableResult = importTable(connection, tableInfo);
+          TableImportResult tableResult = importTable(opContext, connection, tableInfo);
           result.addTableResult(tableResult);
 
           if (tableResult.isSuccess()) {
@@ -124,9 +135,16 @@ public class FullImportService {
 
   /**
    * 导入单个表
+   *
+   * @param opContext 操作上下文（用于发布元数据到 DataHub）
+   * @param connection 数据连接
+   * @param tableInfo 表信息
+   * @return 导入结果
    */
   public TableImportResult importTable(
-      @Nonnull DataConnection connection, @Nonnull TableInfo tableInfo) {
+      @Nullable OperationContext opContext,
+      @Nonnull DataConnection connection,
+      @Nonnull TableInfo tableInfo) {
 
     String tableName = tableInfo.getTableName();
     log.info("Importing table: {}", tableName);
@@ -171,6 +189,17 @@ public class FullImportService {
 
       // 6. 更新同步完成状态
       mirrorTableRepository.updateFullSyncComplete(mirrorTable.getId(), rowCount);
+
+      // 7. 发布数据集元数据到 DataHub
+      if (metadataPublisher != null && opContext != null) {
+        try {
+          metadataPublisher.publishDatasetMetadata(opContext, mirrorTable, tableInfo);
+          log.info("Published dataset metadata for table: {}", mirrorTableName);
+        } catch (Exception e) {
+          // 元数据发布失败不应该阻止导入成功
+          log.warn("Failed to publish dataset metadata for table {}: {}", mirrorTableName, e.getMessage(), e);
+        }
+      }
 
       log.info("Table {} imported successfully, {} rows", tableName, rowCount);
       return TableImportResult.success(tableName, mirrorTableName, rowCount);
