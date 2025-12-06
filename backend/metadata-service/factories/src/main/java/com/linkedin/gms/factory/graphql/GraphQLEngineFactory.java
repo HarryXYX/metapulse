@@ -222,6 +222,12 @@ public class GraphQLEngineFactory {
   @Qualifier("dataHubFileService")
   private DataHubFileService dataHubFileService;
 
+  @Autowired(required = false)
+  private com.linkedin.metadata.service.ingestiondata.DataConnectionService dataConnectionService;
+
+  @Autowired(required = false)
+  private com.linkedin.metadata.service.ingestiondata.FullImportService fullImportService;
+
   @Bean(name = "graphQLEngine")
   @Nonnull
   protected GraphQLEngine graphQLEngine(
@@ -289,6 +295,10 @@ public class GraphQLEngineFactory {
     args.setConnectionService(_connectionService);
     args.setAssertionService(assertionService);
     args.setMetricUtils(metricUtils);
+
+    // Master data ingestion services (optional)
+    args.setDataConnectionService(dataConnectionService);
+    args.setFullImportService(fullImportService);
 
     return new GmsGraphQLEngine(args).builder().build();
   }

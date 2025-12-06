@@ -1,0 +1,647 @@
+# Master Data Management GraphQL Schema
+# Provides APIs for managing external database connections and data import
+
+extend type Query {
+  """
+  List all data connections
+  """
+  listDataConnections(input: ListDataConnectionsInput!): ListDataConnectionsResult
+
+  """
+  Get a specific data connection by ID
+  """
+  dataConnection(id: Long!): DataConnection
+
+  """
+  Get tables from a data connection
+  """
+  getDataConnectionTables(connectionId: Long!): [ExternalTableInfo!]!
+
+  """
+  Get mirror tables for a connection
+  """
+  getMirrorTables(connectionId: Long!): [MirrorTable!]!
+}
+
+extend type Mutation {
+  """
+  Create a new data connection
+  """
+  createDataConnection(input: CreateDataConnectionInput!): DataConnection
+
+  """
+  Update an existing data connection
+  """
+  updateDataConnection(id: Long!, input: UpdateDataConnectionInput!): DataConnection
+
+  """
+  Delete a data connection
+  """
+  deleteDataConnection(id: Long!): Boolean
+
+  """
+  Test a data connection
+  """
+  testDataConnection(input: TestDataConnectionInput!): TestConnectionResult
+
+  """
+  Execute full import from external database
+  """
+  fullImport(input: FullImportInput!): FullImportResult
+}
+
+"""
+Data connection type enum
+"""
+enum DataConnectionType {
+  MYSQL
+  POSTGRES
+  ORACLE
+  SQLSERVER
+  MONGODB
+}
+
+"""
+Data connection status
+"""
+enum DataConnectionStatus {
+  ACTIVE
+  INACTIVE
+  ERROR
+  DELETED
+}
+
+"""
+External database connection configuration
+"""
+type DataConnection {
+  """
+  Unique identifier
+  """
+  id: Long!
+
+  """
+  Associated ingestion source URN (if any)
+  """
+  ingestionSourceUrn: String
+
+  """
+  Display name for the connection
+  """
+  connectionName: String!
+
+  """
+  Type of database connection
+  """
+  connectionType: DataConnectionType!
+
+  """
+  Database host
+  """
+  host: String!
+
+  """
+  Database port
+  """
+  port: Int!
+
+  """
+  Database name
+  """
+  databaseName: String!
+
+  """
+  Username for connection
+  """
+  username: String!
+
+  """
+  Whether to use SSL
+  """
+  useSsl: Boolean
+
+  """
+  SSL mode
+  """
+  sslMode: String
+
+  """
+  Connection status
+  """
+  status: DataConnectionStatus!
+
+  """
+  Last test timestamp
+  """
+  lastTestAt: Long
+
+  """
+  Last test result
+  """
+  lastTestResult: String
+
+  """
+  Last test message
+  """
+  lastTestMessage: String
+
+  """
+  Creation timestamp
+  """
+  createdAt: Long
+
+  """
+  Created by user
+  """
+  createdBy: String
+
+  """
+  Mirror tables associated with this connection
+  """
+  mirrorTables: [MirrorTable!]
+}
+
+"""
+External table information
+"""
+type ExternalTableInfo {
+  """
+  Table name
+  """
+  tableName: String!
+
+  """
+  Schema name (for PostgreSQL/Oracle)
+  """
+  schemaName: String
+
+  """
+  Database name
+  """
+  databaseName: String
+
+  """
+  Table type: TABLE or VIEW
+  """
+  tableType: String
+
+  """
+  Table comment/description
+  """
+  comment: String
+
+  """
+  Column information
+  """
+  columns: [ExternalColumnInfo!]
+
+  """
+  Primary key column names
+  """
+  primaryKeys: [String!]
+
+  """
+  Estimated row count
+  """
+  estimatedRowCount: Long
+}
+
+"""
+External column information
+"""
+type ExternalColumnInfo {
+  """
+  Column name
+  """
+  name: String!
+
+  """
+  Data type
+  """
+  dataType: String!
+
+  """
+  Column length
+  """
+  length: Int
+
+  """
+  Numeric precision
+  """
+  precision: Int
+
+  """
+  Numeric scale
+  """
+  scale: Int
+
+  """
+  Whether the column is nullable
+  """
+  nullable: Boolean
+
+  """
+  Default value
+  """
+  defaultValue: String
+
+  """
+  Column comment
+  """
+  comment: String
+
+  """
+  Whether this is a primary key column
+  """
+  primaryKey: Boolean
+
+  """
+  Whether this is an auto-increment column
+  """
+  autoIncrement: Boolean
+}
+
+"""
+Mirror table sync status
+"""
+enum MirrorTableSyncStatus {
+  PENDING
+  SYNCING
+  SYNCED
+  ERROR
+}
+
+"""
+Mirror table representing a synced external table
+"""
+type MirrorTable {
+  """
+  Unique identifier
+  """
+  id: Long!
+
+  """
+  Connection ID
+  """
+  connectionId: Long!
+
+  """
+  Associated dataset URN
+  """
+  datasetUrn: String
+
+  """
+  Source database name
+  """
+  sourceDatabase: String!
+
+  """
+  Source schema name
+  """
+  sourceSchema: String
+
+  """
+  Source table name
+  """
+  sourceTable: String!
+
+  """
+  Mirror table name in master_data
+  """
+  mirrorTableName: String!
+
+  """
+  Column schema (JSON)
+  """
+  columnSchema: String
+
+  """
+  Primary key columns (JSON)
+  """
+  primaryKeyColumns: String
+
+  """
+  Sync status
+  """
+  syncStatus: MirrorTableSyncStatus!
+
+  """
+  Last full sync timestamp
+  """
+  lastFullSyncAt: Long
+
+  """
+  Last incremental sync timestamp
+  """
+  lastIncrementalAt: Long
+
+  """
+  Row count
+  """
+  rowCount: Long
+
+  """
+  Creation timestamp
+  """
+  createdAt: Long
+}
+
+"""
+Input for listing data connections
+"""
+input ListDataConnectionsInput {
+  """
+  Starting offset
+  """
+  start: Int
+
+  """
+  Number of results
+  """
+  count: Int
+
+  """
+  Optional search query
+  """
+  query: String
+
+  """
+  Filter by status
+  """
+  status: DataConnectionStatus
+}
+
+"""
+Result of listing data connections
+"""
+type ListDataConnectionsResult {
+  """
+  Starting offset
+  """
+  start: Int!
+
+  """
+  Number of results
+  """
+  count: Int!
+
+  """
+  Total number of connections
+  """
+  total: Int!
+
+  """
+  The connections
+  """
+  connections: [DataConnection!]!
+}
+
+"""
+Input for creating a data connection
+"""
+input CreateDataConnectionInput {
+  """
+  Associated ingestion source URN
+  """
+  ingestionSourceUrn: String
+
+  """
+  Display name
+  """
+  connectionName: String!
+
+  """
+  Connection type
+  """
+  connectionType: DataConnectionType!
+
+  """
+  Database host
+  """
+  host: String!
+
+  """
+  Database port
+  """
+  port: Int!
+
+  """
+  Database name
+  """
+  databaseName: String!
+
+  """
+  Username
+  """
+  username: String!
+
+  """
+  Password
+  """
+  password: String!
+
+  """
+  Use SSL
+  """
+  useSsl: Boolean
+
+  """
+  SSL mode
+  """
+  sslMode: String
+}
+
+"""
+Input for updating a data connection
+"""
+input UpdateDataConnectionInput {
+  """
+  Display name
+  """
+  connectionName: String
+
+  """
+  Database host
+  """
+  host: String
+
+  """
+  Database port
+  """
+  port: Int
+
+  """
+  Database name
+  """
+  databaseName: String
+
+  """
+  Username
+  """
+  username: String
+
+  """
+  Password (only if changing)
+  """
+  password: String
+
+  """
+  Use SSL
+  """
+  useSsl: Boolean
+
+  """
+  SSL mode
+  """
+  sslMode: String
+
+  """
+  Status
+  """
+  status: DataConnectionStatus
+}
+
+"""
+Input for testing a connection
+"""
+input TestDataConnectionInput {
+  """
+  Existing connection ID (test saved connection)
+  """
+  connectionId: Long
+
+  """
+  Or provide connection details for unsaved connection test
+  """
+  connectionType: DataConnectionType
+
+  """
+  Database host
+  """
+  host: String
+
+  """
+  Database port
+  """
+  port: Int
+
+  """
+  Database name
+  """
+  databaseName: String
+
+  """
+  Username
+  """
+  username: String
+
+  """
+  Password
+  """
+  password: String
+
+  """
+  Use SSL
+  """
+  useSsl: Boolean
+}
+
+"""
+Result of connection test
+"""
+type TestConnectionResult {
+  """
+  Whether the test succeeded
+  """
+  success: Boolean!
+
+  """
+  Test result message
+  """
+  message: String!
+}
+
+"""
+Input for full import
+"""
+input FullImportInput {
+  """
+  Connection ID
+  """
+  connectionId: Long!
+
+  """
+  Specific table names to import (empty = all tables)
+  """
+  tableNames: [String!]
+}
+
+"""
+Single table import result
+"""
+type TableImportResult {
+  """
+  Source table name
+  """
+  sourceTable: String!
+
+  """
+  Mirror table name
+  """
+  mirrorTable: String
+
+  """
+  Whether import succeeded
+  """
+  success: Boolean!
+
+  """
+  Result message
+  """
+  message: String
+
+  """
+  Number of rows imported
+  """
+  rowCount: Long
+}
+
+"""
+Result of full import operation
+"""
+type FullImportResult {
+  """
+  Connection ID
+  """
+  connectionId: Long!
+
+  """
+  Overall success
+  """
+  success: Boolean!
+
+  """
+  Result message
+  """
+  message: String!
+
+  """
+  Total number of tables
+  """
+  totalTables: Int!
+
+  """
+  Number of successfully imported tables
+  """
+  successTables: Int!
+
+  """
+  Number of failed tables
+  """
+  failedTables: Int!
+
+  """
+  Individual table results
+  """
+  tableResults: [TableImportResult!]!
+}

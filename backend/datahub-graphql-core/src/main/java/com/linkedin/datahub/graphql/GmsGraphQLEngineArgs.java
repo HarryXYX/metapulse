@@ -101,4 +101,8 @@ public class GmsGraphQLEngineArgs {
   boolean systemTelemetryEnabled;
   MetricUtils metricUtils;
   // any fork specific args should go below this line
+
+  // Master data ingestion services
+  com.linkedin.metadata.service.ingestiondata.DataConnectionService dataConnectionService;
+  com.linkedin.metadata.service.ingestiondata.FullImportService fullImportService;
 }

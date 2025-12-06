@@ -132,6 +132,11 @@ import com.linkedin.datahub.graphql.resolvers.jobs.DataJobRunsResolver;
 import com.linkedin.datahub.graphql.resolvers.jobs.EntityRunsResolver;
 import com.linkedin.datahub.graphql.resolvers.lineage.UpdateLineageResolver;
 import com.linkedin.datahub.graphql.resolvers.load.AspectResolver;
+import com.linkedin.datahub.graphql.resolvers.masterdata.CreateDataConnectionResolver;
+import com.linkedin.datahub.graphql.resolvers.masterdata.FullImportResolver;
+import com.linkedin.datahub.graphql.resolvers.masterdata.GetDataConnectionTablesResolver;
+import com.linkedin.datahub.graphql.resolvers.masterdata.ListDataConnectionsResolver;
+import com.linkedin.datahub.graphql.resolvers.masterdata.TestDataConnectionResolver;
 import com.linkedin.datahub.graphql.resolvers.load.BatchGetEntitiesResolver;
 import com.linkedin.datahub.graphql.resolvers.load.EntityLineageResultResolver;
 import com.linkedin.datahub.graphql.resolvers.load.EntityRelationshipsResultResolver;
@@ -435,6 +440,11 @@ public class GmsGraphQLEngine {
   private final PageModuleService pageModuleService;
   private final DataHubFileService dataHubFileService;
 
+  // Master data ingestion services (optional)
+  private final com.linkedin.metadata.service.ingestiondata.DataConnectionService
+      dataConnectionService;
+  private final com.linkedin.metadata.service.ingestiondata.FullImportService fullImportService;
+
   private final BusinessAttributeService businessAttributeService;
   private final FeatureFlags featureFlags;
 
@@ -574,6 +584,8 @@ public class GmsGraphQLEngine {
     this.pageTemplateService = args.pageTemplateService;
     this.pageModuleService = args.pageModuleService;
     this.dataHubFileService = args.dataHubFileService;
+    this.dataConnectionService = args.dataConnectionService;
+    this.fullImportService = args.fullImportService;
     this.formService = args.formService;
     this.restrictedService = args.restrictedService;
     this.connectionService = args.connectionService;
@@ -814,6 +826,7 @@ public class GmsGraphQLEngine {
     configurePageTemplateResolvers(builder);
     configureDataHubFileResolvers(builder);
     configureAssetSettingsResolver(builder);
+    configureMasterDataResolvers(builder);
   }
 
   private void configureOrganisationRoleResolvers(RuntimeWiring.Builder builder) {
@@ -878,7 +891,8 @@ public class GmsGraphQLEngine {
         .addSchema(fileBasedSchema(MODULE_SCHEMA_FILE))
         .addSchema(fileBasedSchema(PATCH_SCHEMA_FILE))
         .addSchema(fileBasedSchema(SETTINGS_SCHEMA_FILE))
-        .addSchema(fileBasedSchema(FILES_SCHEMA_FILE));
+        .addSchema(fileBasedSchema(FILES_SCHEMA_FILE))
+        .addSchema(fileBasedSchema(MASTERDATA_SCHEMA_FILE));
 
     for (GmsGraphQLPlugin plugin : this.graphQLPlugins) {
       List<String> pluginSchemaFiles = plugin.getSchemaFiles();
@@ -3758,6 +3772,44 @@ public class GmsGraphQLEngine {
                       }
                       return null;
                     })));
+  }
+
+  /**
+   * Configures resolvers for master data ingestion operations. This includes queries and mutations
+   * for data connections, external table discovery, and full import operations.
+   */
+  private void configureMasterDataResolvers(final RuntimeWiring.Builder builder) {
+    // Only configure if master data services are available
+    if (dataConnectionService == null || fullImportService == null) {
+      log.info(
+          "Master data services not configured, skipping master data resolver configuration");
+      return;
+    }
+
+    // Query resolvers
+    builder.type(
+        "Query",
+        typeWiring ->
+            typeWiring
+                .dataFetcher(
+                    "listDataConnections", new ListDataConnectionsResolver(dataConnectionService))
+                .dataFetcher(
+                    "getDataConnectionTables",
+                    new GetDataConnectionTablesResolver(dataConnectionService)));
+
+    // Mutation resolvers
+    builder.type(
+        "Mutation",
+        typeWiring ->
+            typeWiring
+                .dataFetcher(
+                    "createDataConnection",
+                    new CreateDataConnectionResolver(dataConnectionService))
+                .dataFetcher(
+                    "testDataConnection", new TestDataConnectionResolver(dataConnectionService))
+                .dataFetcher("fullImport", new FullImportResolver(fullImportService)));
+
+    log.info("Master data resolvers configured successfully");
   }
 
   private void configureTagGroupResolvers(final RuntimeWiring.Builder builder) {
