@@ -11,7 +11,7 @@ import com.linkedin.metadata.Constants;
 import com.linkedin.metadata.service.ingestiondata.model.ColumnInfo;
 import com.linkedin.metadata.service.ingestiondata.model.MirrorTable;
 import com.linkedin.metadata.service.ingestiondata.model.TableInfo;
-import com.linkedin.mxe.ChangeType;
+import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.schema.BooleanType;
 import com.linkedin.schema.BytesType;
