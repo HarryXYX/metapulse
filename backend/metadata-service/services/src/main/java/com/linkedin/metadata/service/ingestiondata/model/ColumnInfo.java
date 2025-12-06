@@ -63,7 +63,7 @@ public class ColumnInfo {
     }
 
     if (defaultValue != null && !defaultValue.isEmpty()) {
-      sb.append(" DEFAULT ").append(defaultValue);
+      sb.append(" DEFAULT ").append(formatDefaultValue(defaultValue));
     }
 
     if (Boolean.TRUE.equals(autoIncrement)) {
@@ -75,5 +75,29 @@ public class ColumnInfo {
     }
 
     return sb.toString();
+  }
+
+  /**
+   * 格式化默认值，为字符串类型添加引号
+   */
+  private String formatDefaultValue(String value) {
+    if (value == null || value.isEmpty()) {
+      return value;
+    }
+
+    String upperValue = value.toUpperCase();
+
+    // 不需要引号的情况：NULL, 数字, 函数调用, 已有引号
+    if (upperValue.equals("NULL")
+        || upperValue.equals("CURRENT_TIMESTAMP")
+        || upperValue.startsWith("CURRENT_")
+        || upperValue.startsWith("NOW(")
+        || upperValue.startsWith("'")
+        || upperValue.matches("^-?\\d+(\\.\\d+)?$")) {
+      return value;
+    }
+
+    // 其他情况需要加引号（如 ENUM 值 ACTIVE、字符串等）
+    return "'" + value.replace("'", "''") + "'";
   }
 }
