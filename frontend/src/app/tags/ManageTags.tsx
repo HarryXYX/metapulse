@@ -1,5 +1,6 @@
 import { Button, PageTitle, Pagination, SearchBar, StructuredPopover } from '@components';
 import React, { useEffect, useMemo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { useUserContext } from '@app/context/useUserContext';
@@ -12,18 +13,39 @@ import { useEntityRegistry } from '@src/app/useEntityRegistry';
 import { useShowNavBarRedesign } from '@src/app/useShowNavBarRedesign';
 import { useGetSearchResultsForMultipleQuery } from '@src/graphql/search.generated';
 import { EntityType } from '@src/types.generated';
+import { PageRoutes } from '@src/conf/Global';
 
 const HeaderContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0px;
+    margin-bottom: 16px;
+`;
+
+const TabContainer = styled.div`
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e8e8e8;
+    padding-bottom: 8px;
+`;
+
+const TabButton = styled(Button)<{ $active: boolean }>`
+    border: none;
+    background: ${(props) => (props.$active ? '#f0f0f0' : 'transparent')};
+    border-bottom: ${(props) => (props.$active ? '2px solid #1890ff' : '2px solid transparent')};
+    border-radius: 0;
+    padding: 8px 16px;
+
+    &:hover {
+        background: #f5f5f5;
+    }
 `;
 
 const SearchContainer = styled.div`
     display: flex;
     align-items: center;
-    margin-bottom: 0px;
+    margin-bottom: 16px;
 `;
 
 // Simple loading indicator at the top of the page
@@ -54,6 +76,7 @@ const PAGE_SIZE = 10;
 
 const ManageTags = () => {
     const isShowNavBarRedesign = useShowNavBarRedesign();
+    const history = useHistory();
     const [searchQuery, setSearchQuery] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZE);
@@ -160,6 +183,20 @@ const ManageTags = () => {
                 <PageTitle title="Manage Tags" subTitle="Create and edit asset & column tags" />
                 {renderCreateTagButton()}
             </HeaderContainer>
+
+            <TabContainer>
+                <TabButton $active variant="text" size="md">
+                    Tags
+                </TabButton>
+                <TabButton
+                    $active={false}
+                    onClick={() => history.push(PageRoutes.MANAGE_TAG_GROUPS)}
+                    variant="text"
+                    size="md"
+                >
+                    Tag Groups
+                </TabButton>
+            </TabContainer>
 
             <SearchContainer>
                 <SearchBar

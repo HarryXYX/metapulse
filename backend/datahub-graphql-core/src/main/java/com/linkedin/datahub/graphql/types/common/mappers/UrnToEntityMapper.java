@@ -45,6 +45,7 @@ import com.linkedin.datahub.graphql.generated.Role;
 import com.linkedin.datahub.graphql.generated.SchemaFieldEntity;
 import com.linkedin.datahub.graphql.generated.StructuredPropertyEntity;
 import com.linkedin.datahub.graphql.generated.Tag;
+import com.linkedin.datahub.graphql.generated.TagGroup;
 import com.linkedin.datahub.graphql.generated.Test;
 import com.linkedin.datahub.graphql.generated.VersionSet;
 import com.linkedin.datahub.graphql.types.mappers.ModelMapper;
@@ -111,6 +112,11 @@ public class UrnToEntityMapper implements ModelMapper<com.linkedin.common.urn.Ur
       partialEntity = new Tag();
       ((Tag) partialEntity).setUrn(input.toString());
       ((Tag) partialEntity).setType(EntityType.TAG);
+    }
+    if (input.getEntityType().equals(TAG_GROUP_ENTITY_NAME)) {
+      partialEntity = new TagGroup();
+      ((TagGroup) partialEntity).setUrn(input.toString());
+      ((TagGroup) partialEntity).setType(EntityType.TAG_GROUP);
     }
     if (input.getEntityType().equals("corpuser")) {
       partialEntity = new CorpUser();

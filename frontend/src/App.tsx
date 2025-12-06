@@ -50,30 +50,14 @@ const errorLink = onError((error) => {
     // }
 });
 
-// 优化：使用闭包缓存 token，避免每次请求都读取 localStorage
-let cachedToken: string | null = null;
-let tokenCacheTime = 0;
-const TOKEN_CACHE_TTL = 5000; // 缓存5秒，降低 localStorage 访问频率
-
-// 监听 token 变化事件，立即更新缓存
-window.addEventListener('accessTokenChanged', ((event: CustomEvent) => {
-    cachedToken = event.detail;
-    tokenCacheTime = Date.now();
-}) as EventListener);
-
 const authLink = setContext((_, { headers }) => {
-    // 检查缓存是否有效（5秒内重用缓存值）
-    const now = Date.now();
-    if (!cachedToken || now - tokenCacheTime > TOKEN_CACHE_TTL) {
-        cachedToken = localStorage.getItem('accessToken');
-        tokenCacheTime = now;
-    }
-
+    // Get the authentication token from local storage if it exists
+    const token = localStorage.getItem('accessToken');
     // Return the headers to the context so httpLink can read them
     return {
         headers: {
             ...headers,
-            authorization: cachedToken ? `Bearer ${cachedToken}` : '',
+            authorization: token ? `Bearer ${token}` : '',
         },
     };
 });
@@ -104,14 +88,10 @@ const client = new ApolloClient({
     credentials: 'include',
     defaultOptions: {
         watchQuery: {
-            fetchPolicy: 'cache-first',  // ✅ 优先使用缓存，大幅提升性能
-            nextFetchPolicy: 'cache-first',
+            fetchPolicy: 'no-cache',
         },
         query: {
-            fetchPolicy: 'cache-first',  // ✅ 优先使用缓存
-        },
-        mutate: {
-            fetchPolicy: 'no-cache',  // Mutation 仍然不缓存（正确）
+            fetchPolicy: 'no-cache',
         },
     },
 });

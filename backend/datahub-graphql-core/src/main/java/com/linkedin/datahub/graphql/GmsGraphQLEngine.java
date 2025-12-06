@@ -229,6 +229,14 @@ import com.linkedin.datahub.graphql.resolvers.structuredproperties.UpsertStructu
 import com.linkedin.datahub.graphql.resolvers.tag.CreateTagResolver;
 import com.linkedin.datahub.graphql.resolvers.tag.DeleteTagResolver;
 import com.linkedin.datahub.graphql.resolvers.tag.SetTagColorResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.AddTagToGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.BatchAddTagsToGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.BatchRemoveTagsFromGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.CreateTagGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.DeleteTagGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.RemoveTagFromGroupResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.TagGroupTagsResolver;
+import com.linkedin.datahub.graphql.resolvers.taggroup.UpdateTagGroupResolver;
 import com.linkedin.datahub.graphql.resolvers.template.DeletePageTemplateResolver;
 import com.linkedin.datahub.graphql.resolvers.template.UpsertPageTemplateResolver;
 import com.linkedin.datahub.graphql.resolvers.test.CreateTestResolver;
@@ -315,6 +323,7 @@ import com.linkedin.datahub.graphql.types.rolemetadata.RoleType;
 import com.linkedin.datahub.graphql.types.schemafield.SchemaFieldType;
 import com.linkedin.datahub.graphql.types.structuredproperty.StructuredPropertyType;
 import com.linkedin.datahub.graphql.types.tag.TagType;
+import com.linkedin.datahub.graphql.types.taggroup.TagGroupType;
 import com.linkedin.datahub.graphql.types.template.PageTemplateType;
 import com.linkedin.datahub.graphql.types.test.TestType;
 import com.linkedin.datahub.graphql.types.versioning.VersionSetType;
@@ -453,6 +462,7 @@ public class GmsGraphQLEngine {
   private final DashboardType dashboardType;
   private final DataPlatformType dataPlatformType;
   private final TagType tagType;
+  private final TagGroupType tagGroupType;
   private final MLModelType mlModelType;
   private final MLModelGroupType mlModelGroupType;
   private final MLFeatureType mlFeatureType;
@@ -594,6 +604,7 @@ public class GmsGraphQLEngine {
     this.dashboardType = new DashboardType(entityClient);
     this.dataPlatformType = new DataPlatformType(entityClient);
     this.tagType = new TagType(entityClient);
+    this.tagGroupType = new TagGroupType(entityClient);
     this.mlModelType = new MLModelType(entityClient);
     this.mlModelGroupType = new MLModelGroupType(entityClient);
     this.mlFeatureType = new MLFeatureType(entityClient);
@@ -651,6 +662,7 @@ public class GmsGraphQLEngine {
                 chartType,
                 dashboardType,
                 tagType,
+                tagGroupType,
                 mlModelType,
                 mlModelGroupType,
                 mlFeatureType,
@@ -767,6 +779,7 @@ public class GmsGraphQLEngine {
     configureOrganisationRoleResolvers(builder);
     configureGlossaryNodeResolvers(builder);
     configureDomainResolvers(builder);
+    configureTagGroupResolvers(builder);
     configureDataProductResolvers(builder);
     configureApplicationResolvers(builder);
     configureAssertionResolvers(builder);
@@ -1045,6 +1058,7 @@ public class GmsGraphQLEngine {
                 .dataFetcher("dashboard", getResolver(dashboardType))
                 .dataFetcher("chart", getResolver(chartType))
                 .dataFetcher("tag", getResolver(tagType))
+                .dataFetcher("tagGroup", getResolver(tagGroupType))
                 .dataFetcher("dataFlow", getResolver(dataFlowType))
                 .dataFetcher("dataJob", getResolver(dataJobType))
                 .dataFetcher("dataProcessInstance", getResolver(dataProcessInstanceType))
@@ -1201,6 +1215,16 @@ public class GmsGraphQLEngine {
               .dataFetcher("updateTag", new MutableTypeResolver<>(tagType))
               .dataFetcher("setTagColor", new SetTagColorResolver(entityClient, entityService))
               .dataFetcher("deleteTag", new DeleteTagResolver(entityClient))
+              .dataFetcher(
+                  "createTagGroup",
+                  new CreateTagGroupResolver(this.entityClient, this.entityService))
+              .dataFetcher("updateTagGroup", new UpdateTagGroupResolver(entityClient))
+              .dataFetcher("deleteTagGroup", new DeleteTagGroupResolver(entityClient))
+              .dataFetcher("addTagToGroup", new AddTagToGroupResolver(entityClient))
+              .dataFetcher("removeTagFromGroup", new RemoveTagFromGroupResolver(entityClient))
+              .dataFetcher("batchAddTagsToGroup", new BatchAddTagsToGroupResolver(entityClient))
+              .dataFetcher(
+                  "batchRemoveTagsFromGroup", new BatchRemoveTagsFromGroupResolver(entityClient))
               .dataFetcher("updateChart", new MutableTypeResolver<>(chartType))
               .dataFetcher("updateDashboard", new MutableTypeResolver<>(dashboardType))
               .dataFetcher("updateNotebook", new MutableTypeResolver<>(notebookType))
@@ -3734,5 +3758,17 @@ public class GmsGraphQLEngine {
                       }
                       return null;
                     })));
+  }
+
+  private void configureTagGroupResolvers(final RuntimeWiring.Builder builder) {
+    builder.type(
+        "TagGroup",
+        typeWiring ->
+            typeWiring
+                .dataFetcher("tags", new TagGroupTagsResolver(this.graphClient))
+                .dataFetcher("privileges", new EntityPrivilegesResolver(entityClient))
+                .dataFetcher(
+                    "aspects", new WeaklyTypedAspectsResolver(entityClient, entityRegistry))
+                .dataFetcher("relationships", new EntityRelationshipsResultResolver(graphClient)));
   }
 }
