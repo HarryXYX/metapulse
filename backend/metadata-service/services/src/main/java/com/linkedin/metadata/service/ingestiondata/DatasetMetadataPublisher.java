@@ -11,6 +11,7 @@ import com.linkedin.metadata.Constants;
 import com.linkedin.metadata.service.ingestiondata.model.ColumnInfo;
 import com.linkedin.metadata.service.ingestiondata.model.MirrorTable;
 import com.linkedin.metadata.service.ingestiondata.model.TableInfo;
+import com.linkedin.metadata.utils.GenericRecordUtils;
 import com.linkedin.events.metadata.ChangeType;
 import com.linkedin.mxe.MetadataChangeProposal;
 import com.linkedin.schema.BooleanType;
@@ -134,7 +135,7 @@ public class DatasetMetadataPublisher {
     mcp.setEntityUrn(datasetUrn);
     mcp.setEntityType(Constants.DATASET_ENTITY_NAME);
     mcp.setAspectName(Constants.DATASET_PROPERTIES_ASPECT_NAME);
-    mcp.setAspect(com.linkedin.entity.Aspect.create(properties));
+    mcp.setAspect(GenericRecordUtils.serializeAspect(properties));
     mcp.setChangeType(ChangeType.UPSERT);
 
     entityClient.ingestProposal(opContext, mcp);
@@ -175,7 +176,7 @@ public class DatasetMetadataPublisher {
     mcp.setEntityUrn(datasetUrn);
     mcp.setEntityType(Constants.DATASET_ENTITY_NAME);
     mcp.setAspectName(Constants.SCHEMA_METADATA_ASPECT_NAME);
-    mcp.setAspect(com.linkedin.entity.Aspect.create(schemaMetadata));
+    mcp.setAspect(GenericRecordUtils.serializeAspect(schemaMetadata));
     mcp.setChangeType(ChangeType.UPSERT);
 
     entityClient.ingestProposal(opContext, mcp);
@@ -189,7 +190,7 @@ public class DatasetMetadataPublisher {
     SchemaField field = new SchemaField();
     field.setFieldPath(column.getName());
     field.setNativeDataType(column.getDataType());
-    field.setNullable(column.isNullable());
+    field.setNullable(Boolean.TRUE.equals(column.getNullable()));
     field.setLastModified(auditStamp);
 
     if (column.getComment() != null && !column.getComment().isEmpty()) {
@@ -269,7 +270,7 @@ public class DatasetMetadataPublisher {
       ColumnInfo col = columns.get(i);
       ddl.append("  `").append(col.getName()).append("` ").append(col.getDataType());
 
-      if (!col.isNullable()) {
+      if (Boolean.FALSE.equals(col.getNullable())) {
         ddl.append(" NOT NULL");
       }
 
