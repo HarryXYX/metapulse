@@ -127,7 +127,8 @@ public class ESUtils {
           Condition.GREATER_THAN_OR_EQUAL_TO,
           Condition.LESS_THAN,
           Condition.LESS_THAN_OR_EQUAL_TO);
-  public static final String ENTITY_NAME_FIELD = "_entityName";
+  // Changed from "_entityName" to "name" - the actual field in ES index mappings
+  public static final String ENTITY_NAME_FIELD = "name";
   public static final String NAME_SUGGESTION = "nameSuggestion";
 
   // we use this to make sure we filter for editable & non-editable fields. Also expands out
