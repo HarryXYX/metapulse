@@ -165,6 +165,22 @@ telemetry:
   enabledCli: false  # 开发环境禁用xian zh遥测
   enabledServer: false
 
+# ===== 主数据库配置 (master_data) =====
+# 用于存储外部数据库的镜像数据，支持数据接入层 CDC 同步
+masterData:
+  datasource:
+    url: jdbc:mysql://47.80.65.112:3306/master_data?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: metapulse
+    password: metapulse
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: MasterDataPool
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
 # ===== Ebean 配置（数据库表自动创建） =====
 ebean:
   username: metapulse

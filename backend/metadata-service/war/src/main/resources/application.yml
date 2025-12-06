@@ -27,7 +27,7 @@ spring:
   application:
     name: metapulse-all-in-one
 
-  # 数据库配置
+  # 数据库配置 - 元数据库 (metadata_aspect_v2)
   datasource:
     url: jdbc:${DB_TYPE:mysql}://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_DATABASE:metapulse}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
     username: ${DB_USERNAME:metapulse}
@@ -42,6 +42,22 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       leak-detection-threshold: 60000
+
+# ===== 主数据库配置 (master_data) =====
+# 用于存储外部数据库的镜像数据，支持数据接入层 CDC 同步
+masterData:
+  datasource:
+    url: jdbc:${MASTER_DB_TYPE:mysql}://${MASTER_DB_HOST:${DB_HOST:localhost}}:${MASTER_DB_PORT:${DB_PORT:3306}}/${MASTER_DB_DATABASE:master_data}?useUnicode=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: ${MASTER_DB_USERNAME:${DB_USERNAME:metapulse}}
+    password: ${MASTER_DB_PASSWORD:${DB_PASSWORD:metapulse}}
+    driver-class-name: ${MASTER_DB_DRIVER:${DB_DRIVER:com.mysql.cj.jdbc.Driver}}
+    hikari:
+      pool-name: MasterDataPool
+      maximum-pool-size: ${MASTER_DB_POOL_MAX:30}
+      minimum-idle: ${MASTER_DB_POOL_MIN:5}
+      connection-timeout: ${MASTER_DB_CONN_TIMEOUT:30000}
+      idle-timeout: 600000
+      max-lifetime: 1800000
 
   jpa:
     hibernate:
