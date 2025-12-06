@@ -160,22 +160,28 @@ public class FullImportService {
           mirrorTableRepository.findByMirrorTableName(mirrorTableName);
 
       MirrorTable mirrorTable;
+      String columnSchemaJson = columnsToJson(tableInfo.getColumns());
+      String primaryKeysJson = primaryKeysToJson(tableInfo.getPrimaryKeys());
+
       if (existingMirror.isPresent()) {
         mirrorTable = existingMirror.get();
-        log.info("Mirror table record already exists: {}", mirrorTableName);
+        log.info("Mirror table record already exists: {}, updating schema", mirrorTableName);
+        // 更新已存在的记录的列结构信息（以便处理表结构变化的情况）
+        mirrorTableRepository.updateColumnSchema(mirrorTable.getId(), columnSchemaJson, primaryKeysJson);
       } else {
-        // 创建镜像表记录
+        // 创建新的镜像表记录
         mirrorTable =
             MirrorTable.builder()
                 .connectionId(connection.getId())
                 .sourceDatabase(connection.getDatabaseName())
                 .sourceTable(tableName)
                 .mirrorTableName(mirrorTableName)
-                .columnSchema(columnsToJson(tableInfo.getColumns()))
-                .primaryKeyColumns(primaryKeysToJson(tableInfo.getPrimaryKeys()))
+                .columnSchema(columnSchemaJson)
+                .primaryKeyColumns(primaryKeysJson)
                 .syncStatus(MirrorTable.SyncStatus.SYNCING.name())
                 .build();
         mirrorTable = mirrorTableRepository.create(mirrorTable);
+        log.info("Created new mirror table record: {}", mirrorTableName);
       }
 
       // 3. 更新状态为 SYNCING
@@ -211,12 +217,29 @@ public class FullImportService {
   }
 
   /**
-   * 创建镜像表
+   * 创建或更新镜像表
+   *
+   * <p>如果表结构相同，只清空数据；如果结构不同或表不存在，则重建表
    */
   private void createMirrorTable(String mirrorTableName, TableInfo tableInfo) {
-    // 先删除旧表（如果存在）
-    String dropSql = "DROP TABLE IF EXISTS `" + mirrorTableName + "`";
-    masterDataJdbcTemplate.execute(dropSql);
+    // 检查表是否已存在
+    boolean tableExists = checkTableExists(mirrorTableName);
+
+    if (tableExists) {
+      // 比较表结构是否相同
+      boolean structureSame = compareTableStructure(mirrorTableName, tableInfo);
+
+      if (structureSame) {
+        // 结构相同，只清空数据（比 DROP+CREATE 更快）
+        log.info("Mirror table {} exists with same structure, truncating data", mirrorTableName);
+        masterDataJdbcTemplate.execute("TRUNCATE TABLE `" + mirrorTableName + "`");
+        return;
+      } else {
+        // 结构不同，需要重建表
+        log.info("Mirror table {} structure changed, rebuilding table", mirrorTableName);
+        masterDataJdbcTemplate.execute("DROP TABLE `" + mirrorTableName + "`");
+      }
+    }
 
     // 构建建表语句
     StringBuilder sql = new StringBuilder();
@@ -254,6 +277,59 @@ public class FullImportService {
     log.debug("Creating mirror table: {}", sql);
     masterDataJdbcTemplate.execute(sql.toString());
     log.info("Created mirror table: {}", mirrorTableName);
+  }
+
+  /**
+   * 检查表是否存在
+   */
+  private boolean checkTableExists(String tableName) {
+    try {
+      String sql = "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?";
+      Integer count = masterDataJdbcTemplate.queryForObject(sql, Integer.class, tableName);
+      return count != null && count > 0;
+    } catch (Exception e) {
+      log.warn("Failed to check if table {} exists: {}", tableName, e.getMessage());
+      return false;
+    }
+  }
+
+  /**
+   * 比较表结构是否相同
+   */
+  private boolean compareTableStructure(String tableName, TableInfo newTableInfo) {
+    try {
+      // 获取现有表的列信息
+      String sql = "SELECT COLUMN_NAME, DATA_TYPE, COLUMN_TYPE FROM information_schema.COLUMNS " +
+          "WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION";
+
+      List<String> existingColumns = masterDataJdbcTemplate.query(sql,
+          (rs, rowNum) -> rs.getString("COLUMN_NAME") + ":" + rs.getString("COLUMN_TYPE"),
+          tableName);
+
+      // 构建新表的列签名
+      List<String> newColumns = new ArrayList<>();
+      for (ColumnInfo column : newTableInfo.getColumns()) {
+        newColumns.add(column.getName() + ":" + column.getDataType());
+      }
+
+      // 简单比较列数量和列名+类型是否相同
+      if (existingColumns.size() != newColumns.size()) {
+        log.debug("Column count different: existing={}, new={}", existingColumns.size(), newColumns.size());
+        return false;
+      }
+
+      for (int i = 0; i < existingColumns.size(); i++) {
+        if (!existingColumns.get(i).equalsIgnoreCase(newColumns.get(i))) {
+          log.debug("Column {} different: existing={}, new={}", i, existingColumns.get(i), newColumns.get(i));
+          return false;
+        }
+      }
+
+      return true;
+    } catch (Exception e) {
+      log.warn("Failed to compare table structure for {}: {}", tableName, e.getMessage());
+      return false;
+    }
   }
 
   /**

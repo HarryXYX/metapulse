@@ -59,11 +59,12 @@ public class DatasetMetadataPublisher {
       @Nonnull TableInfo tableInfo) {
 
     try {
-      String tableName = mirrorTable.getMirrorTableName();
-      log.info("Publishing dataset metadata for table: {}", tableName);
+      String mirrorTableName = mirrorTable.getMirrorTableName();
+      String sourceTableName = mirrorTable.getSourceTable();
+      log.info("Publishing dataset metadata for table: {} (source: {})", mirrorTableName, sourceTableName);
 
-      // 创建 Dataset URN
-      DatasetUrn datasetUrn = createDatasetUrn(tableName);
+      // 创建 Dataset URN (使用镜像表名以保持唯一性)
+      DatasetUrn datasetUrn = createDatasetUrn(mirrorTableName);
 
       // 创建 AuditStamp
       AuditStamp auditStamp = createAuditStamp();
@@ -113,7 +114,8 @@ public class DatasetMetadataPublisher {
       AuditStamp auditStamp) throws Exception {
 
     DatasetProperties properties = new DatasetProperties();
-    properties.setName(mirrorTable.getMirrorTableName());
+    // 使用外部数据库的原始表名作为显示名称，而不是镜像表名
+    properties.setName(mirrorTable.getSourceTable());
 
     // 设置描述
     String description = buildDescription(mirrorTable, tableInfo);

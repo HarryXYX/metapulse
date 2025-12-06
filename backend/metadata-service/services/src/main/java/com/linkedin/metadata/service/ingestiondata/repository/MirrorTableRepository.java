@@ -185,6 +185,19 @@ public class MirrorTableRepository {
   }
 
   /**
+   * 更新列结构信息
+   *
+   * <p>用于在重新导入时更新表结构发生变化的情况
+   */
+  public void updateColumnSchema(
+      @Nonnull Long id, @Nonnull String columnSchema, @Nonnull String primaryKeyColumns) {
+    String sql =
+        "UPDATE " + TABLE_NAME + " SET column_schema = ?, primary_key_columns = ?, updated_at = ? WHERE id = ?";
+    jdbcTemplate.update(sql, columnSchema, primaryKeyColumns, new Timestamp(System.currentTimeMillis()), id);
+    log.debug("Updated column schema for mirror table: id={}", id);
+  }
+
+  /**
    * 删除镜像表记录
    */
   public void delete(@Nonnull Long id) {
