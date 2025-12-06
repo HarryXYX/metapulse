@@ -20,6 +20,7 @@ import com.linkedin.entity.EntityResponse;
 import com.linkedin.entity.EnvelopedAspect;
 import com.linkedin.entity.client.EntityClient;
 import com.linkedin.execution.ExecutionRequestInput;
+import com.linkedin.execution.ExecutionRequestResult;
 import com.linkedin.execution.ExecutionRequestSource;
 import com.linkedin.ingestion.DataHubIngestionSourceInfo;
 import com.linkedin.metadata.config.IngestionConfiguration;
@@ -156,11 +157,14 @@ public class CreateIngestionExecutionRequestResolver
 
   /**
    * Execute direct import using FullImportService for supported database sources.
+   * Creates an ExecutionRequest with result status so the frontend can track progress.
    */
   private String executeDirectImport(
       QueryContext context, String ingestionSourceUrn, String recipe) {
 
     log.info("Executing direct import for ingestion source: {}", ingestionSourceUrn);
+
+    long startTimeMs = System.currentTimeMillis();
 
     // Parse recipe to extract connection info
     JSONObject recipeJson = new JSONObject(recipe);
@@ -211,21 +215,104 @@ public class CreateIngestionExecutionRequestResolver
     FullImportService.ImportResult importResult =
         _fullImportService.fullImport(context.getOperationContext(), connection.getId(), null);
 
-    log.info("Import completed: success={}, message={}, tables={}/{}",
+    long durationMs = System.currentTimeMillis() - startTimeMs;
+
+    log.info("Import completed: success={}, message={}, tables={}/{}, duration={}ms",
         importResult.isSuccess(), importResult.getMessage(),
-        importResult.getSuccessTables(), importResult.getTotalTables());
+        importResult.getSuccessTables(), importResult.getTotalTables(), durationMs);
 
-    // Return a result URN indicating this was a direct import
-    String resultUrn = String.format(
-        "urn:li:directImport:%s-%d",
-        connection.getId(),
-        System.currentTimeMillis());
-
-    if (!importResult.isSuccess()) {
-      throw new RuntimeException("Import failed: " + importResult.getMessage());
+    // Create ExecutionRequest with result for frontend tracking
+    try {
+      return createExecutionRequestWithResult(
+          context,
+          ingestionSourceUrn,
+          recipe,
+          importResult,
+          startTimeMs,
+          durationMs);
+    } catch (Exception e) {
+      log.error("Failed to create ExecutionRequest record", e);
+      // Still return success if import succeeded, just log the error
+      if (importResult.isSuccess()) {
+        return String.format("urn:li:directImport:%s-%d", connection.getId(), startTimeMs);
+      }
+      throw new RuntimeException("Import failed: " + importResult.getMessage(), e);
     }
+  }
 
-    return resultUrn;
+  /**
+   * Create an ExecutionRequest with both Input and Result aspects for frontend tracking.
+   */
+  private String createExecutionRequestWithResult(
+      QueryContext context,
+      String ingestionSourceUrn,
+      String recipe,
+      FullImportService.ImportResult importResult,
+      long startTimeMs,
+      long durationMs) throws Exception {
+
+    // Create ExecutionRequest key
+    final ExecutionRequestKey key = new ExecutionRequestKey();
+    final UUID uuid = UUID.randomUUID();
+    key.setId(uuid.toString());
+    final Urn executionRequestUrn =
+        EntityKeyUtils.convertEntityKeyToUrn(key, EXECUTION_REQUEST_ENTITY_NAME);
+    final Urn sourceUrn = Urn.createFromString(ingestionSourceUrn);
+
+    // Create ExecutionRequestInput
+    final ExecutionRequestInput execInput = new ExecutionRequestInput();
+    execInput.setTask(RUN_INGEST_TASK_NAME);
+    execInput.setSource(
+        new ExecutionRequestSource()
+            .setType("DIRECT_IMPORT")
+            .setIngestionSource(sourceUrn));
+    execInput.setRequestedAt(startTimeMs);
+    execInput.setActorUrn(UrnUtils.getUrn(context.getActorUrn()));
+
+    Map<String, String> arguments = new HashMap<>();
+    arguments.put(RECIPE_ARG_NAME, recipe);
+    execInput.setArgs(new StringMap(arguments));
+
+    // Ingest ExecutionRequestInput
+    final MetadataChangeProposal inputProposal =
+        buildMetadataChangeProposalWithKey(
+            key,
+            EXECUTION_REQUEST_ENTITY_NAME,
+            EXECUTION_REQUEST_INPUT_ASPECT_NAME,
+            execInput);
+    _entityClient.ingestProposal(context.getOperationContext(), inputProposal, false);
+
+    // Create ExecutionRequestResult
+    final ExecutionRequestResult execResult = new ExecutionRequestResult();
+    execResult.setStatus(importResult.isSuccess() ? "SUCCESS" : "FAILURE");
+    execResult.setStartTimeMs(startTimeMs);
+    execResult.setDurationMs(durationMs);
+
+    String report = String.format(
+        "Direct Import Result:\n" +
+        "- Total Tables: %d\n" +
+        "- Success: %d\n" +
+        "- Failed: %d\n" +
+        "- Message: %s",
+        importResult.getTotalTables(),
+        importResult.getSuccessTables(),
+        importResult.getFailedTables(),
+        importResult.getMessage());
+    execResult.setReport(report);
+
+    // Ingest ExecutionRequestResult
+    final MetadataChangeProposal resultProposal =
+        buildMetadataChangeProposalWithKey(
+            key,
+            EXECUTION_REQUEST_ENTITY_NAME,
+            EXECUTION_REQUEST_RESULT_ASPECT_NAME,
+            execResult);
+    _entityClient.ingestProposal(context.getOperationContext(), resultProposal, false);
+
+    log.info("Created ExecutionRequest: urn={}, status={}",
+        executionRequestUrn, execResult.getStatus());
+
+    return executionRequestUrn.toString();
   }
 
   /**
