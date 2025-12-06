@@ -33,6 +33,7 @@ dependencies {
     // Spring JDBC for master data ingestion (using Java 11 compatible versions)
     implementation externalDependency.springJdbcJdk11
     implementation externalDependency.hikariCPJdk11
+    implementation 'org.springframework:spring-context:5.3.39'  // For @Service, @Repository annotations
     runtimeOnly externalDependency.logbackClassic
     compileOnly externalDependency.lombok
     implementation externalDependency.javatuples
